@@ -1,6 +1,8 @@
+---
 layout: page
 title: "про всяке"
 permalink: /about/provse
+---
 
 # About  me
 
