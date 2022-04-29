@@ -23,3 +23,5 @@ urls:
       url: /projects/
     - text: XML Feed
       url: /feed.xml
+
+theme: jekyll-theme-minimal
