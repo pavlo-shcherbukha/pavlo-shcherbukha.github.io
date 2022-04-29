@@ -1,1 +1,25 @@
 theme: jekyll-theme-leap-day
+title: Моя сторінка
+description: Моя персональна сторінка
+author: Pavlo Shcherbukha
+github: https://github.com/pavlo-shcherbukha
+about: Зараз програмую на  Node.js та VUE
+
+social:
+    - icon: fa-facebook
+      link: "#"
+    - icon: fa-twitter
+      link: "#"
+    - icon: fa-linkedin
+      link: "#"
+    - icon: fa-stack-exchange
+      link: "#"
+    - icon: fa-github
+      link: "https://github.com/agusmakmun"
+urls:
+    - text: About Me
+      url: /about/
+    - text: My Projects
+      url: /projects/
+    - text: XML Feed
+      url: /feed.xml
