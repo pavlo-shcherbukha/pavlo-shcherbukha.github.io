@@ -2,3 +2,9 @@
 //     @import "{{ site.theme }}";
 // Then using this theme with jekyll-remote-theme will work fine.
 @import "jekyll-theme-minimal";
+
+.contact-list,
+.social-media-list {
+    list-style: none;
+    margin-left: 0;
+}
