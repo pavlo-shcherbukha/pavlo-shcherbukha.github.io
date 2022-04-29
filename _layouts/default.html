@@ -40,6 +40,13 @@
         {% endif %}
       </header>
       <section>
+          <div class="social">
+            <ul>
+              {% for link in site.social %}
+                <li><a href="{{ link.link }}" target="_blank"><i class="fa {{ link.icon }}"></i></a></li>
+              {% endfor %}
+            </ul>
+          </div>
 
       {{ content }}
 
