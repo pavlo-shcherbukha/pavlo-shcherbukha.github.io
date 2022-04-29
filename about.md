@@ -1,8 +1,9 @@
 ---
 layout: page
-title: "про всяке"
-permalink: /about/provse
+title: About
+permalink: /about/
 ---
+
 
 # About  me
 
