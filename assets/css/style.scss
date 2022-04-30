@@ -35,4 +35,21 @@
     margin-top: 10px;
     color: #8C8C8C;
   }
-    
+
+  .sidebar-nav {
+    margin: 0;
+    padding: 0;
+  }
+  .sidebar-nav li {
+    margin: 0;
+    list-style: none;
+  }
+  .sidebar-nav li::before {
+    content: "»";
+    margin-right: .5em;
+  }
+  div.col-sm-3 div.profile-about {
+    margin-top: 10px;
+    color: #8C8C8C;
+  }
+      
