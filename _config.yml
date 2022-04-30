@@ -20,6 +20,4 @@ urls:
       url: /uflinks/
     - text: Настройка ubuntu 20.04
       url: /ubuntu/
-    - text: AXURE VMS
-      url: /azurevms/
 
