@@ -2,7 +2,7 @@
 layout: default
 ---
 
-**v-5**
+**v-6**
 
 Text can be **bold**, _italic_, or ~~strikethrough~~.
 
