@@ -4,6 +4,8 @@ title: Настройка linux ubuntu 20.04
 permalink: /ubuntu/
 
 ---
+
+**v-1**
 # Установка ubuntu - опис для початківця
 
 <!-- TOC BEGIN -->
