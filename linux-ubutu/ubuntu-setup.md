@@ -163,7 +163,7 @@ sudo systemctl status xrdp
 ```
 Повинно бути  щось отаке.
 
-<kbd><img src="doc/pic-01.png" /></kbd>
+<kbd><img src="https://pavlo-shcherbukha.github.io/ubuntu/doc/pic-01.png" /></kbd>
 <p style="text-align: center;">pic-1</p>                        
 
 Якщо виявлені помилки (не стартонув), значить скоріше всього не відкрито порт 3389 на сервері.
