@@ -5,7 +5,6 @@ permalink: /ubuntu/
 
 ---
 
-**v-2**
 # Установка ubuntu - опис для початківця
 
 <!-- TOC BEGIN -->
@@ -16,6 +15,9 @@ permalink: /ubuntu/
 5. [Прокопування канал для віртуалки в ORACLE CLOUD](#p05)
 6. [Установка DOCKER](#p06)
 7. [Установка codepage для підримки кирилиці та  локальної timezone](#p07)
+8. [Установка Node.js під ubuntu](#p08)
+9. [Устновка git під ubuntu](#p09)
+10. [Установка  Visual Studio Code під ubuntu](#p10)
 <!-- TOC END -->
 
 ## 1. <a name="p01">Чому ubuntu</a>
@@ -370,3 +372,80 @@ $locale -c charmap  Display  the  available charmap
 
   timedatectl - отримати поточну  часову зону
 ```
+
+## 8. <a name="p08">Установка Node.js під ubuntu</a>
+
+
+- Скачати Node Source пакет потрібної версії (в даному  прикладі версія 16)
+
+```bash
+cd ~
+curl -sL https://deb.nodesource.com/setup_16.x -o nodesource_setup.sh
+
+```
+
+- перевірити текстовим редактором, що  скрипт в наявності
+
+```bash
+nano nodesource_setup.sh
+
+```
+
+- виконати скрипт, який зареєструє пакети потрібної версії
+
+```bash
+sudo bash nodesource_setup.sh
+
+```
+
+- запустити установку node.js
+
+```bash
+sudo apt install nodejs
+
+
+- перевірити версію Node.js,  повинна бути версія 16 те версію npm, повинна бути 8
+
+```
+nodejs -v
+
+npm -v
+```
+
+9. <a name="p09">Установка git під ubuntu</a>
+
+```bash
+
+sudo apt install git -y  
+
+```
+
+10. <a name="p10">Установка  Visual Studio Code під ubuntu</a> 
+
+Для установки Visual Studio Code  потрібно виконати таку послаідоність команд
+
+
+```bash
+sudo apt update
+sudo apt install software-properties-common apt-transport-https wget
+
+wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add -
+
+sudo add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
+
+sudo apt install code
+
+sudo apt update
+sudo apt upgrade
+
+```
+
+В результаті знайдете в GUI з'явиться уже знайома іконка. Нажимаємо на іконку і працюємо
+
+<kbd><img src="https://pavlo-shcherbukha.github.io/linux-ubutu/doc/pic-10.png" /></kbd>
+<p style="text-align: center;">pic-10</p>
+
+
+Таким чином створена робоча машина для розробки під Node.js. Звичайно, для віртуалок, де тільки виконується запуск прграм GUI та Visual Studio Code ставити не обов'зково. І навіть RDP  там не потрібне. До них підключаюьбся по shh  з допомогою putty.
+
+В таких випадках з widows машини підключаються по ssh або через putty.
