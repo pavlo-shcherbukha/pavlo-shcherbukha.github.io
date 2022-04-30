@@ -56,6 +56,17 @@
             </ul>
           </div>
 
+          <div class="profile-about">
+            <ul class="sidebar-nav">
+              <strong>Navigation</strong>
+              <li><a href="/">Home</a></li>
+              {% for i in site.urls %}
+                <li><a class="about" href="{{ i.url }}">{{ i.text }}</a></li>
+              {% endfor %}
+            </ul>
+  
+          </div>  
+
       </header>
       <section>
 

@@ -14,10 +14,10 @@ social:
     - icon: fa-github
       link: "https://github.com/pavlo-shcherbukha"
 urls:
-    - text: About Me
+    - text: Про себе
       url: /about/
-    - text: My Projects
+    - text: Проекти
       url: /projects/
-    - text: XML Feed
-      url: /feed.xml
+    - text: Корисні лінки
+      url: /uflinks/
 
