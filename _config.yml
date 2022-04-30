@@ -1,10 +1,10 @@
 theme: jekyll-theme-minimal
 title: Павло Щербуха
-description: Мій персональний записник
+description: Персональна освітня сорінка
 author: Pavlo Shcherbukha
 github: https://github.com/pavlo-shcherbukha
-about: Зараз програмую на  Node.js та VUE
-logo: /assets/img/robot-1.jpg
+about: Розробка на Node.js, VUE.JS, Python, IIB-10, ORACLE PL/SQL
+logo: /assets/img/pasha.jpg
 
 social:
     - icon: fa-facebook
