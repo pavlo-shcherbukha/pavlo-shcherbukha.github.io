@@ -1,6 +1,6 @@
 theme: jekyll-theme-minimal
-title: Моя сторінка
-description: Моя персональна сторінка
+title: Павло Щербуха
+description: Мій персональний записник
 author: Pavlo Shcherbukha
 github: https://github.com/pavlo-shcherbukha
 about: Зараз програмую на  Node.js та VUE
@@ -9,12 +9,8 @@ logo: /assets/img/robot-1.jpg
 social:
     - icon: fa-facebook
       link: "#"
-    - icon: fa-twitter
-      link: "#"
     - icon: fa-linkedin
-      link: "#"
-    - icon: fa-stack-exchange
-      link: "#"
+      link: "https://www.linkedin.com/in/pavel-shcherbukha-a788a26a/"
     - icon: fa-github
       link: "https://github.com/pavlo-shcherbukha"
 urls:
