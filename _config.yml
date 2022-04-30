@@ -7,8 +7,6 @@ about: Розробка на Node.js, VUE.JS, Python, IIB-10, ORACLE PL/SQL
 logo: /assets/img/pasha.jpg
 
 social:
-    - icon: fa-facebook
-      link: "#"
     - icon: fa-linkedin
       link: "https://www.linkedin.com/in/pavel-shcherbukha-a788a26a/"
     - icon: fa-github
@@ -20,4 +18,6 @@ urls:
       url: /projects/
     - text: Корисні лінки
       url: /uflinks/
+    - text: Настройка ubuntu 20.04
+      url: /ubuntu/
 
