@@ -6,4 +6,4 @@ layout: default
 
 # Мій блог
 
-[Створення віртуальної машини в azure Cloud](https://pavlo-shcherbukha.github.io/azurevms-2022-04-30-1)
+[Створення віртуальної машини в azure Cloud](/azurevms-2022-04-30-1)
