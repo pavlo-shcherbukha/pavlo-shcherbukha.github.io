@@ -3,7 +3,7 @@ layout: post
 title: "Настройка linux ubuntu 20.04 для розроника"
 date: 2022-04-30 17:00:01
 categories: [ubuntu, linux, cloud]
-permalink: posts/2022-04-30/markdown-help/
+permalink: posts/2022-04-30/ubuntu-setup/
 published: true
 ---
 
