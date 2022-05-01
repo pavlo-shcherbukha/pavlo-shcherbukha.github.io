@@ -1,13 +1,13 @@
 ---
 layout: post
-title:  "Тест"
-date:   2022-04-30 23:04:51
-categories: [cloud, azure]
-permalink: /azurevms2/
+title:  "Установка MySql на VM UBUNTA"
+date:   2022-04-30 12:04:51
+categories: [ubunta, mysql]
+permalink: posts/2022-04-30/ubunta-setup-mysql/
 published: true
 ---
 
-# Установка MySql  на  vm UBUNTA в AZURE
+# Установка MySql  на  vm UBUNTA
 
 Для тестування і розуміння vm  та всіх приколів побудуємо багато рівневе application
 Центром всього цьго буде БД mysql 
