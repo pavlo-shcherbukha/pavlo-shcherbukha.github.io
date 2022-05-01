@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "Створення віртуальної машини в azure Cloud"
-date:   2022-04-30 23:00:51
-categories: [cloud, azure]
+title:  "Markdown  для розробників"
+date:   2022-05-01 16:00:01
+categories: [markdown, mermaid]
 ---
 
 # Markdown  для розробників
