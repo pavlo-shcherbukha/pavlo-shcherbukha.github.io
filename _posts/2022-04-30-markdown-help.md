@@ -3,7 +3,7 @@ layout: post
 title: "Markdown  для розробників"
 date: 2022-04-30 16:00:01
 categories: [markdown, mermaid]
-permalink: /markdown-help/
+permalink: posts/2022-04-30/markdown-help/
 published: true
 ---
 
@@ -26,9 +26,9 @@ published: true
 [mermaid-live-editor](https://mermaid-js.github.io/mermaid-live-editor), або скачати собі локально і запускати у себе на робочій станції: [mermaid on github](https://github.com/mermaid-js/mermaid). Mermaid — це інструмент для створення діаграм і діаграм на основі Javascript, який використовує текстові визначення, прийняті в Markdown, і засіб візуалізації для створення та зміни складних діаграм. Основна мета Mermaid — допомогти документації наздогнати розробку.
 
 
-## Додаткові opensource інструменти, для  створення графіки в IP
+## Додаткові opensource інструменти, для  створення графіки в IT
 
-Кому не вситачає marjdown,  то можна порекомендувати використання [Archi - The Open Source modelling toolkit for creating ArchiMate models and sketches.
+Кому не вситачає markdown,  то можна порекомендувати використання [Archi - The Open Source modelling toolkit for creating ArchiMate models and sketches.
 Used by Enterprise Architects everywhere.](https://www.archimatetool.com/)
 
 ## Яким реадктором можна пористуватися для роботи з markdown
@@ -37,7 +37,7 @@ Used by Enterprise Architects everywhere.](https://www.archimatetool.com/)
 
 ## Що маємо в підсумку
 
-А в підсумку маємо кросплатформенний універсальний продукт,  що не вимагає ліцензій, гарно підтримується git-подіними source control system. Ну і не вимагає ліцензій. З недоліків помітив тільки один: потрібно звикнути.
+А в підсумку маємо кросплатформений універсальний продукт,  що не вимагає ліцензій, гарно підтримується git-подібними source control systems. Ну і не вимагає ліцензій. З недоліків помітив тільки один: потрібно звикнути.
 
 
 
