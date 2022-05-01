@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Установка MySql на VM UBUNTA"
+title:  "Установка MySql на VM з ОS Ubunta"
 date:   2022-04-30 12:04:51
 categories: [ubunta, mysql]
 permalink: posts/2022-04-30/ubunta-setup-mysql/
