@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: default
 title: Мої лінки
 permalink: /links/
 ---
