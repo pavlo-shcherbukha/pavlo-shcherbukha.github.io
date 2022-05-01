@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "Markdown  для розробників"
-date:   2022-05-01 16:00:01
+title: "Markdown  для розробників"
+date: 2022-05-01 16:00:01
 categories: [markdown, mermaid]
 ---
 
