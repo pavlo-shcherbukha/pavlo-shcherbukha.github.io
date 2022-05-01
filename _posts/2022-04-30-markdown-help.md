@@ -1,9 +1,9 @@
 ---
 layout: post
 title: "Markdown  для розробників"
-date: 2022-05-01 16:00:01
+date: 2022-04-30 16:00:01
 categories: [markdown, mermaid]
-permalink: /2022-05-01-markdown-help/
+permalink: /markdown-help/
 published: true
 ---
 
