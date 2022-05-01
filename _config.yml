@@ -18,6 +18,4 @@ urls:
       url: /projects/
     - text: Корисні лінки
       url: /uflinks/
-    - text: Настройка ubuntu 20.04
-      url: /ubuntu/
 
