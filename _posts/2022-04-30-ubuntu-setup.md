@@ -33,7 +33,7 @@ Ubuntu  легка в установці. Має свій GUI інерфейс. 
 
 А на [pic-022](#pic-022)  показана уже запущена віртуалка на hyper-v з її конфігурацією. Більш того, віртуалка буде підключена до мережі internet і ви зможете спілкуватися і з інтернет і з вашою, так би мовити, host-машиною. Ну, і замість того, щоб інсталювати та деінсталювати різне програмне забезепечення для вивчення та проведеня тестів  на ваш ноутбук, то краще все поставити на віртуалку. Ну, як зламається - то створите нову віртуалку - та і все. З особистого досвіду, то на ubuntu-віртуалку ставив собі docker і в контейнерах підінімав для вивення fluent-d, elastic, kibana. Для windwos - користувача, спершу не звично. Але через деякий час звикаєш, і коли починаеш подорожувати по різних хмарах - то кругом все більш-менш однакове і знайоме.   
 
-<kbd><img src="https://pavlo-shcherbukha.github.io/linux-ubutu/doc/pic-022.png" /></kbd>
+<kbd><img src="/assets/img/posts/2022-04-30-ubuntu-setup/doc/pic-022.png" /></kbd>
 <p style="text-align: center;"><a name="pic-022">pic-022</a></p>
 
 
@@ -169,7 +169,7 @@ sudo systemctl status xrdp
 ```
 Повинно бути  щось отаке.
 
-<kbd><img src="https://pavlo-shcherbukha.github.io/linux-ubutu/doc/pic-01.png" /></kbd>
+<kbd><img src="/assets/img/posts/2022-04-30-ubuntu-setup/doc/pic-01.png" /></kbd>
 <p style="text-align: center;">pic-1</p>                        
 
 Якщо виявлені помилки (не стартонув), значить скоріше всього не відкрито порт 3389 на сервері.
@@ -191,7 +191,7 @@ netstat -nltp
 
 Повинно бути  щось схоже як на pic-02.
 
-<kbd><img src="https://pavlo-shcherbukha.github.io/linux-ubutu/doc/pic-02.png" /></kbd>
+<kbd><img src="/assets/img/posts/2022-04-30-ubuntu-setup/doc/pic-02.png" /></kbd>
 <p style="text-align: center;">pic-2</p>
 
 
@@ -204,7 +204,7 @@ netstat -nltp
 
 та додати рядок, що  на малюнку обведено червоною рамкою
 
-<kbd><img src="https://pavlo-shcherbukha.github.io/linux-ubutu/doc/pic-03.png" /></kbd>
+<kbd><img src="/assets/img/posts/2022-04-30-ubuntu-setup/doc/pic-03.png" /></kbd>
 <p style="text-align: center;">pic-3</p>
 
 
@@ -222,25 +222,25 @@ netstat -nltp
 
 Заходимо в свою VCN **Virtual Cloud Network**
 
-<kbd><img src="https://pavlo-shcherbukha.github.io/linux-ubutu/doc/pic-04.png" /></kbd>
+<kbd><img src="/assets/img/posts/2022-04-30-ubuntu-setup/doc/pic-04.png" /></kbd>
 <p style="text-align: center;">pic-4</p>
 
 
 Та вікриваємо меню: "Security List". В нему внесенмо правило для мережі.
 
 
-<kbd><img src="https://pavlo-shcherbukha.github.io/linux-ubutu/doc/pic-05.png" /></kbd>
+<kbd><img src="/assets/img/posts/2022-04-30-ubuntu-setup/doc/pic-05.png" /></kbd>
 <p style="text-align: center;">pic-5</p>
 
 
-<kbd><img src="https://pavlo-shcherbukha.github.io/linux-ubutu/doc/pic-06.png" /></kbd>
+<kbd><img src="/assets/img/posts/2022-04-30-ubuntu-setup/doc/pic-06.png" /></kbd>
 <p style="text-align: center;">pic-6</p>
 
 
 Заходимо в **"Security List"**, що створено за замовчуванням, та вносимо правило для доступу но порта RDP 3389
 
 
-<kbd><img src="https://pavlo-shcherbukha.github.io/linux-ubutu/doc/pic-07.png" /></kbd>
+<kbd><img src="/assets/img/posts/2022-04-30-ubuntu-setup/doc/pic-07.png" /></kbd>
 <p style="text-align: center;">pic-7</p>
 
 
@@ -250,13 +250,13 @@ netstat -nltp
 
 або  просто **mstsc.exe**  та вносимо публічний IP вашої терміналки:
 
-<kbd><img src="https://pavlo-shcherbukha.github.io/linux-ubutu/doc/pic-08.png" /></kbd>
+<kbd><img src="/assets/img/posts/2022-04-30-ubuntu-setup/doc/pic-08.png" /></kbd>
 <p style="text-align: center;">pic-8</p>
 
 
 Ну, а далі підключаємося під root **ubunta**  або під користувачм, що ви створили **psh**
 
-<kbd><img src="https://pavlo-shcherbukha.github.io/linux-ubutu/doc/pic-09.png" /></kbd>
+<kbd><img src="/assets/img/posts/2022-04-30-ubuntu-setup/doc/pic-09.png" /></kbd>
 <p style="text-align: center;">pic-9</p>
 
 
@@ -444,7 +444,7 @@ sudo apt upgrade
 
 В результаті знайдете в GUI з'явиться уже знайома іконка. Нажимаємо на іконку і працюємо
 
-<kbd><img src="https://pavlo-shcherbukha.github.io/linux-ubutu/doc/pic-10.png" /></kbd>
+<kbd><img src="/assets/img/posts/2022-04-30-ubuntu-setup/doc/pic-10.png" /></kbd>
 <p style="text-align: center;">pic-10</p>
 
 
