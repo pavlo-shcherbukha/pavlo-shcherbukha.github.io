@@ -311,11 +311,6 @@ select A.* from  APP2$EMP A;
 
 Все, пересвідчилися - , зв'язок з сервером є, клієнт працює.
 
-
-
-
-
-
 ```bash
 git clone https://github.com/pavlo-shcherbukha/az-lan-app.git 
 
