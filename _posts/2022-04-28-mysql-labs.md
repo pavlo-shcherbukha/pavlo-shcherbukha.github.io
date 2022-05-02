@@ -9,6 +9,9 @@ published: true
 
 # lerning-path Навчальні матеріали
 
+В репзиторії  [mysql-labs](https://github.com/pavlo-shcherbukha/mysql-labs) зібрані лабораторні та короткі матеріали для швидкого початку роботи з mysql
+ 
+
 
  ## MY SQL та бази даних
 
