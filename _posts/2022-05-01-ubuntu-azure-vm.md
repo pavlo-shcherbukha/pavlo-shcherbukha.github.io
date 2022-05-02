@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Розгордання віртуалок на azure"
+title: "Розгортання віртуалок на azure"
 date: 2022-05-01 10:00:01
 categories: [ubuntu, linux, cloud, azure]
 permalink: posts/2022-05-01/ubuntu-azure-vm/
