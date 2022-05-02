@@ -1,8 +1,8 @@
 ---
 layout: post
-title: "Настройка linux ubuntu 20.04 для розроника"
+title: "Розгордання віртуалок на azure"
 date: 2022-05-01 10:00:01
-categories: [ubuntu, linux, cloud]
+categories: [ubuntu, linux, cloud, azure]
 permalink: posts/2022-05-01/ubuntu-azure-vm/
 published: true
 ---
