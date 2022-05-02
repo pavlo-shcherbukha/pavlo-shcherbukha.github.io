@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Настройка linux ubuntu 20.04 для розроника"
+title: "Почтаток роботи з MySQL"
 date: 2022-04-28 10:00:01
 categories: [mysql]
 permalink: posts/2022-04-28/mysql-labs/
