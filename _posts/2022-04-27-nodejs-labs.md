@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Почтаток роботи з Node.js"
+title: "Початок роботи з Node.js"
 date: 2022-04-27 10:00:01
 categories: [node.js]
 permalink: posts/2022-04-27/nodejs-labs/
