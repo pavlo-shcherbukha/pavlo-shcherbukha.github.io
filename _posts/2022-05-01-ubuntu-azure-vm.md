@@ -18,6 +18,7 @@ published: true
 6. [MySQL: Створення прикладного користувача та бази даних на сервері mysql](#p06)
 7. [MySQL: Підключення до віддаленого сервера клієнтом mysql](#p07)
 
+
 <!-- TOC END -->
 
 ## 1. <a name="p01">Вступ</a>
@@ -310,6 +311,7 @@ select A.* from  APP2$EMP A;
 
 
 Все, пересвідчилися - , зв'язок з сервером є, клієнт працює.
+
 
 ```bash
 git clone https://github.com/pavlo-shcherbukha/az-lan-app.git 
