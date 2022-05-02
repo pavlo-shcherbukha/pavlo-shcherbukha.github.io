@@ -3,8 +3,8 @@ layout: post
 title: "Настройка linux ubuntu 20.04 для розроника"
 date: 2022-05-01 10:00:01
 categories: [ubuntu, linux, cloud]
-permalink: posts/2022-04-30/ubuntu-azure-vm/
-published: false
+permalink: posts/2022-05-01/ubuntu-azure-vm/
+published: true
 ---
 
 # Установка ubuntu - опис для початківця
@@ -13,13 +13,11 @@ published: false
 1. [Вступ](#p01) 
 2. [Створення AZURE account](#p02)
 3. [Створення віртуальної машини](#p03)
-4. [У](#p04)
-5. [П](#p05)
-6. [в](#p06)
-7. [У](#p07)
-8. [У](#p08)
-9. [У](#p09)
-10. [У](#p10)
+4. [Установка MySQL сервера на ubuntu](#p04)
+5. [Установка mysql клієнта на vm2 та vm3](#p05)
+6. [MySQL: Створення прикладного користувача та бази даних на сервері mysql](#p06)
+7. [MySQL: Підключення до віддаленого сервера клієнтом mysql](#p07)
+
 <!-- TOC END -->
 
 ## 1. <a name="p01">Вступ</a>
@@ -227,6 +225,105 @@ ssh -i keyname.pem azureuser@publicIP
 <p style="text-align: center;"><a name="pic-27">pic-27</a></p>
 
 Таким чином створили одну VM  та виконали до нех підключання по ssh. Для цілей розробки та тестування цього достатньо.
+
+4. <a name="p04">Установка MySQL сервера на ubuntu</a>
+
+Для досягнення конфігурації описаної на  [pic-14](#pic-14)
+
+<kbd><img src="../assets/img/posts/2022-05-01-ubuntu-azure-vm/doc/pic-14.png"/></kbd>
+<p style="text-align: center;"><a name="pic-14">pic-14</a></p>
+
+потрібно створити 3 віртуальних машини. На машинах уже присутній git та за замовчуванням вони можуть комунікувати в рамках virtual network одна з одною. Бажано виконати лоалізацію, так як написано в [Настройка linux ubuntu 20.04 для розроника](https://pavlo-shcherbukha.github.io/posts/2022-04-30/ubuntu-setup/), щоб коректно відображалася кирилиця 
+
+Далі на vm4  потрібно розгорнути сервер mysql, так, як написано по лінку: [Установка MySql на VM з ОS Ubunta](https://pavlo-shcherbukha.github.io/posts/2022-04-30/ubunta-setup-mysql/).
+
+Тут, особливо не забуваємо про розділ інстукції: **Зробити можливем підклчення до mysql з віддаленої машини**,  що б сервер приймав підключення з віддалених машин
+
+
+5. <a name="p05">Установка mysql клієнта на vm2 та vm3</a>
+
+Далі на vm2 та vm3  потрібно розгорнути клієнт mysql, так, як написано по лінку: [Установка MySql на VM з ОS Ubunta](https://pavlo-shcherbukha.github.io/posts/2022-04-30/ubunta-setup-mysql/),  по суті, виконати:
+
+```bash
+sudo apt install mysql-client
+```
+
+6. <a name="p06">MySQL: Створення прикладного користувача та бази даних на сервері mysql</a>
+
+Далі заходимо по ssh на vm4 (де встановлено mysql) та підключаємося під root для створення прикладного користувача
+
+```bash
+
+sudo mysql -u root
+
+```
+
+Та виконуємо скрипт по створенню прикладного користувача: [mysql-ddl.sql](https://github.com/pavlo-shcherbukha/az-lan-app/tree/main/mysql-ddl). Можна просто, шляхом вклеювання в вікно, але перд цим не забуваємо поміняти пароль в рядку: 
+
+```text
+ CREATE USER 'devadm'@'%' IDENTIFIED BY '*******';
+ ```
+
+Виходимо.
+
+Підключаємось уже під новоствореним користувачем:
+
+```bash
+sudo mysql -udevadm -p 
+
+```
+Вводимо пароль та створюємо БД шляхом виконання псолідовно скриптів:
+
+- [db-build.sql](https://github.com/pavlo-shcherbukha/az-lan-app/blob/main/mysql-ddl/db-build.sql) - створення БД;
+
+- [data-ins1.sql](https://github.com/pavlo-shcherbukha/az-lan-app/blob/main/mysql-ddl/data-ins1.sql) - внесення в БД тестових даних;
+
+
+
+7. <a name="p07">MySQL: Підключення до віддаленого сервера клієнтом mysql</a>
+
+Для підклюення до віддаленого сервера mysql потрідно зайти на vm2 або vm3  та підкобчитися командою:
+
+```bash
+mysql -u devadm -p -h 10.0.0.4
+
+```
+
+Основною відмінністю від роботи на севрері є необхідність вказати ip host машини, де запущений сервер mysql. В моєму випадку це локальний IP сервера в virtual network.
+
+
+Далі, якщо все налаштовано коерктно, то виконаємо select з [data-ins1.sql](https://github.com/pavlo-shcherbukha/az-lan-app/blob/main/mysql-ddl/data-ins1.sql) 
+
+```sql
+use test4;
+select A.* from  APP2$EMP A;
+
+```
+
+І повинні отримати щось схоже на 
+
+<kbd><img src="../assets/img/posts/2022-05-01-ubuntu-azure-vm/doc/pic-28.png"/></kbd>
+<p style="text-align: center;"><a name="pic-28">pic-28</a></p>
+
+
+та клонуємо репозиторій https://github.com/pavlo-shcherbukha/az-lan-app
+
+
+Все, пересвідчилися - , зв'язок з сервером є, клієнт працює.
+
+
+
+
+
+
+```bash
+git clone https://github.com/pavlo-shcherbukha/az-lan-app.git 
+
+```
+
+
+
+
 
 
 
