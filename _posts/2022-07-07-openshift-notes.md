@@ -35,7 +35,7 @@ https://access.redhat.com/solutions/2317401
 
 
 
-## Як масштабувати  кількісьб POD-ів
+## Як масштабувати  кількість POD-ів
 
 
 Масшабується такою командою.   'dc/bankid-p' - це назва DeploymentConfig
