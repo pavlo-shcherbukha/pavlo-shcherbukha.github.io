@@ -86,5 +86,55 @@ oc rsync . pod_name:/opt/app-root/src --delete --no-perms=true --watch=true
 cd ..
 ```
 
+## Відкотитися на вибрану версію успішного  deployment
+
+Інколи виникає ситуація, що вимагає відкотитися на попредню, не обов'язково останню версію deployment
+
+Більш детально можна подивитися за лінком [ Openshift 4.7. Rolling back a deployment](https://docs.openshift.com/container-platform/4.7/applications/deployments/managing-deployment-processes.html)
 
 
+А якщо коротко то: 
+
+- Переглянути історію deployment   
+
+```bash
+   oc rollout history dc/mysrvc-p
+
+```
+
+В результаті будемо  мати щось таке:
+
+```text
+REVISION        STATUS          CAUSE
+38              Complete        image change
+39              Complete        image change
+40              Failed          newer deployment was found running
+41              Complete        newer deployment was found running
+42              Complete        config change
+43              Complete        image change
+44              Complete        image change
+45              Complete        image change
+46              Failed          newer deployment was found running
+47              Complete        config change
+48              Complete        image change
+````
+
+- Вернутися на вибрану revision:  
+
+В даному випадку стартуємо з revision з номером 40
+
+```bash
+
+oc rollout undo dc/mysrvc-p  --to-revision=50
+
+```
+
+При цьому слід прийняти до уваги, що при rollout на попередню версю відключаютья всі тригери в DecpoymntConfig. І це зупинить автоматичний deployment.  
+
+- Повернути все  в автомат: 
+
+```bash
+
+oc set triggers dc/mysrvc-p --auto
+
+```
