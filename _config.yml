@@ -5,6 +5,7 @@ author: Pavlo Shcherbukha
 github: https://github.com/pavlo-shcherbukha
 about: Розробка на Node.js, VUE.js, Python, IBM Integration Bus (App Connect Ent) , ORACLE PL/SQL
 logo: /assets/img/pasha.jpg
+markdown: maruku
 
 social:
     - icon: fa-linkedin
