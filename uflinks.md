@@ -9,10 +9,10 @@ permalink: /uflinks/
 
 * https://pupenasan.github.io/
 
-Цікавий ресурс, створений викладачем викладачем з Національного Університету Харчових Технологій, м.Київ.
+Цікавий ресурс, створений викладачем з Національного Університету Харчових Технологій, м.Київ.
 Особливо цікаві:
 
-* [Довілник з Node-REd](https://pupenasan.github.io/NodeREDGuidUKR/)
+* [Довідник з Node-REd](https://pupenasan.github.io/NodeREDGuidUKR/)
 
 * [Git для всіх](https://pupenasan.github.io/Git4All/)
 
