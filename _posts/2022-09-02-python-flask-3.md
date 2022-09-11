@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Python - flask інтеграція з Redis, gevent"
+title: "Python - flask інтеграція з Redis"
 date: 2022-09-02 10:00:01
 categories: [python, flask]
 permalink: posts/2022-09-02/python-flask-3/
