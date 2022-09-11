@@ -91,7 +91,7 @@ docker compose up
 
 ```
 На екарні отримаєте щось схоже на таке.
-<kbd><img src="../assets/img/posts/2022-09-02-python-flask-3/doc/pic-01.png" /></kbd>
+<kbd><img src="/assets/img/posts/2022-09-02-python-flask-3/doc/pic-01.png" /></kbd>
 <p style="text-align: center;"><a name="pic-01">pic-01</a></p> 
 
 Якщо подивитися на контейнери, що стартонули, то можна побачити redis:
@@ -103,7 +103,7 @@ docker compose up
 ```
 
 На екарні отримаєте щось схоже на таке.
-<kbd><img src="../assets/img/posts/2022-09-02-python-flask-3/doc/pic-02.png" /></kbd>
+<kbd><img src="/assets/img/posts/2022-09-02-python-flask-3/doc/pic-02.png" /></kbd>
 <p style="text-align: center;"><a name="pic-02">pic-02</a></p> 
 
 
@@ -119,7 +119,7 @@ docker compose up
 
 
 На екарні отримаєте щось схоже на таке.
-<kbd><img src="../assets/img/posts/2022-09-02-python-flask-3/doc/pic-03.png" /></kbd>
+<kbd><img src="/assets/img/posts/2022-09-02-python-flask-3/doc/pic-03.png" /></kbd>
 <p style="text-align: center;"><a name="pic-03">pic-03</a></p> 
 
 Ну і для перевірки з'єднання задаємо комнаду "PING", а у відповідь отримуємо PONG.
@@ -147,7 +147,7 @@ set myKey myvaluse
 get myKey
 
 ```
-<kbd><img src="../assets/img/posts/2022-09-02-python-flask-3/doc/pic-04.png" /></kbd>
+<kbd><img src="/assets/img/posts/2022-09-02-python-flask-3/doc/pic-04.png" /></kbd>
 <p style="text-align: center;"><a name="pic-04">pic-04</a></p> 
 
 Встановити ключ, що "живе" протягом визначеного часу. На прикладі, що показано видно, як встановлено значення ключа на 4 секунди. А потім, через якийсь час - ключ "пропадає"
@@ -161,7 +161,7 @@ get myKey
 
 ```
 
-<kbd><img src="../assets/img/posts/2022-09-02-python-flask-3/doc/pic-05.png" /></kbd>
+<kbd><img src="/assets/img/posts/2022-09-02-python-flask-3/doc/pic-05.png" /></kbd>
 <p style="text-align: center;"><a name="pic-05">pic-05</a></p> 
 
 Тут показано простий варіант установки лічільника і його постійного збільшення
@@ -185,7 +185,7 @@ OK
 
 ```
 
-<kbd><img src="../assets/img/posts/2022-09-02-python-flask-3/doc/pic-06.png" /></kbd>
+<kbd><img src="/assets/img/posts/2022-09-02-python-flask-3/doc/pic-06.png" /></kbd>
 <p style="text-align: center;"><a name="pic-06">pic-06</a></p> 
 
 
@@ -401,7 +401,7 @@ rping=red.ping()
 ```
 Тобто, якщо rping=True, значить до redis сервіс підключився. 
 
-<kbd><img src="../assets/img/posts/2022-09-02-python-flask-3/doc/pic-07.png" /></kbd>
+<kbd><img src="/assets/img/posts/2022-09-02-python-flask-3/doc/pic-07.png" /></kbd>
 <p style="text-align: center;"><a name="pic-07">pic-07</a></p> 
 
 #### Проста функція лічилька кількості викликів АПІ
@@ -509,7 +509,7 @@ services:
 ```
 
 На pic-08  показано з яких частин цей файл склажається:
-<kbd><img src="../assets/img/posts/2022-09-02-python-flask-3/doc/pic-08.png" /></kbd>
+<kbd><img src="/assets/img/posts/2022-09-02-python-flask-3/doc/pic-08.png" /></kbd>
 <p style="text-align: center;"><a name="pic-08">pic-08</a></p> 
 
 1. Описуэ запуск контейнера redis
@@ -519,7 +519,7 @@ services:
 
 На pic-09  показані основні конфігураційні елементи, пов'язані з конфігуруванням  запуску redis  
 
-<kbd><img src="../assets/img/posts/2022-09-02-python-flask-3/doc/pic-09.png" /></kbd>
+<kbd><img src="/assets/img/posts/2022-09-02-python-flask-3/doc/pic-09.png" /></kbd>
 <p style="text-align: center;"><a name="pic-09">pic-09</a></p> 
 
 1. Кореневий елемен окрем взятого сервісу, що параметризуємо. В подальшому на нього можна буде посилатися.
@@ -533,7 +533,7 @@ services:
 
 На pic-10  показані основні конфігураційні елементи, пов'язані з конфігуруванням  запуску контейнера додатку на Python 
 
-<kbd><img src="../assets/img/posts/2022-09-02-python-flask-3/doc/pic-10.png" /></kbd>
+<kbd><img src="/assets/img/posts/2022-09-02-python-flask-3/doc/pic-10.png" /></kbd>
 <p style="text-align: center;"><a name="pic-10">pic-10</a></p> 
 
 
