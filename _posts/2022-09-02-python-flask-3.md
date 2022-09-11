@@ -20,7 +20,7 @@ published: true
   * 3.5. [Як зберегти JSON в Redis](#p-3.5)
   * 3.6. [Корисні посилання по redis](#p-3.6)
 
-4. [Побудова образу з використанням аргументів](#p-3)
+4. [Використання Redis сумісно з Python-flask application](#p-4)
 5. [Висновки](#p-5)
 
 
@@ -353,12 +353,219 @@ OK
 
 
 
-## <a name="p-3">Побудова образу локально</a>
+## <a name="p-4">Використання Redis сумісно з python flask application</a>
+
+В цьому розділі показана проста демка, для демонстрації того, як використати  redis сумісно  з python flask applicatoin. Програмний код демонстрашки можна знайти за лінком [Flask app Rest API та взаємодія з Redis](https://github.com/pavlo-shcherbukha/py-flask-app-smpl-redis). Опис бібліотеки Python для роботи з redis знаходиться за лінком: [redis 4.3.4](https://pypi.org/project/redis/) або ж  прямо на github [redis-py](https://github.com/redis/redis-py). Цікаві і потрібні, як на мій погляд, приклади наедені в [ndexing / querying JSON documents](https://redis.readthedocs.io/en/stable/examples/search_json_examples.html) 
+
+В демці розглядається, як запустити redis  та Python web service, що зверта
+ться до redis  на совєму ноутбуці в контейнерах, викорситовуючи docker-composer. Це, так би мовити, створення та запуск середовища розробки на своєму laptop.
+
+### Опис програмного коду демки.
+
+Redis використовується в модулі **views.py**. Підключення до redis описано у наведеному фрагменті:
+
+```py
+log("Підключення до Redis")
+
+irds_host = os.getenv('RDS_HOST');
+irds_port = os.getenv('RDS_PORT');
+irds_psw = os.getenv('RDS_PSW');
+
+log('Підключеня до redis: ' + 'host=' + irds_host  )
+log('Підключеня до redis: ' + 'Порт=' + str(irds_port)  )
+log('Підключеня до redis: ' +  'Пароль: ' + irds_psw )
+
+red = redis.StrictRedis(irds_host, irds_port, charset="utf-8", password=irds_psw, decode_responses=True)
+log(" Trying PING")
+log("1=======================")
+rping=red.ping()
+log( str(rping) )
+if rping:
+    log("redis Connected")
+    #sub = red.pubsub()    
+    #sub.subscribe( ichannel )    
+else:
+    log("redis NOT CONNECTED!!!")    
+
+log("2=======================")
+
+```
+
+#### Підключення до redis
+Як видно, парамери підключення параметризуються в ENV-variables  сервісу: RDS_HOST, RDS_PORT, RDS_PSW, які вичитуються при старті сервісу і повинні бути задані при старті контейнера (якщо сервіс стартує в контейнері).
+Підклюення (чи то створення об'єкту підклченя) описано в команді: **red = redis.StrictRedis**  .....  А ось перевырити можливість взаємодії сервіса та redis  можна з допопогою команди **PING**: 
+
+```text
+rping=red.ping()
+
+```
+Тобто, якщо rping=True, значить до redis сервіс підключився. 
+
+<kbd><img src="../assets/img/posts/2022-09-02-python-flask-3/doc/pic-07.png" /></kbd>
+<p style="text-align: center;"><a name="pic-07">pic-07</a></p> 
+
+#### Проста функція лічилька кількості викликів АПІ
+
+Використаемо просут команду бібліотеки: [ incrby(name, amount=1)](https://redis.readthedocs.io/en/stable/commands.html?highlight=incrby#redis.commands.cluster.RedisClusterCommands.incrby). Також, при старті сервісу ключ потрібно створити, а потім бажано ще і прочитати. Для цього використаємо комнади:
+
+- [set(name, value, ex=None, px=None, nx=False, xx=False, keepttl=False, get=False, exat=None, pxat=None)](https://redis.readthedocs.io/en/stable/commands.html?highlight=incrby#redis.commands.core.CoreCommands.set)
+
+- [get(name)](https://redis.readthedocs.io/en/stable/commands.html?highlight=incrby#redis.commands.core.CoreCommands.get)
+
+Цю задачу вирішують два простих фагменти кода.
+
+Тут при старті створюється ключ в БД
+```py
+i_apicntr_key="APICALLS"
+if rping:
+    log("redis Connected")
+
+    log("set predefined key by 0 value: " +  i_apicntr_key ) 
+    red.set(i_apicntr_key, 0)
+    log("Check the valuse of key: " + i_apicntr_key )
+    log( "Read value: " + str( red.get(i_apicntr_key) ) )
+```
+
+А тут є функція, що виконє інкремент значення ключа
+
+```py
+#==================================================
+# Функція підраховування викликів API
+#
+#=================================================
+def apicallscntr():
+    l_label="apicallscntr"
+    log("Старт", l_label)
+    return red.incrby( i_apicntr_key, 1)
+```
+
+Ну і далі виклик цієї функції вмонтовуємо в оброники викликів API
+
+#### Розробка API методів, що дозволяюь створити ключ, прочитати занчення ключа, отримати список всіх ключів в Redis
+
+
+Для читання ключів використовується функціія: [ keys(pattern='*', **kwargs)](https://redis.readthedocs.io/en/stable/commands.html?highlight=incrby#redis.commands.cluster.RedisClusterCommands.keys).
+
+У відповіді повинні отримати масив всіх існуючих ключів, типу такого: 
+
+```json
+{
+  "list": ["shhkey2", "shkey1", "APICALLS", "book1", "myhash", "jsondata", "get", "counter", "xcntr", "sh-book", "gey"]
+}
+```
+
+
+Ну а для створення ключа використовуєму функцію: - [set(name, value, ex=None, px=None, nx=False, xx=False, keepttl=False, get=False, exat=None, pxat=None)](https://redis.readthedocs.io/en/stable/commands.html?highlight=incrby#redis.commands.core.CoreCommands.set)
+
+Тіло POST запиту:
+
+```json
+{
+"keyname": "test1",
+"keyvalue": "test1 value"
+}
+
+```
+
+
+Для демонстрації взаємодії з redis цього  досить. Тепер проблема, як це запустити у себе на машині.
+
+
+### Запуск та налашьування контейнерів 
+
+
+Коли програмний код уже існує, потрібно налаштувати узгожений запуск двох контейнерів:
+
+- контейнера redis
+
+- контейнера з PYthon  додатком на laptop
+
+Для цього використано **docker-composer**. Хоч, выдверто кажучи, я його ы не дуже люблю. Мені більш звичним є такі платформи як Openshift та  kubernetes.  Але для цього випадку прийшлося використати **docker-composer**. Основним конфігураційним файлом, що зв'язує різні контейнери між собою є yaml-файл: **docker-compose.yaml**:
+
+```yaml
+version: '3.8'
+services:
+  redisserver:
+    image: redis:5.0.14-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning --requirepass 22
+  smplapp-srvc-redis:
+    build:
+      context: ./
+      dockerfile: Dockerfile_local 
+    ports:
+      - "8081:8080" 
+    links:
+      - "redisserver:redis"     
+    environment:
+      GUNICORN_CMD_ARGS: "--workers=1 --bind=0.0.0.0:8080 --access-logfile=-"
+      APP_MODULE: "hello_app.webapp"
+      RDS_HOST: "redisserver"
+      RDS_PORT: 6379
+      RDS_PSW: "22"
+
+```
+
+На pic-08  показано з яких частин цей файл склажається:
+<kbd><img src="../assets/img/posts/2022-09-02-python-flask-3/doc/pic-08.png" /></kbd>
+<p style="text-align: center;"><a name="pic-08">pic-08</a></p> 
+
+1. Описуэ запуск контейнера redis
+2. Описує запуск контейнера python application
 
 
 
-## <a name="p-5">Висновки</a>
+На pic-09  показані основні конфігураційні елементи, пов'язані з конфігуруванням  запуску redis  
 
-Це елементарні приклади для початківця щоб  запустити python appliction в docker контейнері та навчитися з ним працювати. Ну а  в репозиторії програмного коду показані типові приклади побудови api/
-Сам репозиторій з прикладом знаходиться за лінком: [py-flask-app-smpl-restapi-for-ubi8](https://github.com/pavlo-shcherbukha/py-flask-app-smpl-restapi-for-ubi8/tree/main)
+<kbd><img src="../assets/img/posts/2022-09-02-python-flask-3/doc/pic-09.png" /></kbd>
+<p style="text-align: center;"><a name="pic-09">pic-09</a></p> 
 
+1. Кореневий елемен окрем взятого сервісу, що параметризуємо. В подальшому на нього можна буде посилатися.
+
+2. Вказує на образ, з якого буде створюватися та стартувати контейнер.
+
+3. Вказує на визначення портів в форматі [локальний порт вашого laptop]:[порт контейнера].
+
+4. Вказує на команду, що перекриває комнаду Dockerfile **CMD**  при старті контейнера. В даному випадку ми додаємо додаткові параметри при старті сервісу БД.
+
+
+На pic-10  показані основні конфігураційні елементи, пов'язані з конфігуруванням  запуску контейнера додатку на Python 
+
+<kbd><img src="../assets/img/posts/2022-09-02-python-flask-3/doc/pic-10.png" /></kbd>
+<p style="text-align: center;"><a name="pic-10">pic-10</a></p> 
+
+
+1. Кореневий елемен окрем взятого сервісу, що параметризуємо. В подальшому на нього можна буде посилатися.
+
+2. Вказує на Dockerfile, з якого буде створюватися  образ та стартувати контейнер. При цьому, **context** вказує на path  до Dockerfile **.** - значить поточний каталог, а **dockerfile** вказує на найменування Dockerfile  в якому описані правила побудови  образу.  
+
+3. Вказує на визначення портів в форматі [локальний порт вашого laptop]:[порт контейнера].
+
+4. Вказує на блок **links**, що так би мовити зв'язує два контейнера між собою так, що вони можуть між собою взаємодіяти по tcp/ip. В даному випадку вказано, що сервіс **smplapp-srvc-redis** може звертатися до сервісу з назвою хоста "redisserver". **:redis** це альтернативна назва.
+
+5. Вказує на блок environments змінних які потрібно задати для старту сервісу.  Цифрою 6 показано, як сконфігуровано підключення до redis.
+
+
+### Запуск контейнерів docker composer.
+
+Запукаються командою
+
+```bash
+docker compose up
+```
+Але мені потрібно, щоб при запуску сервіс **smplapp-srvc-redis** перебудовував образ, бо я в процесі розробки можу міняти програмний код. Для цього використовується команда: --build smplapp-srvc-redis, що запускає перебудову образа 
+
+
+``````bash
+docker compose up --build smplapp-srvc-redis
+```
+
+Зупинити сервыс можна по CTRL + C  або просто: 
+
+
+```bash
+
+docker compose stop
+```
