@@ -30,13 +30,14 @@ published: true
 Це продовження записок початківця про python flask. 
 В попреденіх серіях було про запуск flask application в контейнері і через docker-compose  поєднати з супутнім сервісов. В якості супутнього сервісу було вибрано Redis DB. Але в усіх цих випадках сервіс Python запускався я продуктивному режимі. Але, не маючи режима debug в контейнері ефективно розробляти не зручно.
 В цьому блозі:
-- Як налаштувати можливість debug python-flask application, що запущено в контейнері, викорстовуючи docker-compose. Я довго це пробував зібрати до купи. Але цей метод мені здався найбільш дієвим. Тут мова піде не про програмування, а більше про devops навики. Але, якщо розробник не матиме цих навиків, то як йому на своєму laptop  створити середовище розробки і ефективно працювати? Як правильно спроектувати, які компоненти винести в параметризацію?.... Ну і ще  можна знайти купу таких риторичних запитань.
+
+  Як налаштувати можливість debug python-flask application, що запущено в контейнері, викорстовуючи docker-compose. Я довго це пробував зібрати до купи. Але цей метод мені здався найбільш дієвим. Тут мова піде не про програмування, а більше про devops навики. Але, якщо розробник не матиме цих навиків, то як йому на своєму laptop  створити середовище розробки і ефективно працювати? Як правильно зпроектувати, які компоненти винести в параметризацію?.... Ну і ще  можна знайти купу таких риторичних запитань.
 
 Репозиторій з прикладом доступний за лінком: [py-flask-app-smpl-redis-dbg Flask application. Debug додатку, що запущено в контейнері](https://github.com/pavlo-shcherbukha/py-flask-app-smpl-redis-dbg).
 
 ## <a name="p-2">2. Різниця в запуску flask application</a>
 
-Flask template розробдений таким чином, що  його можна запустити в **development mode**, як описано в [Створення найпростішого скрипта для flask app та запуск applicaiton з індивідуальною назвою в DEVELOPENT mode](https://pavlo-shcherbukha.github.io/posts/2022-09-02/python-flask-1/). А бо ж flask application запускається в **productive mode** за WSGI  сервером типу gunicorn, як описано в [Python - flask запуск в контейнері від RadHat UBI8](https://pavlo-shcherbukha.github.io/posts/2022-09-02/python-flask-2/).
+Flask template розроблений таким чином, що  його можна запустити в **development mode**, як описано в [Створення найпростішого скрипта для flask app та запуск applicaiton з індивідуальною назвою в DEVELOPENT mode](https://pavlo-shcherbukha.github.io/posts/2022-09-02/python-flask-1/). А бо ж flask application запускається в **productive mode** за WSGI  сервером типу gunicorn, як описано в [Python - flask запуск в контейнері від RadHat UBI8](https://pavlo-shcherbukha.github.io/posts/2022-09-02/python-flask-2/).
 
 Збірка запуск та debug контейнера з сервісом python описана  за цими лінками: 
 
@@ -49,9 +50,9 @@ Flask template розробдений таким чином, що  його мо
 
 Таким чином, мені для запуску debug  потрібно:
 
-- для побудови debug образу проінсталювати цю бібліотеку **pip install ptvsd debugpy**
-- в контейнеры  выдкрити порт в контейнері для remote debug 5678
-- змінитин команту запуска так, щоб замість gunicorn запускався python flask run  з додатковими ключами
+- для побудови debug образу встановити цю бібліотеку **pip install ptvsd debugpy**
+- в контейнері  відкрити порт для remote debug 5678
+- змінитин команду запуска так, щоб замість gunicorn запускався **python flask run**  з додатковими ключами
 - налаштувати правильно файл  ".vscode/launch.json" для підключення до контейнера по порту 5678
 - Підготувати правильно Dockerfile та docker-compose.yaml
 
@@ -78,23 +79,23 @@ CMD /usr/libexec/s2i/run
 ```
 
 Тепер використаємо властивість Dockerfile [multistage-build](https://docs.docker.com/develop/develop-images/multistage-build/).
-Сенс використаня multistage-build в тому, що ми можемо використати кілька команд **FROM** з аліасом. Основний секнс цик команд в наступному:
+Сенс використаня multistage-build в тому, що ми можемо використати кілька команд **FROM** з аліасом. Основний сенс цик команд в наступному:
 
 - можна з одної **FROM** копиіювати дані в наступну stage
 
 - можна при побудові образу вказати на якій stage зупинитися.
 
-Ось останню особливість і викристаємо. А при старті docker-compose вкажемо, яка stage у тезі **target** мається на увазі:
+Ось останню особливість і використаємо. А при старті docker-compose вкажемо, яка stage мається на увазі у тезі **target** :
 [Compose file version 3 reference](https://docs.docker.com/compose/compose-file/compose-file-v3/)
 
 <kbd><img src="/assets/img/posts/2022-09-02-python-flask-4/doc/pic-01.png" /></kbd>
 <p style="text-align: center;"><a name="pic-01">pic-01</a></p> 
 
-- Для debug mode **target: DEBUG**
-- Для prod mode  **target: PROD**   
+- Для debug mode **target: debug**
+- Для prod mode  **target: prod**   
 
 
-Ось наведно **Dockerfile** який в результаті отримав:
+Ось наведено **Dockerfile** який в результаті отримав:
 
 ```bash
 FROM registry.fedoraproject.org/f33/python3 as base
@@ -123,33 +124,29 @@ FROM base as prod
 CMD /usr/libexec/s2i/run
 
 ```
-
-
-## <a name="p-4">Підготовка файлів типу docker-compose  для запуску в різних режимах</a>
-
 А на [pic-02](#pic-02)  показані коротке пояснення, як stage з **Dockerfile** відображається на yaml з docker compose
 
 <kbd><img src="/assets/img/posts/2022-09-02-python-flask-4/doc/pic-02.png" /></kbd>
 <p style="text-align: center;"><a name="pic-02">pic-02</a></p> 
 
 
-І потрібно не забути, що при запуску в режимі debug flask app  потрібно запускати поза gunicorn командою **pyhon flask run** ну з розшиенням під debug. В нашому випадку: 
+
+## <a name="p-4">Підготовка файлів типу docker-compose  для запуску в різних режимах</a>
+
+
+Потрібно не забути, що при запуску в режимі debug, flask app  потрібно запускати поза gunicorn, командою **pyhon flask run** ну з розширенням спеціальним ключами під debug. В нашому випадку: 
 
 ```bash
 python -m debugpy --listen 0.0.0.0:5678 --wait-for-client -m flask run -h 0.0.0.0 -p 8080
 
 ```
 
-
 На [pic-03](#pic-03) показана порівняльна характеристика docker-comppose - файлів для різних режимів запуску, що будуються з єдного dockerfile.
 
 <kbd><img src="/assets/img/posts/2022-09-02-python-flask-4/doc/pic-03.png" /></kbd>
 <p style="text-align: center;"><a name="pic-03">pic-03</a></p> 
 
-
-
 ## <a name="p-5">Налаштування Visual Studio Code</a>
-
 
 Для налаштування Visual Studio Code потрібно в файл: ".vscode/launch.json" блок для підключення:
 
