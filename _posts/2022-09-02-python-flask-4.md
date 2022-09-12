@@ -11,48 +11,16 @@ published: true
 
 <!-- TOC BEGIN -->
 1. [Про що цей блог](#p-1)
-2. [Розгортання Redis локально в Docker контейнері](#p-2)
-3. [Короткий довідник по командах Redis які можна виконати з допомогою redis-клієнта](#p-3)
-  * 3.1. [[SET, GET, INCR]  Встановлення - читання ключа та його значення](#p-3.1)
-  * 3.2. [[KEYS]  Отримати список всіх ключів в БД](#p-3.2)
-  * 3.3. [[HSET, HGET, HDEL, HEXISTS]  Встановлення - читання hash-ключа](#p-3.3)
-  * 3.4. [[DEL, EXISTS] Видалити ключ, перевірити навність ключа](#p-3.4)
-  * 3.5. [Як зберегти JSON в Redis](#p-3.5)
-  * 3.6. [Корисні посилання по redis](#p-3.6)
-
-4. [Використання Redis сумісно з Python-flask application](#p-4)
-  * 4.1. [Опис програмного коду демки](#p-4.1)
-  * 4.2. [Підключення до redis](#p-4.2)
-  * 4.3. [Проста функція лічилька кількості викликів АПІ](#p-4.3)
-  * 4.4. [Розробка API методів, що дозволяюь створити ключ, прочитати занчення ключа, отримати список всіх ключів в Redis](#p-4.4)
-5. [Запуск та налаштування контейнерів](#p-5)
-6. [Запуск контейнерів docker compose](#p-6)
+2. [Різниця в запуску flask application](#p-2)
+3. [Підготовка Dockerfile](#p-3)
+4. [Підготовка файлів типу docker-compose  для запуску в різних режимах](#p-4)
+5. [Налаштування Visual Studio Code](#p-5)
+6. [Запуск та підключення до debug з Visual Studio COde](#p-6)
 
 
 <!-- TOC END -->
 
-https://dev.to/pacheco/dockerize-a-flask-app-and-debug-with-vscode-34i1
-https://github.com/pachecoio/flask-api
 
-Debug flask in container
-
-- https://dev.to/pacheco/dockerize-a-flask-app-and-debug-with-vscode-34i1
-Дуже цікаво. Мабуть те що треба
-https://github.com/pachecoio/flask-api
-
-
-- https://trstringer.com/python-flask-debug-docker-compose/
-Тут теж інший варіант debug.
-
-- https://code.visualstudio.com/docs/containers/quickstart-python
-  https://code.visualstudio.com/docs/containers/debug-python
-
-  Тут опис від VSC
-
-
-- https://vladyslav-krylasov.medium.com/how-to-use-pdb-inside-a-docker-container-eeb230de4d11
-  https://dev.to/zahaar/pdb-ipdb-in-docker-compose-enable-interactive-debugging-1goj
-Тут ще debug
 
 
 
@@ -86,7 +54,7 @@ Flask template розробдений таким чином, що  його мо
 - налаштувати правильно файл  ".vscode/launch.json" для підключення до контейнера по порту 5678
 - Підготувати правильно Dockerfile та docker-compose.yaml
 
-## Підготовка Dockerfile
+## <a name="p-3">Підготовка Dockerfile</a>
 
 Для запуску в *productive mode** Dockerfile виглядава таким чином:
 
@@ -156,7 +124,7 @@ CMD /usr/libexec/s2i/run
 ```
 
 
-## Підготовка файлів типу docker-compose  для запуску в різних режимах
+## <a name="p-4">Підготовка файлів типу docker-compose  для запуску в різних режимах</a>
 
 А на [pic-02](#pic-02)  показані коротке пояснення, як stage з **Dockerfile** відображається на yaml з docker compose
 
@@ -179,7 +147,7 @@ python -m debugpy --listen 0.0.0.0:5678 --wait-for-client -m flask run -h 0.0.0.
 
 
 
-## Налаштування Visual Studio Code
+## <a name="p-5">Налаштування Visual Studio Code</a>
 
 
 Для налаштування Visual Studio Code потрібно в файл: ".vscode/launch.json" блок для підключення:
@@ -202,7 +170,7 @@ python -m debugpy --listen 0.0.0.0:5678 --wait-for-client -m flask run -h 0.0.0.
 В полі **remoteRoot** потрібно вказати каталог де знаходиться програмний код вашого додатку  в контейнері. Для UBI8 це **/opt/app-root/src**. А в приципі, можна отримати, якщо підключится до контейнера перейти в ваш каталог та виконати команду linux **pwd**.  
 
 
-## Запуск та підключення до debug з Visual Studio COde
+## <a name="p-6">Запуск та підключення до debug з Visual Studio COde</a>
 
 Ну і тепер порібно це все запустити. 
 
@@ -258,3 +226,4 @@ docker-compose -f docker-compose-prod.yaml up --build smplapp-srvc-redis
 
 
 Ну, таким чином, можна вважати що  Remote Debug  для Flask app ,  що запущено в контейнері виконано.
+
