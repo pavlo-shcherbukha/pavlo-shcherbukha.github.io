@@ -87,7 +87,7 @@ CMD /usr/libexec/s2i/run
 Ось останню особливість і викристаємо. А при старті docker-compose вкажемо, яка stage у тезі **target** мається на увазі:
 [Compose file version 3 reference](https://docs.docker.com/compose/compose-file/compose-file-v3/)
 
-<kbd><img src="../assets/img/posts/2022-09-02-python-flask-4/doc/pic-01.png" /></kbd>
+<kbd><img src="/assets/img/posts/2022-09-02-python-flask-4/doc/pic-01.png" /></kbd>
 <p style="text-align: center;"><a name="pic-01">pic-01</a></p> 
 
 - Для debug mode **target: DEBUG**
@@ -129,7 +129,7 @@ CMD /usr/libexec/s2i/run
 
 А на [pic-02](#pic-02)  показані коротке пояснення, як stage з **Dockerfile** відображається на yaml з docker compose
 
-<kbd><img src="../assets/img/posts/2022-09-02-python-flask-4/doc/pic-02.png" /></kbd>
+<kbd><img src="/assets/img/posts/2022-09-02-python-flask-4/doc/pic-02.png" /></kbd>
 <p style="text-align: center;"><a name="pic-02">pic-02</a></p> 
 
 
@@ -143,7 +143,7 @@ python -m debugpy --listen 0.0.0.0:5678 --wait-for-client -m flask run -h 0.0.0.
 
 На [pic-03](#pic-03) показана порівняльна характеристика docker-comppose - файлів для різних режимів запуску, що будуються з єдного dockerfile.
 
-<kbd><img src="../assets/img/posts/2022-09-02-python-flask-4/doc/pic-03.png" /></kbd>
+<kbd><img src="/assets/img/posts/2022-09-02-python-flask-4/doc/pic-03.png" /></kbd>
 <p style="text-align: center;"><a name="pic-03">pic-03</a></p> 
 
 
@@ -195,13 +195,13 @@ docker-compose -f docker-compose-prod.yaml up --build smplapp-srvc-redis
 
 Спершу виконується побудова образу, потім контейнер запускається і завмирає на **Attachin to ......** (обведено червоною рамочкою на pic-04)
 
-<kbd><img src="../assets/img/posts/2022-09-02-python-flask-4/doc/pic-04.png" /></kbd>
+<kbd><img src="/assets/img/posts/2022-09-02-python-flask-4/doc/pic-04.png" /></kbd>
 <p style="text-align: center;"><a name="pic-04">pic-04</a></p> 
 
 
 В цей момент потріно переклчитися на Visual Studio Code  та вирати  налаштований вами в попередньому пункті режим підключення  до контейнера [pic-05](#pic-05)
 
-<kbd><img src="../assets/img/posts/2022-09-02-python-flask-4/doc/pic-05.png" /></kbd>
+<kbd><img src="/assets/img/posts/2022-09-02-python-flask-4/doc/pic-05.png" /></kbd>
 <p style="text-align: center;"><a name="pic-05">pic-05</a></p> 
 
 
@@ -209,20 +209,20 @@ docker-compose -f docker-compose-prod.yaml up --build smplapp-srvc-redis
 
 І от диво, сервіс стартонув у контейнері [pic-06](#pic-06)
 
-<kbd><img src="../assets/img/posts/2022-09-02-python-flask-4/doc/pic-06.png" /></kbd>
+<kbd><img src="/assets/img/posts/2022-09-02-python-flask-4/doc/pic-06.png" /></kbd>
 <p style="text-align: center;"><a name="pic-06">pic-06</a></p> 
 
 
 Ну а якщо відкрити файл view.py поставити brakepoint  на обробнику метода /api/health  то отримаємо  зупинку програми при зверенні до http://localhost:8081/api/health  як на  [pic-07](#pic-07).
 
-<kbd><img src="../assets/img/posts/2022-09-02-python-flask-4/doc/pic-07.png" /></kbd>
+<kbd><img src="/assets/img/posts/2022-09-02-python-flask-4/doc/pic-07.png" /></kbd>
 <p style="text-align: center;"><a name="pic-07">pic-07</a></p> 
 
 
 Якщо ж виконати запуск в продуктивному режимі, то  на [pic-08](#pic-08) видно як воно швидко стартує, та ще й в 4 потоках (там для кожного pid в лог записується). 
 
 
-<kbd><img src="../assets/img/posts/2022-09-02-python-flask-4/doc/pic-08.png" /></kbd>
+<kbd><img src="/assets/img/posts/2022-09-02-python-flask-4/doc/pic-08.png" /></kbd>
 <p style="text-align: center;"><a name="pic-08">pic-08</a></p> 
 
 
