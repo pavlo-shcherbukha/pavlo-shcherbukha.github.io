@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Python-flask how to create and process multipart/form-data requests"
-date: 2023-06-06 10:00:01
+date: 2023-02-06 10:00:01
 categories: [python, flask]
 permalink: posts/2023-02-06/2023-02-06-python-flask-multipart-formdata/
 published: true
