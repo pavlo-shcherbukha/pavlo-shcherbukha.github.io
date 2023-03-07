@@ -132,3 +132,26 @@ Keycloak підтримує як OpenID Connect (розширення OAuth 2.0)
 - **assistent_users** -  група кристувачів,  що  повинна тільки читати дані. Тобто цій групі повинна відповідати прикладна роль **app_viewer**.
 
 - **manager_users** - група користувачів, що можуть змінювати дані. Тобто цій групі повинна відповідати роль **app_editor**. 
+
+Процес створення груп показано на [pic-12](#pic-12) та  [pic-13](#pic-13).
+
+
+<kbd><img src="../assets/img/posts/2023-03-02-keycloak-openshift/doc/pic-12.png" /></kbd>
+<p style="text-align: center;"><a name="pic-12">pic-12</a></p>
+
+
+<kbd><img src="../assets/img/posts/2023-03-02-keycloak-openshift/doc/pic-13.png" /></kbd>
+<p style="text-align: center;"><a name="pic-13">pic-13</a></p>
+
+Далі, потрібно пройтися по користувачах і додати кожного у відповідін групи так, як показано на [pic-14](#pic-14).
+
+<kbd><img src="../assets/img/posts/2023-03-02-keycloak-openshift/doc/pic-14.png" /></kbd>
+<p style="text-align: center;"><a name="pic-14">pic-14</a></p>
+
+Тут треба зазначити, що якщо keycloak інтегрувати з Active Directory -  то гурпи користувачів будть ззразу відображатися і розносити коритсувачів по групах в KeyCloak  не потрібно. Це робиться в Active Directory. У підсумку, користувачі по групах рознесені так, як показано на [pic-15](#pic-15).
+
+<kbd><img src="../assets/img/posts/2023-03-02-keycloak-openshift/doc/pic-15.png" /></kbd>
+<p style="text-align: center;"><a name="pic-15">pic-15</a></p>
+
+
+На цьому етапі  співставлення: користувачі-групи-client roles виконано. можна переходити до етапа тестування логіну.
