@@ -215,5 +215,5 @@ curl -X POST -k -H 'Content-Type: application/x-www-form-urlencoded' -i 'https:/
 
 Під одним логіном можна отримати кілька токенів і вони всі будуть дійсні, якщо їх період дії пересікається. Ну можна вибрати ще одного користувача, usr4  [pic-18](#pic-18).
 
-<kbd><img src="../assets/img/posts/2023-03-02-keycloak-openshift/doc/pic-18.png" /></kbd>
+<kbd><img src="/assets/img/posts/2023-03-02-keycloak-openshift/doc/pic-18.png" /></kbd>
 <p style="text-align: center;"><a name="pic-18">pic-18</a></p>
