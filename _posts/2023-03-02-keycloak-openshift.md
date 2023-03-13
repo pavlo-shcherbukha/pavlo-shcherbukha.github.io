@@ -11,25 +11,28 @@ published: true
 
 - [1. Інтеграція keycloak з vue.js, Node.js express в openhsift](#p-1)
 - [2. Розгортаня keycloak  в OpenShift](#p-2)
-- [3. Основні терміни адмінітрування Keycloak](#p-3)
+- [3. Основні терміни адміністрування Keycloak](#p-3)
 - [4. Ручна реєстрація програми клієнта](#p-4)
 - [5. Налаштування прикладних ролей для програми клієнта](#p-5)
 - [6. Створення користувачів для призначення їм ролей](#p-6)
 - [7. Отримання авторизаційного токену по протоколу openid-connect](#p-7)
+- [8. Захист Node.js express Rest API  за допомогою KeyCloak](#p-8)
 <!-- TOC END -->
 
 ## <a name="p-1">Інтеграція keycloak з vue.js, Node.js express в openhsift </a>
 
-Продук [Keycloack](https://www.keycloak.org/) є зараз типовим  інструментом для авторизації в Web-based системах.  Документацію можна знайти за лінком: 
+Продук [Keycloack](https://www.keycloak.org/) є зараз типовим  інструментом для авторизації в Web-based системах.  Документацію можна знайти за лінками: 
 - Основна документація знаходиться за лінком [documentation](https://www.keycloak.org/documentation);
-- За цим лінком знаходяться більш фокусовані описи [Фокусовані описи](https://www.keycloak.org/guides).
+- За цим лінком знаходяться більш сфокусовані описи [Фокусовані описи](https://www.keycloak.org/guides).
 
-Ну на цьому зацікавився цим продуктом, щоб трохи розібратися як він працює та як його конфігурвати.
+Ну на цьому зацікавився цим продуктом, щоб трохи розібратися як він працює та як його конфігурвати. Це більше про те, як підключитися клієнтом до keycloak  а не про те, як правильно його розгортати та конфігурувати.
 
 
 ## <a name="p-2">Розгортаня keycloak  в OpenShift</a>
 
-За звичай keycloak  можна підняти в контейнері, але він страртує в development mode. Так також там треба прив'язати базу даних типу postgresql. Я вирішив піти більш простим шляхом і роззоргнув його в хмарі RadHat в sendbox  OpsnShift.  Openshift sendbox можна створити за url: https://developers.redhat.com/developer-sandbox, а перед цим потрібно зарєструватися як developer на RedHat. Docker відкинув зразу, тому що  прочитав ліцензійні обмеження для корпорацій.
+За звичай keycloak  можна підняти в контейнері, але він страртує в development mode. Також, там треба прив'язати базу даних типу postgresql. Я вирішив піти більш простим шляхом і розгорнув його в хмарі RadHat в sendbox  OpsnShift.  Openshift sendbox можна створити за url: https://developers.redhat.com/developer-sandbox, а перед цим потрібно зарєструватися як developer на RedHat. Docker відкинув зразу, тому що  прочитав ліцензійні обмеження для корпорацій, що описані за лінокм [pricing](https://www.docker.com/pricing/) в самому низу стріник, і відмовився.
+
+> Docker Desktop is free to use, as part of the Docker Personal subscription, for individuals, non-commercial open source developers, students and educators, and small businesses of less than 250 employees AND less than $10 million in revenue. Commercial use of Docker Desktop at a company of more than 250 employees OR more than $10 million in annual revenue requires a paid subscription (Pro, Team, or Business) to use Docker Desktop. While the effective date of these terms is August 31, 2021, there is a grace period until January 31, 2022 for those that require a paid subscription to use Docker Desktop.
 
 Щоб не мучитися з  лінкуванням бази даних та самого  сервісу keycloak  я використав калог уже підготованих продуктів, що є вже в любому OpenShift і в пару кліків розгорнув додаток [pic-01](#pic-01). 
 
@@ -57,7 +60,7 @@ published: true
 <p style="text-align: center;"><a name="pic-05">pic-05</a></p>
 
 
-## <a name="p-3">Основні терміни адмінітрування Keycloak</a>
+## <a name="p-3">Основні терміни адміністрування Keycloak</a>
 
 Адміністрування в keycloak ділиться на **realm**-и. 
 - **Realm**  це одниця адміністрування, що інкапсулює в собі набори: користувачів, ролей, груп та набори додаткових повноважень (чи  прав). Тому, переше, що робимо,  реєструємо свій realm. Назвемо його **shdemorealm**. На [pic-06](#pic-06) показані основні елементи realm.
@@ -217,3 +220,395 @@ curl -X POST -k -H 'Content-Type: application/x-www-form-urlencoded' -i 'https:/
 
 <kbd><img src="/assets/img/posts/2023-03-02-keycloak-openshift/doc/pic-18.png" /></kbd>
 <p style="text-align: center;"><a name="pic-18">pic-18</a></p>
+
+
+# <a name="p-8">Захист Node.js express Rest API  за допомогою KeyCloak</a>
+
+В документації до Keycloak [Securing Applications and Services Guide](s://www.keycloak.org/docs/latest/securing_apps/index.html) є розділ по інтеграції додатків Node.js з keycloak [2.3. Node.js adapter](https://www.keycloak.org/docs/latest/securing_apps/index.html#_nodejs_adapter). Рекомендується використовувати пакет [keycloak-connect](https://www.npmjs.com/package/keycloak-connect), при цьому він парцює  разом з [express-session](https://www.npmjs.com/package/express-session).
+
+Тому для демонстрації підготовано приклад  простого додатку [todo_srvc - Node.js exptress  REST API with keycloak security](https://github.com/pavlo-shcherbukha/todo_srvc), що використовує  [keycloak-connect](https://www.npmjs.com/package/keycloak-connect) для захисту RestAPI. Опист розгортання додтаку та розробені API описано в [readme.md](https://github.com/pavlo-shcherbukha/todo_srvc/blob/main/README.md). Додаток використовує realm та client_id,  що були створені в попередньому розділі.
+
+Завантаження бібліотеки  [keycloak-connect](https://www.npmjs.com/package/keycloak-connect) відубвається у файлі [/server/config/keycloak-config.js](https://github.com/pavlo-shcherbukha/todo_srvc/blob/main/server/config/keycloak-config.js).  А вже саме її підклчення для викоритсання, разом з [express-session](https://www.npmjs.com/package/express-session), виконується в файлі [/server/server.js](https://github.com/pavlo-shcherbukha/todo_srvc/blob/main/server/server.js):
+
+```js
+// Включаємо  session memory store
+const memoryStore = new session.MemoryStore()
+
+app.use(session({
+  secret: 'mySecret',
+  resave: false,
+  saveUninitialized: true,
+  store: memoryStore
+}))
+
+
+// включаємо keycloack
+const keycloak = require('./config/keycloak-config.js').initKeycloak(memoryStore);
+app.use(keycloak.middleware());
+
+```
+
+Також, потрібно звернути увагу на те, що всі АПІ, які не повинні використовувати захист keycloak  потрібно розмістити вище цього участку коду. В іншому разі keycloak буде перевіряти наявність http-заголовка з   токеном:
+
+```text
+  Authorization: Bearer <token>
+
+```
+
+А, для прикладу, коли у вас використовується fronend,  то браузер шле на backend  запити **options** і явно без цього заголовка. Тому, в  цій демці методи **options** та метод перевірки доступності сервера "api/health"  розміщені до момента підключення keycloak.
+
+Як було  показано раніше,  на рівні клієнта створено 2 ролі: **app_viewer** та **app_editor**.  Для захисту API можна використати конструкцію **keycloak.protect**,  де в масиві  передати список доступних ролей.
+
+```js
+keycloak.protect(  [ 'app_editor' ,'app_viewe' ]  )
+```
+
+Ось для прикладу:
+
+```js
+app.get('/api/todos',  keycloak.protect(  [ 'app_editor' ,'app_viewe' ]  ), function(req, res) {
+  let label='todos';
+  applog.info( 'call api/todos method', label);
+  try{
+      let result=i_todos;
+      return res.status(200).json( result );
+  } 
+  catch (err){
+      applog.error( `Error ${err.message} `, label);
+      errresp=applib.HttpErrorResponse(err)
+      applog.error( `Error result ${errresp.Error.statusCode} ` + JSON.stringify( errresp )   ,label);
+      return res.status(errresp.Error.statusCode ).json(errresp);    
+
+  }
+
+});  
+
+app.post('/api/todo',  keycloak.protect( [ 'app_editor' ]),  function(req, res) {
+  let label='todo';
+  applog.info( 'call api/todo method', label);
+  let body=req.body;
+  try { 
+      applog.info( 'Check propery [name]', label);
+      if (!body.hasOwnProperty("name")){
+        throw new apperror.ValidationError( 'key [name] is absend' );
+      }
+      applog.info( 'Check propery [description]', label);
+      if (!body.hasOwnProperty("description")){
+        throw new apperror.ValidationError( 'key [description] is absend' );
+
+      }
+      applog.info( 'Check propery [owner]', label);
+      if (!body.hasOwnProperty("owner")){
+        throw new apperror.ValidationError( 'key [owner] is absend' );
+      }
+      applog.info( 'Return result', label);
+      
+      body["id"] = uuid.v4()
+      i_todos.push(  body )
+      let result={"id": body.id};
+      return res.status(200).json( result );
+
+  } 
+  catch (err){
+    applog.error( `Error ${err.message} `, label);
+    errresp=applib.HttpErrorResponse(err)
+    applog.error( `Error result ${errresp.Error.statusCode} ` + JSON.stringify( errresp )   ,label);
+    return res.status(errresp.Error.statusCode ).json(errresp);
+
+  }
+
+});
+
+```
+
+Але, як на мене, це ну дуже гунучний метод. Мені б хотілося, з токена отримати інформацію про користувача, та  номер сесії. Більш того, хотілося б якось запараметризувати відповідність URL (path)  та доступних ролей. Цього можна досягти, якщо  прочитиати увжано документацію до бібліотеки, де сказано, що  в **keycloak.protect()**  можна пыдставляти не тыльки масив ролей а і свою функцію, якак в якості парамтерів приймає token та requset, так як показано далі:
+
+```js
+/**
+ * Перевірка доступа
+ * @param {*} token 
+ * @param {*} request 
+ * @returns  true or false
+ */
+function checkAccess(token, request) {
+  let label='checkAccess';
+  let is_role=false ;
+  if ( token.hasRole( "rolename") ) {
+      is_role=true ;
+
+  }
+
+  applog.info(`checkAccess Method: ${request.method} Path: ${request.path}`, label);
+  return is_role;
+}  
+
+
+app.post('/api/todo',   keycloak.protect(  checkAccess  ) ,  function(req, res) {
+  let label='todo';
+  applog.info( 'call api/todo method', label);
+});  
+
+
+```
+
+От цей підхід і можна використати. Для цього потібно підготувати json стурктура, що пов'язує:
+- http  метод;
+- path (частину url);
+- масив ролей, яким достуний виклик даного методі.
+
+На приклад, зробимо такий **/server/config/accessRoles.json ** :
+
+[
+  {"method": "GET",    "path": "/api/todos", "accessroles": ["app_editor", "app_viewer" ]},
+  {"method": "POST",   "path": "/api/todo", "accessroles": ["app_editor"]},
+  {"method": "GET",    "path": "/api/todo/:todoid", "accessroles": ["app_viewer", "app_editor" ]},
+  {"method": "DELETE", "path": "/api/todo/:todoid", "accessroles": ["app_editor"]}
+]
+
+Для співставлення path реального URL  та заданого в файлі використаємо пакет: **url-pattern**. Фінальний варіант функції та її використання показані уже в git репозиторії. На додачу до цього додамо логування в метода реквізити username та state (що аналогічно ідентифікатору сесії). Ось лог роботи сервісу, коли методи виклкаємо для користуачів usr1  - app_viewer  та usr4 - app_editor. По логу можна побачити, що метод POST Path: /api/todo (label=createTodo) достпно для користувача usr4 та не доступно для usr1, чого і хотіли досягти. И бачимо, що викли кожного метода супрводжується логуванням, в якому присутні username - логін користуача та state-ідентифікатор сесії. Тобто по ньому можна відслідкувати послідовність викликів сесії. 
+
+```json
+        [
+            {
+                "hostname": "localhost",
+                "label": "server",
+                "level": "info",
+                "message": "SERVER HAS STARTED",
+                "state": null,
+                "timestamp": "2023-03-13T21:23:13.765765+02:00",
+                "username": null
+            },
+            {
+                "hostname": "localhost",
+                "label": "server",
+                "level": "info",
+                "message": "LISTENING  PORT= 8080 on HOST localhost",
+                "state": null,
+                "timestamp": "2023-03-13T21:23:13.767767+02:00",
+                "username": null
+            },
+            {
+                "hostname": "localhost",
+                "label": "checkAccess",
+                "level": "info",
+                "message": "checkAccess Method: GET Path: /api/todos",
+                "state": null,
+                "timestamp": "2023-03-13T21:24:01.980980+02:00",
+                "username": null
+            },
+            {
+                "hostname": "localhost",
+                "label": "checkAccess",
+                "level": "info",
+                "message": "Set session param ",
+                "state": null,
+                "timestamp": "2023-03-13T21:24:01.983983+02:00",
+                "username": null
+            },
+            {
+                "hostname": "localhost",
+                "label": "checkAccess",
+                "level": "info",
+                "message": "Check parmission of: usr1 - Петро Петренко state= a9552b74-24ac-4926-87ec-1ccc4d6b026a",
+                "state": null,
+                "timestamp": "2023-03-13T21:24:01.985985+02:00",
+                "username": null
+            },
+            {
+                "hostname": "localhost",
+                "label": "checkAccess",
+                "level": "info",
+                "message": "Check parmission : usr1 - Петро Петренко state= a9552b74-24ac-4926-87ec-1ccc4d6b026a  against Method: GET Path: /api/todos  RESULT: true",
+                "state": null,
+                "timestamp": "2023-03-13T21:24:01.993993+02:00",
+                "username": null
+            },
+            {
+                "hostname": "localhost",
+                "label": "todos",
+                "level": "info",
+                "message": "call api/todos method",
+                "state": "a9552b74-24ac-4926-87ec-1ccc4d6b026a",
+                "timestamp": "2023-03-13T21:24:01.997997+02:00",
+                "username": "usr1"
+            },
+            {
+                "hostname": "localhost",
+                "label": "checkAccess",
+                "level": "info",
+                "message": "checkAccess Method: POST Path: /api/todo",
+                "state": null,
+                "timestamp": "2023-03-13T21:24:21.643643+02:00",
+                "username": null
+            },
+            {
+                "hostname": "localhost",
+                "label": "checkAccess",
+                "level": "info",
+                "message": "Set session param ",
+                "state": null,
+                "timestamp": "2023-03-13T21:24:21.645645+02:00",
+                "username": null
+            },
+            {
+                "hostname": "localhost",
+                "label": "checkAccess",
+                "level": "info",
+                "message": "Check parmission of: usr1 - Петро Петренко state= a9552b74-24ac-4926-87ec-1ccc4d6b026a",
+                "state": null,
+                "timestamp": "2023-03-13T21:24:21.647647+02:00",
+                "username": null
+            },
+            {
+                "hostname": "localhost",
+                "label": "checkAccess",
+                "level": "info",
+                "message": "Check parmission : usr1 - Петро Петренко state= a9552b74-24ac-4926-87ec-1ccc4d6b026a  against Method: POST Path: /api/todo  RESULT: false",
+                "state": null,
+                "timestamp": "2023-03-13T21:24:21.651651+02:00",
+                "username": null
+            },
+            {
+                "hostname": "localhost",
+                "label": "checkAccess",
+                "level": "info",
+                "message": "checkAccess Method: GET Path: /api/todos",
+                "state": null,
+                "timestamp": "2023-03-13T21:24:52.391391+02:00",
+                "username": null
+            },
+            {
+                "hostname": "localhost",
+                "label": "checkAccess",
+                "level": "info",
+                "message": "Set session param ",
+                "state": null,
+                "timestamp": "2023-03-13T21:24:52.394394+02:00",
+                "username": null
+            },
+            {
+                "hostname": "localhost",
+                "label": "checkAccess",
+                "level": "info",
+                "message": "Check parmission of: usr4 - Денис Денисов state= c41a18f6-7617-4415-a477-86c5950f691c",
+                "state": null,
+                "timestamp": "2023-03-13T21:24:52.395395+02:00",
+                "username": null
+            },
+            {
+                "hostname": "localhost",
+                "label": "checkAccess",
+                "level": "info",
+                "message": "Check parmission : usr4 - Денис Денисов state= c41a18f6-7617-4415-a477-86c5950f691c  against Method: GET Path: /api/todos  RESULT: true",
+                "state": null,
+                "timestamp": "2023-03-13T21:24:52.399399+02:00",
+                "username": null
+            },
+            {
+                "hostname": "localhost",
+                "label": "todos",
+                "level": "info",
+                "message": "call api/todos method",
+                "state": "c41a18f6-7617-4415-a477-86c5950f691c",
+                "timestamp": "2023-03-13T21:24:52.403403+02:00",
+                "username": "usr4"
+            },
+            {
+                "hostname": "localhost",
+                "label": "checkAccess",
+                "level": "info",
+                "message": "checkAccess Method: POST Path: /api/todo",
+                "state": null,
+                "timestamp": "2023-03-13T21:25:06.717717+02:00",
+                "username": null
+            },
+            {
+                "hostname": "localhost",
+                "label": "checkAccess",
+                "level": "info",
+                "message": "Set session param ",
+                "state": null,
+                "timestamp": "2023-03-13T21:25:06.720720+02:00",
+                "username": null
+            },
+            {
+                "hostname": "localhost",
+                "label": "checkAccess",
+                "level": "info",
+                "message": "Check parmission of: usr4 - Денис Денисов state= c41a18f6-7617-4415-a477-86c5950f691c",
+                "state": null,
+                "timestamp": "2023-03-13T21:25:06.721721+02:00",
+                "username": null
+            },
+            {
+                "hostname": "localhost",
+                "label": "checkAccess",
+                "level": "info",
+                "message": "Check parmission : usr4 - Денис Денисов state= c41a18f6-7617-4415-a477-86c5950f691c  against Method: POST Path: /api/todo  RESULT: true",
+                "state": null,
+                "timestamp": "2023-03-13T21:25:06.725725+02:00",
+                "username": null
+            },
+            {
+                "hostname": "localhost",
+                "label": "createtodo",
+                "level": "info",
+                "message": "call post api/todo method",
+                "state": "c41a18f6-7617-4415-a477-86c5950f691c",
+                "timestamp": "2023-03-13T21:25:06.729729+02:00",
+                "username": "usr4"
+            },
+            {
+                "hostname": "localhost",
+                "label": "createtodo",
+                "level": "info",
+                "message": "Check propery [name]",
+                "state": "c41a18f6-7617-4415-a477-86c5950f691c",
+                "timestamp": "2023-03-13T21:25:06.732732+02:00",
+                "username": "usr4"
+            },
+            {
+                "hostname": "localhost",
+                "label": "createtodo",
+                "level": "info",
+                "message": "Check propery [description]",
+                "state": "c41a18f6-7617-4415-a477-86c5950f691c",
+                "timestamp": "2023-03-13T21:25:06.734734+02:00",
+                "username": "usr4"
+            },
+            {
+                "hostname": "localhost",
+                "label": "createtodo",
+                "level": "info",
+                "message": "Check propery [owner]",
+                "state": "c41a18f6-7617-4415-a477-86c5950f691c",
+                "timestamp": "2023-03-13T21:25:06.736736+02:00",
+                "username": "usr4"
+            },
+            {
+                "hostname": "localhost",
+                "label": "createtodo",
+                "level": "info",
+                "message": "Return result",
+                "state": "c41a18f6-7617-4415-a477-86c5950f691c",
+                "timestamp": "2023-03-13T21:25:06.738738+02:00",
+                "username": "usr4"
+            }
+        ]
+
+
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
