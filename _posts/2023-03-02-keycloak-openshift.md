@@ -1,9 +1,9 @@
 ---
 layout: post
-title: "Keycloak vue.js node.js couchdb on openhsift"
+title: "Keycloak vue.js node.js on openhsift"
 date: 2023-03-02 10:00:01
-categories: [keycloak, node.js, vue.js, couchdb, openshift]
-permalink: posts/2023-03-02/Keycloak vue.js node.js couchdb on openhsift/
+categories: [keycloak, node.js, vue.js, openshift]
+permalink: posts/2023-03-02/Keycloak vue.js node.js on openhsift/
 published: true
 ---
 
