@@ -248,14 +248,14 @@ app.use(keycloak.middleware());
 
 ```
 
-Також, потрібно звернути увагу на те, що всі АПІ, які не повинні використовувати захист keycloak  потрібно розмістити вище цього участку коду. В іншому разі keycloak буде перевіряти наявність http-заголовка з   токеном:
+Також, потрібно звернути увагу на те, що всі АПІ, які не повинні використовувати захист keycloak  потрібно розмістити вище цього участку коду. Інакше, keycloak буде перевіряти наявність http-заголовка Authorization з токеном:
 
 ```text
   Authorization: Bearer <token>
 
 ```
 
-А, для прикладу, коли у вас використовується fronend,  то браузер шле на backend  запити **options** і явно без цього заголовка. Тому, в  цій демці методи **options** та метод перевірки доступності сервера "api/health"  розміщені до момента підключення keycloak.
+А, для прикладу, коли у вас використовується fronend,  то браузер шле на backend http запити **options** і явно без цього заголовка. Тому, в  цій демці методи **options** та метод перевірки доступності сервера "api/health"  розміщені до момента підключення keycloak.
 
 Як було  показано раніше,  на рівні клієнта створено 2 ролі: **app_viewer** та **app_editor**.  Для захисту API можна використати конструкцію **keycloak.protect**,  де в масиві  передати список доступних ролей.
 
@@ -321,7 +321,7 @@ app.post('/api/todo',  keycloak.protect( [ 'app_editor' ]),  function(req, res) 
 
 ```
 
-Але, як на мене, це ну дуже гунучний метод. Мені б хотілося, з токена отримати інформацію про користувача, та  номер сесії. Більш того, хотілося б якось запараметризувати відповідність URL (path)  та доступних ролей. Цього можна досягти, якщо  прочитиати увжано документацію до бібліотеки, де сказано, що  в **keycloak.protect()**  можна пыдставляти не тыльки масив ролей а і свою функцію, якак в якості парамтерів приймає token та requset, так як показано далі:
+Але, як на мене, це не дуже гнучний метод. Мені б хотілося, з токена отримати інформацію про користувача, та  номер сесії. Більш того, хотілося б якось запараметризувати відповідність URL (path)  та доступних ролей. Цього можна досягти, якщо  прочитиати увжано документацію до бібліотеки, де сказано, що  в **keycloak.protect()**  можна використовувати не тільки масив ролей а і свою функцію, яка в якості парамтерів приймає token та requset, так, як показано далі фрагмент функції та приклад її використання. Перевірка наявності тієї чи іншої ролі виконується функцією **token.hasRole( "rolename")**. А сама функція контролю доступа повинна повертати boolean: true-дозволено, false-не дозволено.
 
 ```js
 /**
@@ -351,13 +351,14 @@ app.post('/api/todo',   keycloak.protect(  checkAccess  ) ,  function(req, res) 
 
 ```
 
-От цей підхід і можна використати. Для цього потібно підготувати json стурктура, що пов'язує:
+От цей підхід і можна використати. Для цього потібно підготувати json стурктуру, що пов'язує:
 - http  метод;
 - path (частину url);
 - масив ролей, яким достуний виклик даного методі.
 
-На приклад, зробимо такий **/server/config/accessRoles.json ** :
+На приклад, зробимо такий **/server/config/accessRoles.json** :
 
+```json
 [
   {"method": "GET",    "path": "/api/todos", "accessroles": ["app_editor", "app_viewer" ]},
   {"method": "POST",   "path": "/api/todo", "accessroles": ["app_editor"]},
@@ -365,7 +366,124 @@ app.post('/api/todo',   keycloak.protect(  checkAccess  ) ,  function(req, res) 
   {"method": "DELETE", "path": "/api/todo/:todoid", "accessroles": ["app_editor"]}
 ]
 
-Для співставлення path реального URL  та заданого в файлі використаємо пакет: **url-pattern**. Фінальний варіант функції та її використання показані уже в git репозиторії. На додачу до цього додамо логування в метода реквізити username та state (що аналогічно ідентифікатору сесії). Ось лог роботи сервісу, коли методи виклкаємо для користуачів usr1  - app_viewer  та usr4 - app_editor. По логу можна побачити, що метод POST Path: /api/todo (label=createTodo) достпно для користувача usr4 та не доступно для usr1, чого і хотіли досягти. И бачимо, що викли кожного метода супрводжується логуванням, в якому присутні username - логін користуача та state-ідентифікатор сесії. Тобто по ньому можна відслідкувати послідовність викликів сесії. 
+```
+Для співставлення path реального URL  та заданого в файлі використаємо пакет: **url-pattern**.  Доречі, виявив, що пакет на працює з масками імен, що майть "_":  ":todoid - співставляє", а ":todo_id - не співставляє".   Фінальний варіант функції та її використання показані уже в git репозиторії. На додачу до цього додамо логування в метода реквізити username та state (що аналогічно ідентифікатору сесії). 
+
+Також, слід звернути увагу на частину куду в функції **checkAccess**, а саме:
+- Параметр token надходить у вигляді розшифрованої JSON об'єкту, де в ключі **resource_access**  мжна побачити  ролі користувача для заданого client-id, а в ключі **realm_access** доступні користувачу realm ролі;
+
+```json
+{
+  token: "eyJhbGc.......jEmYLHmeg",
+  clientId: "DemoApp1",
+  header: {
+    alg: "RS256",
+    typ: "JWT",
+    kid: "jott31qT3_Vutuz6yt9k2......lsJizig",
+  },
+  content: {
+    exp: 1678552102,
+    iat: 1678551802,
+    jti: "21954b73-6579-4e42-b260-8f08840b0084",
+    iss: "https://hostname/auth/realms/DemoApp1",
+    aud: "account",
+    sub: "228501ff-8d5c-4224-9fe7-8a72fa5db426",
+    typ: "Bearer",
+    azp: "DemoApp1",
+    session_state: "9310df83-1f52-43b1-b64f-6cc74d090c8f",
+    acr: "1",
+    "allowed-origins": [
+      "",
+    ],
+    realm_access: {
+      roles: [
+        "offline_access",
+        "uma_authorization",
+        "default-roles-iitregsrvcr",
+      ],
+    },
+    resource_access: {
+      DemoApp1: {
+        roles: [
+          "app_editor",
+        ],
+      },
+      account: {
+        roles: [
+          "manage-account",
+          "manage-account-links",
+          "view-profile",
+        ],
+      },
+    },
+    scope: "email profile",
+    sid: "9310df83-1f52-43b1-b64f-6cc74d090c8f",
+    email_verified: false,
+    name: "Микола Роблюусьо",
+    preferred_username: "usr1",
+    given_name: "Микола",
+    family_name: "Роблюусьо",
+  },
+  signature: new Uint8Array([53, .........2]),
+  signed: "eyJ.....QviJ9",
+}
+
+
+```
+
+- цей токен через перемери сесії передається далі в запит на всі інші API;
+
+```js
+function checkAccess(token, request) {
+  let label='checkAccess';
+  let is_role=false ;
+  applog.info(`checkAccess Method: ${request.method} Path: ${request.path}`, label);
+  // в параметри http сесії записуємо token-об'єкт
+  applog.info("Set session param ", label);
+  request.session["keycloak-token"]=token;
+  ///..........
+}
+
+app.get('/api/todos',  keycloak.protect( checkAccess ), function(req, res) {
+  let label='todos';
+  // отримуэмо з запиту об'єкт-token  
+  let ssnk=req.session['keycloak-token'];
+
+  let alogctx= new LogContext();
+  let alog= new AppLogger();
+  alog.LogContext=alogctx;      
+  
+  // з token  читаю id сесії та логін користувача і заисую в лог для подальшого використання
+  alog.State=ssnk.content.session_state;  
+  alog.Username=ssnk.content.preferred_username;
+  
+  
+  alog.info( 'call api/todos method', label);
+  // ...........
+});
+
+
+```
+
+- Backend  сервіс може перевіряти доступ з інших client-id,  що внесені до одного й того ж realm. Для цього в ролі потрібно вказувати client-id. На приклад:
+
+```text
+[
+  /* роль перевіряються в client-id  backend*/
+  {"method": "GET",    "path": "/api/todos", "accessroles": ["app_editor", "app_viewer" ]},
+  /*перевіряється роль для client-id "demoapp2"*/
+  {"method": "POST",   "path": "/api/todo", "accessroles": ["demoapp2:app_editor"]},
+  {"method": "GET",    "path": "/api/todo/:todoid", "accessroles": ["demoapp2:app_viewer", "demoapp2:app_editor" ]},
+  /*В цьому прикладіперевіряється роль, що задана на весь realm*/
+  {"method": "DELETE", "path": "/api/todo/:todoid", "accessroles": ["realm:app_support"]}
+]
+
+```
+
+Таким чином, один back-end   може перевіряти доступи кількох front-end  в рамках одного realm. А, для приклду, групі support  можна зробити розширені доступа до всіх методів за допомогою введення одної спільної ralm- ролі.
+
+
+Ось лог роботи сервісу, коли методи виклкаємо для користуачів usr1  - app_viewer  та usr4 - app_editor. По логу можна побачити, що метод POST Path: /api/todo (label=createTodo) достпно для користувача usr4 та не доступно для usr1, чого і хотіли досягти. И бачимо, що викли кожного метода супрводжується логуванням, в якому присутні username - логін користуача та state-ідентифікатор сесії. Тобто по ньому можна відслідкувати послідовність викликів сесії. 
 
 ```json
         [
@@ -595,11 +713,8 @@ app.post('/api/todo',   keycloak.protect(  checkAccess  ) ,  function(req, res) 
                 "username": "usr4"
             }
         ]
-
-
-
-
 ```
+
 
 
 
