@@ -39,7 +39,6 @@ Flask template розроблений таким чином, що  його мо
 
 Для вбудовування програмного коду вирішив використовувати базовий [ubi8:python3.9](https://catalog.redhat.com/software/containers/ubi8/python-39/6065b24eb92fbda3a4c65d8f). Тут я процитую з опису до контейнера призначення основних env-змінних, 
 
-
 > **Environment variables**
 >
 > To set these environment variables, you can place them as a key value pair into a .s2i/environment file inside your source code repository.
