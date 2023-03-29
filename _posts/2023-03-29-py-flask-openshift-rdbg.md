@@ -294,5 +294,5 @@ parameters:
     required: true 
 ```
 
-При цьому deployment складається з 3 кроків [srvc-process.cmd](https://github.com/pavlo-shcherbukha/py-flask-rdbg/blob/main/openshift/ubi8_docker_deployment/srvc-process.cmd):
+При цьому deployment складається з 3 кроків [srvc-process.cmd](https://github.com/pavlo-shcherbukha/py-flask-rdbg/blob/main/openshift/ubi8_docker_deployment/srvc-process.cmd).
 
