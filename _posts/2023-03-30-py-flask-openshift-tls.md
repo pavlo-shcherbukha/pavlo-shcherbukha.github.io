@@ -17,44 +17,8 @@ published: true
 
 На приклад маємо таку архітектуру компонентів:
 
-```mermaid
-    C4Container
-    title Service oriented app
-    
-    Person(customer, Customer, "A customer in front of the laptop")
-
-    Container_Boundary(c2, "Application services") {
-        Container(app1_service, "Back End service", "", "")
-        Container(app2_service, "Back End service", "", "")
-    }
-
-    Container_Boundary(c1, "Database Rest API") {
-       
-        Container(appdbservice, "Rest API", "", "Ineract with  database only")
-        ContainerDb(database, "Database", "SQL Database")
-       
-
-    }
-
-    Rel( customer, app1_service, "user interacttion","http", "1")
-    Rel( customer, app2_service, "user interacttion","http", "2")
-    
-    Rel(app1_service,  "appdbservice", "http", "3")
-    Rel(app2_service,  "appdbservice", "http", "4")
-
-    BiRel(appdbservice,  "database", "sql-net", "5")
-
-    Rel(customer,  "appdbservice", http, "Forbidden interaction", "0")
-
-    UpdateRelStyle(customer,  "appdbservice" $textColor="red",$lineColor="red", $offsetY="-80", $offsetX="-120")
-
-
-    UpdateRelStyle(customer, app1_service, $textColor="blue",$lineColor="blue", $offsetY="-50", $offsetX="10")
-    UpdateRelStyle(customer, app2_service, $textColor="blue",$lineColor="blue", $offsetY="-140", $offsetX="-110")
-    
-    UpdateLayoutConfig($c4ShapeInRow="1", $c4BoundaryInRow="2")
-
-```
+<kbd><img src="/assets/img/posts/2023-03-30-py-flask-openshift-tls/doc/pic-02.png" /></kbd>
+<p style="text-align: center;"><a name="pic-02">pic-02</a></p>
 
 Синіми та чорними лініями показана дозволена взаємодія клієнта (сині) та сервісів (чорні). Червона лінія показує  заборонену взаємодію. Може виникнути питання чому ця дія заборонена. На компоненті RestApi скоріше за все немає аутентифікації користувача. Більш того, backend сервіси можуть організовувати с RestApi сервісом взаємодію, по специфічному шаблону взаємодії типу: webpooling чи webhook -  для того щоб не перевантажити сервіс, чи отримати дані послідовно, порціями, а потім користувачу віддати вже все. При чому, customer  це не завжди вреднючий користувач. Просто він користується такми фронтом, де програміст зробив "покращення", тому що так швидше.
 
@@ -63,10 +27,34 @@ published: true
 
 
 
-<iframe
-  src="https://github.com/pavlo-shcherbukha/tls-self-sign-certs#tls-self-sign-certs-%D0%BD%D0%B0%D0%B1%D1%80%D1%96-%D0%BA%D1%80%D0%BE%D0%BA%D1%96%D0%B2-%D0%B4%D0%BB%D1%8F-%D0%B3%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D1%86%D1%96%D1%97-%D1%81%D0%B0%D0%BC%D0%BE%D0%BF%D1%96%D0%B4%D0%BF%D0%B8%D1%81%D0%BD%D0%B8%D1%85-tls--%D1%81%D0%B5%D1%80%D1%82%D0%B8%D1%84%D1%96%D0%BA%D0%B0%D1%82%D1%96%D0%B2"
-  style="width:100%; height:300px;"
-></iframe>
+Можна побудувати для захисту таку, архітектуру для приклау.
+
+<kbd><img src="/assets/img/posts/2023-03-30-py-flask-openshift-tls/doc/pic-03.png" /></kbd>
+<p style="text-align: center;"><a name="pic-03">pic-03</a></p>
+
+Це не єдиний шлях але можливий.  Тому активно прийшлось вивчити як  виконуати розроку та взгалі побудувати процесс розроки та суппорту при масовому використанні TLS. За лінком:  [tls-self-sign-certs Набрі кроків для генерації самопідписних TLS сертифікатів](https://github.com/pavlo-shcherbukha/tls-self-sign-certs#tls-self-sign-certs-%D0%BD%D0%B0%D0%B1%D1%80%D1%96-%D0%BA%D1%80%D0%BE%D0%BA%D1%96%D0%B2-%D0%B4%D0%BB%D1%8F-%D0%B3%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D1%86%D1%96%D1%97-%D1%81%D0%B0%D0%BC%D0%BE%D0%BF%D1%96%D0%B4%D0%BF%D0%B8%D1%81%D0%BD%D0%B8%D1%85-tls--%D1%81%D0%B5%D1%80%D1%82%D0%B8%D1%84%D1%96%D0%BA%D0%B0%D1%82%D1%96%D0%B2) описаний простий набір кроків як розробнику швидко строрити набір tls сертифікатів  та демка на Node.js express  як перевірити їх працездатність. Ці кроки уже кілька разів використовував, коли виникала необхідність змоделювати роботу інших сервісів. Виявилося дуже зручно.
+
+Але, основним завданням у мене було  розібратися, як запустити Python flask сервіси за tls  протоколом на Openshift. Найбльш коротко і лаконічно  описано  про можливості  використання транспортного захисту в роутерах openshift за лінком [Secure your-microservices with RedHat OpenShft Routes](https://masamh.gitbook.io/secure-your-app-on-rhos/). Ось [pic-01](pic-01)
+
+<kbd><img src="/assets/img/posts/2023-03-30-py-flask-openshift-tls/doc/pic-01.png" /></kbd>
+<p style="text-align: center;"><a name="pic-01">pic-01</a></p>
+
+
+показані  комбінації  можливих варіантів захисту.
+
+1. Без захисту, по чистому http. Трафіук взагалі ніяк не шифрується
+2. В цьму варіанті, трафік шифрується до  самого роутера OpenShift,  а далі використовується чистий http.
+3. До роутера трафік захищений одним набороб сертифікатів, а після роутера і до самого сервісу трафік шифрується уже іншим набором.
+4.  Роутер просто пропускає через себе TLS  трафік, і розшифровується він уже на самому сервісі.
+
+
+Щоб якось перевірити це та  зрозуміти як це робити розроблений приклад за лінком: [tls-pyflask-srvc Запуск Python-Flask application за https](https://github.com/pavlo-shcherbukha/tls-pyflask-srvc#tls-pyflask-srvc-%D0%B7%D0%B0%D0%BF%D1%83%D1%81%D0%BA-python-flask-application-%D0%B7%D0%B0-https). В цьому репозиторіх, як раз і використані підходи 2 та 4 з [pic-01](pic-01).
+
+
+
+
+
+
 
 
 
