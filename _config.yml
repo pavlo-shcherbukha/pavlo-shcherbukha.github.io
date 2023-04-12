@@ -19,4 +19,5 @@ urls:
       url: /projects/
     - text: Корисні лінки
       url: /uflinks/
-
+    - text: Всякі меми
+      url: /mems
