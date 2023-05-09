@@ -176,14 +176,3 @@ PS. Написав, значить, у ФБ, чекаю реакції.  Чек�
 <p style="text-align: center;"><a name="sch-3">sch-3</a></p>
 
 
-
-## XXXXXXX
-
-| c1 |
-|----|
-|
- &lt;form action="/formprocess"&gt; 
-   &lt;label for="fname"&gt; First name:&lt;/label&gt; &lt;br&gt; 
-   &lt;input type="text" id="fname" name="fname" value="John"&gt; &lt; br&gt; 
- &lt;/form&gt; 
-|
