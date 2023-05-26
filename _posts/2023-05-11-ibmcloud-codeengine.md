@@ -75,7 +75,7 @@ ibmcloud plugin list
 ```
 
  
-<kbd><img src="../assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-01.png" /></kbd>
+<kbd><img src="/assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-01.png" /></kbd>
 <p style="text-align: center;"><a name="pic-01">pic-01</a></p>
 
 
@@ -85,7 +85,7 @@ ibmcloud plugin list
 ibmcloud plugin repo-plugins
 ```
 
-<kbd><img src="../assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-02.png" /></kbd>
+<kbd><img src="/assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-02.png" /></kbd>
 <p style="text-align: center;"><a name="pic-02">pic-02</a></p>
 
 
@@ -124,7 +124,7 @@ The API endpoint. For example, cloud.ibm.com
 
 Мені не подобається вводити логін і пароль, тому я входжу через onetime password з Cloud Dashboard:
 
-<kbd><img src="../assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-03.png" /></kbd>
+<kbd><img src="/assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-03.png" /></kbd>
 <p style="text-align: center;"><a name="pic-03">pic-03</a></p>
 
 І найбільш для мене прийнятний  і найшвидший, через явний onetime password:
@@ -141,7 +141,7 @@ The API endpoint. For example, cloud.ibm.com
 
 
 Реpультат входу в CLI  показано на [pic-04](#pic-04).
-<kbd><img src="../assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-04.png" /></kbd>
+<kbd><img src="/assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-04.png" /></kbd>
 <p style="text-align: center;"><a name="pic-04">pic-04</a></p>
 
 
@@ -173,14 +173,14 @@ ibmcloud iam api-key-create examplekey -d "APIKEY FOR EXAMPLE" --file psh-exampl
 
 ```
 Реpультат  показано на [pic-05](#pic-05).
-<kbd><img src="../assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-05.png" /></kbd>
+<kbd><img src="/assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-05.png" /></kbd>
 <p style="text-align: center;"><a name="pic-05">pic-05</a></p>
 
 А сам **psh-example-key.json** вигляає так:[pic-06](#pic-06)
 
 
 
-<kbd><img src="../assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-06.png" /></kbd>
+<kbd><img src="/assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-06.png" /></kbd>
 <p style="text-align: center;"><a name="pic-06">pic-06</a></p>
 
 
@@ -201,7 +201,7 @@ ibmcloud login -a cloud.ibm.com --apikey @psh-example-key.json -r eu-gb  -g Defa
 
 ```
 
-<kbd><img src="../assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-07.png" /></kbd>
+<kbd><img src="/assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-07.png" /></kbd>
 <p style="text-align: center;"><a name="pic-07">pic-07</a></p>
 
 На цьому, вивчення можливостей команди login  закінчено. Нам цього достатньо.
@@ -223,7 +223,7 @@ Project це сутність, що групує ваші application  та jobs
 ```
 Результат виконання показано на [pic-08](#pic-08)
 
-<kbd><img src="../assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-08.png" /></kbd>
+<kbd><img src="/assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-08.png" /></kbd>
 <p style="text-align: center;"><a name="pic-08">pic-08</a></p>
 
 **Довідково**: 
@@ -242,7 +242,7 @@ Project це сутність, що групує ваші application  та jobs
 
 
 Щоб створити відповідний API-KEY  потрібно зайти так, як показано на [pic-13](#pic-13) в IBM Cloud Dashboard та бажано скачати JSON-файл.
-<kbd><img src="../assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-13.png" /></kbd>
+<kbd><img src="/assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-13.png" /></kbd>
 <p style="text-align: center;"><a name="pic-13">pic-13</a></p>
 
 ### <a name="p-4.3">Прив'язування container registry. Створення сontainer registry</a>
@@ -264,7 +264,7 @@ ibmcloud ce registry create --name sh-storage-prh-rgstr --server uk.icr.io --use
 
 Результат виконання показано на [pic-10](#pic-10).
 
-<kbd><img src="../assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-10.png" /></kbd>
+<kbd><img src="/assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-10.png" /></kbd>
 <p style="text-align: center;"><a name="pic-10">pic-10</a></p>
 
 
@@ -283,7 +283,7 @@ ibmcloud ce registry list
 
  А secret  можна побачити в cloud Dashboard так, як показано на [pic-09](#pic-09).
 
-<kbd><img src="../assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-09.png" /></kbd>
+<kbd><img src="/assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-09.png" /></kbd>
 <p style="text-align: center;"><a name="pic-09">pic-09</a></p>
 
 На цьому етапі закінчені необхідні передумови для створення додатка і можна переходити безпосередньо до створення додатка **Application Depoyment**. 
@@ -311,10 +311,10 @@ pause
 ```
 Успішне виконання команди показано на [pic-15](#pic-15), а що побачимо в UI - на [pic-14](#pic-14)
 
-<kbd><img src="../assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-15.png" /></kbd>
+<kbd><img src="/assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-15.png" /></kbd>
 <p style="text-align: center;"><a name="pic-15">pic-15</a></p>
 
-<kbd><img src="../assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-14.png" /></kbd>
+<kbd><img src="/assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-14.png" /></kbd>
 <p style="text-align: center;"><a name="pic-14">pic-14</a></p>
 
 
@@ -330,7 +330,7 @@ ibmcloud ce buildrun submit --name sh-storage-be-bld-run --build sh-storage-be-b
 На [pic-16](#pic-16) показано результат виконання команди. 
 
 
-<kbd><img src="../assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-16.png" /></kbd>
+<kbd><img src="/assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-16.png" /></kbd>
 <p style="text-align: center;"><a name="pic-16">pic-16</a></p>
 
 подивитися лог виконання можно за допомогою [ibmcloud ce buildrun logs](https://cloud.ibm.com/docs/codeengine?topic=codeengine-cli#cli-buildrun-logs)
@@ -377,7 +377,7 @@ C:\PSHDEV\PSH-WorkShops\github-io\tz-000013-codeengine\code-engine-app\cenodebes
 
 Таким чином, на цьому етапі ми вже маємо побудований контейнер, покладений в IBM container registry. В UI  результат можна побачити, пройшовши за кроками, що показані на [pic-17](#pic-17)
 
-<kbd><img src="../assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-17.png" /></kbd>
+<kbd><img src="/assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-17.png" /></kbd>
 <p style="text-align: center;"><a name="pic-17">pic-17</a></p>
 
 
@@ -407,12 +407,12 @@ pause
 
 Команда виконується не зразу, а прохожить деякий час, поки application стартоне. Результат виконання показано на [pic-18](#pic-18)
 
-<kbd><img src="../assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-18.png" /></kbd>
+<kbd><img src="/assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-18.png" /></kbd>
 <p style="text-align: center;"><a name="pic-18">pic-18</a></p>
 
 
 На [pic-19](#pic-19)  показано, як теж саме побачити через UI, та  поставлено наголос, що коли не задана
-<kbd><img src="../assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-19.png" /></kbd>
+<kbd><img src="/assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-19.png" /></kbd>
 <p style="text-align: center;"><a name="pic-19">pic-19</a></p>
 
 кількість instances,  то за замовчуванням їх 0, і додаток не стартонутий. Це означає, що вхідний http  запит буде перший раз виконуватися дуже довго. щоб пофіксити, треба  задати мінімальну кількість instances 1. 
@@ -431,7 +431,7 @@ ibmcloud ce application bind --name sh-storage-be1 --service-instance Cloudant-0
 
 За результатм на [pic-20](#pic-20) видно що зв'язування відбулося і application виконує redeployment. 
 
-<kbd><img src="../assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-20.png" /></kbd>
+<kbd><img src="/assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-20.png" /></kbd>
 <p style="text-align: center;"><a name="pic-20">pic-20</a></p>
 
 
@@ -448,7 +448,7 @@ ibmcloud ce application update --name sh-storage-be1 --cpu 0.5 --memory 2G  --mi
 
 За результатм на [pic-21](#pic-21) видно що ми досягли бажаної конфігурації. 
 
-<kbd><img src="../assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-21.png" /></kbd>
+<kbd><img src="/assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-21.png" /></kbd>
 <p style="text-align: center;"><a name="pic-21">pic-21</a></p>
 
 
