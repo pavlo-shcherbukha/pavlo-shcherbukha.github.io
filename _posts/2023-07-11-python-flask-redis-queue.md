@@ -12,7 +12,7 @@ published: true
 - [2. Інструменти, що використовуються](#p-2)
 - [3. Коротко про сутності черг Redis](#p-3)
 - [4. Постановка задачі для прототипа](#p-4)
-
+- [5. Автоматичний обробник, який буде запускатися та зупинятися користувачем](#p-5)
 
 <!-- TOC END -->
 
@@ -139,7 +139,7 @@ C4Container
 1. Потрібно розробити  [Простий асинхронний обробник](#p-4)  простий обробник, який прийме дані з Web форми та через чергу Redis  доведе їх до обробника. Передбачається що обробник оди. Він ніякої роботи не виконує, я тільки виводить в лог отримані дані Web форми.  Цей пункт потрібен для емонстрації та вивчення, що все працює.
 
 
-2. Потрібно розробити автоматичний обробник, який буде запускатися та зупинятися користувачем через Web UI інтефейс. При цьому, наступний цикл обробки запускається після зауінчення попереднього та після деякого часу очікування. Основні обробники можуть працювати в паралель і можна запараметризувати кількість паралельних обробників. 
+2. Потрібно розробити [автоматичний обробник, який буде запускатися та зупинятися користувачем](#p5) через Web UI інтефейс. При цьому, наступний цикл обробки запускається після зауінчення попереднього та після деякого часу очікування. Основні обробники можуть працювати в паралель і можна запараметризувати кількість паралельних обробників. 
 
 ## <a name="p-4">4. Простий асинхронний обробник</a>
 Приклад знаходиться в репозиторії: [flask-redis-rq Async workes using redis and flask and redis queue](https://github.com/pavlo-shcherbukha/flask-redis-rq.git)
@@ -260,3 +260,204 @@ set WORKER_RUNNER=usrregworker.py
 
 <kbd><img src="../assets/img/posts/2023-07-11-python-flask-redis-queue/doc/pic-02.png" /></kbd>
 <p style="text-align: center;"><a name="pic-01">pic-02</a></p>
+
+Приємно те, що саму **task**  можна відлагодити на своїй розробницькій машині. І не треба деплоїти кудись на сервер, як з інтеграційною шиною.
+
+Фінально, результат роботи показано  на pic-03 - pic-05
+
+<kbd><img src="../assets/img/posts/2023-07-11-python-flask-redis-queue/doc/pic-03.png" /></kbd>
+<p style="text-align: center;"><a name="pic-03">pic-03</a></p>
+
+<kbd><img src="../assets/img/posts/2023-07-11-python-flask-redis-queue/doc/pic-04.png" /></kbd>
+<p style="text-align: center;"><a name="pic-04">pic-04</a></p>
+
+<kbd><img src="../assets/img/posts/2023-07-11-python-flask-redis-queue/doc/pic-05.png" /></kbd>
+<p style="text-align: center;"><a name="pic-05">pic-05</a></p>
+
+Тобто в  вікні (синьому) PowerShell видно лог worker,  де видно, що тілько що введені дані були вичитані з черги.
+
+Таким чином, перший простий тест - на працездатність зробили.
+
+## <a name="p-5">5. Автоматичний обробник, який буде запускатися та зупинятися користувачем </a>
+
+Тепер більш скланіша задача. Автоматичний оборобник вертушка, що запускається та зупиняється  користувачем. А після запуску корситувачем - обробник працює  регулярно.  Архітектурно, це виглядає так, як показано на [pic-06](#pic-06).
+
+<kbd><img src="../assets/img/posts/2023-07-11-python-flask-redis-queue/doc/pic-06.png" /></kbd>
+<p style="text-align: center;"><a name="pic-05">pic-06</a></p>
+
+Я UI не малював, але єкранна форма може послати на backend  json запит типу такого:
+- path: "/api/wstart"
+- method: POST
+- request: {"timedelta": 15, "records": 20, "msg": "start regular job", "rplstatus": "START"}, 
+де 
+    - timedelta - період очікування в секундах після гадсилання в чергу
+    - records - кількість записів з БД, які треба вичитата
+    - smg - повідомлення в лог
+    - rplstatus передається тільки при старті  робота користувачем
+
+
+ Зупинка робота виконується коли з фронта на Flask Webservice  надійде  запит на зупинку:
+
+ - path: "/api/wstop"
+ - method: DELETE
+ - request: None
+
+ видаляються всі JOBs з черги і робот зупиняється. В чергу нічоо особливого не передається. Фактично такий же request як и на старт. Але, коли rask відпрацює то вона на Flask  посилає знову запит  {"timedelta": 15, "records": 20, "msg": "start regular job", "rplstatus": "START"} і очікує коли JOB появиься в черзі. Тобто в черзі весь час циркулює одне повідомлення. Якщо після обробки Task  запит на webservice  не поступить, то робот і сам зупиниться. Позитивного  в цій схеміє те, що на відміну від cron  чи шини, нове завдання зупуститься після виконання попереднього і не буде появлятися ситуація, що якщо завдання виконується більше ніж таймер, то запуститься n чи m  завдань. Не приємно що жорсткий зв'язок на перезапуск через webservice. Хоча, можна і просто в чершу покласти.
+
+ - метод api "/api/wstart"  знаходиться за лінком [app_srvc/views.py](https://github.com/pavlo-shcherbukha/flask-redis-rq/blob/main/app_srvc/views.py);
+
+ Тут показно приклад, як в чергу поміщається task
+ 
+ ```py
+ 
+        registry = ScheduledJobRegistry(queue=q_robot)
+        log("Шукаю в реєстрі JobID = " + rpl_job_id,label)
+        job_found=False
+        if rpl_job_id != "NONE":
+            registry = ScheduledJobRegistry(queue=q_robot)
+            job_ids=registry.get_job_ids()
+            
+            for job_id in job_ids:
+                if job_id ==  rpl_job_id:
+                    job_found=True
+                    log("В реєстрі  вже існує JobID = " + rpl_job_id,label)
+                    break
+
+        if job_found:
+            raise InvalidAPIUsage( "InvalidAPIRequestParams",  f"Task has allready sheduled [jobid={rpl_job_id} ]", target=label,status_code=422, payload = {"code": "Jobid exists", "description": "ЗАвдання вже поставлено в чергу" } )
+            #log("нуда існує", label)
+        q_robot.fetch_job
+        #===============================================================================
+        idjob=q_robot.enqueue_in( timedelta(seconds=body_dict["timedelta"]),  app_srvc.tasks.task_robot, body_dict)
+        #=================================================================================
+        log("В чергу відправлено завдання з jobid=" + idjob.get_id(), label)
+        registry = ScheduledJobRegistry(queue=q_robot)
+        log("Записую в редіс jobid=" + idjob.get_id(), label)
+        red.set(i_rpl_job_id,idjob.get_id() )
+        result={"ok": True, "idjob": idjob.get_id(), "queue": q_robot.name}
+        return json.dumps(  result ), 200, {'Content-Type':'application/json'}
+ 
+ ```
+ 
+ - Реальний обробник  task занходиться за лінком: [app_srvc/tasks.py, функція def task_robot( robot_params )](https://github.com/pavlo-shcherbukha/flask-redis-rq/blob/main/app_srvc/tasks.py) . Якщо подивится, то  в кінці функції викликається метод перзапуску завдання
+
+ ```py
+     if repeat:
+        log( "======================================================================", label)
+        log( "Запит на перезапуск завдання ", label)
+        result = repeatjob(  robot_params )
+        log( "Результат перезапуску", label)
+        if result['ok']==True:
+            log( "Перезапуск успішний " + json.dumps(result), label)
+        else:
+            log( "Перезапуск НЕЕЕЕ успішний " + json.dumps(result), label)
+        log( "======================================================================", label)    
+
+    log( "Обробник роботу виконав !!!!", label)
+    return True
+ ``` 
+
+**repeatjob(  robot_params )**
+
+```py
+def repeatjob( jobprm ):
+    """
+        Потр завдання в чергу
+    """
+    result={}
+    label="repeat_job"
+    try:
+ 
+        base_url="http://app-srvc-pashakx-dev.apps.sandbox-m2.ll9k.p1.openshiftapps.com"
+        req_url= base_url+"/api/wstart"
+        req_data=jobprm
+        response = requests.post(req_url,  data=json.dumps(req_data) , headers={'Content-Type':  'application/json'} )    
+
+        if response.status_code == 200:
+            result['ok']=True
+            result["errorCode"]=response.status_code
+            result["resText"]=response.text
+            result["resBody"]=response.json()
+        else: 
+            result['ok']=False
+            result["error"]=response.text
+            result["errorCode"]=response.status_code
+
+        return result  
+
+```
+
+І в цьомуж обробнику отримує мо набір даних з webService та  кожний отриманий елемент вкладаємо в іншу чергу:
+
+```py
+    log( "Отримую набір даних для обробки" , label)
+    result_data=get_data()
+    log( "Аналізую дані", label)
+    if result_data['ok']==True:
+        datalist=result_data["resBody"]
+        datalen=len(datalist)
+        log( f"Отримано {datalen} записів" , label)
+        for item in datalist:
+            log("Обробляю  отримані записи", label)
+            #=====================================================================
+            job=q_msg.enqueue(  app_srvc.tasks.task_processor, item )
+            #====================================================================
+            log( f"Запис {item['id']}  відправлено в чергу jobid={job.get_id}", label)
+
+    else:
+        log( "Помилка при виконанні завдання: " + json.dumps(result), label)
+        log( "!!!!Продовжуєм, не зупиняємся!!!!!! " , label)
+
+
+    
+    if repeat:
+
+```
+
+І це вже обробляється іншим обробником. А task  описана в цьому ж модулі, функція, тут правда просто заглушка 
+
+```py
+def task_processor( todo_item ):
+    label="task_processor"
+    log("task processor", label)
+    log("Обробляю запис " + json.dumps(todo_item), label)
+    log( "======================================================================", label)
+    log( "Обробник роботу виконав !!!!", label)
+    log( "======================================================================", label)
+    return True
+
+
+```
+
+Ну а worker знаходиться за лінком [dbworker.py](https://github.com/pavlo-shcherbukha/flask-redis-rq/blob/main/dbworker.py)
+
+ДЕплоймент виконується по тому ж процесу , що і попередній. Міняємо тільки назву модуля workerа
+[4-db-scaner-process.cmd](https://github.com/pavlo-shcherbukha/flask-redis-rq/blob/main/openshift/4-db-scaner-process.cmd)
+
+```bash
+﻿@echo off
+call ..\login.cmd
+oc project %APP_PROJ%
+pause
+
+set fltempl=async-worker-templ.yaml 
+set fldepl=async-dbscanner-depl.yaml 
+
+
+set DATABASE_SERVICE_NAME=redis
+set APP_SERVICE_NAME=db-scanner
+set APP_NAME=async-app-srvc
+set GIT_BRANCH=main
+set GIT_URL=https://github.com/pavlo-shcherbukha/flask-redis-rq.git
+set DOCKER_PTH=./Dockerfile
+rem =================================
+set WORKER_RUNNER=dbworker.py
+rem =================================
+
+oc delete -f %fldepl%
+pause
+oc process -f %fltempl%  --param=NAMESPACE=%APP_PROJ% --param=DATABASE_SERVICE_NAME=%DATABASE_SERVICE_NAME% --param=APP_SERVICE_NAME=%APP_SERVICE_NAME% --param=APP_NAME=%APP_NAME% --param=GIT_BRANCH=%GIT_BRANCH% --param=GIT_URL=%GIT_URL% --param=DOCKER_PTH=%DOCKER_PTH% --param=WORKER_RUNNER=%WORKER_RUNNER% -o yaml > %fldepl% 
+pause
+oc create -f %fldepl%
+pause
+```
