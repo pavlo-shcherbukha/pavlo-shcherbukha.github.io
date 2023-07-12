@@ -145,7 +145,7 @@ C4Container
 Приклад знаходиться в репозиторії: [flask-redis-rq Async workes using redis and flask and redis queue](https://github.com/pavlo-shcherbukha/flask-redis-rq.git)
 Цей прототип складається з Web форми, в яку вводяться кілька реквізитів. По команді **submus** виконується http метод post та отримує введені дані у вигляді json (dictionary). Отримані дані поміщаються в чергу  з простим обробником, який вичитує праметри форми та виводить отримані дані в лог.  Ну і все задеплоєно в OpenShift. На [pic-01](#pic-01) показано як виглядає задеплоєний проект
 
-<kbd><img src="../assets/img/posts/2023-07-11-python-flask-redis-queue/doc/pic-01.png" /></kbd>
+<kbd><img src="/assets/img/posts/2023-07-11-python-flask-redis-queue/doc/pic-01.png" /></kbd>
 <p style="text-align: center;"><a name="pic-01">pic-01</a></p>
 
 Запис в чергу виконується в  модуі flask [app_srvc/views.py](https://github.com/pavlo-shcherbukha/flask-redis-rq/blob/main/app_srvc/views.py):
@@ -258,20 +258,20 @@ set WORKER_RUNNER=usrregworker.py
 ```
 Ось, на [pic-02](#pic-02) показано, де вказується файл що заускається в контейнері. Ну, це специфічно для контейнерів UBI8
 
-<kbd><img src="../assets/img/posts/2023-07-11-python-flask-redis-queue/doc/pic-02.png" /></kbd>
+<kbd><img src="/assets/img/posts/2023-07-11-python-flask-redis-queue/doc/pic-02.png" /></kbd>
 <p style="text-align: center;"><a name="pic-01">pic-02</a></p>
 
 Приємно те, що саму **task**  можна відлагодити на своїй розробницькій машині. І не треба деплоїти кудись на сервер, як з інтеграційною шиною.
 
 Фінально, результат роботи показано  на pic-03 - pic-05
 
-<kbd><img src="../assets/img/posts/2023-07-11-python-flask-redis-queue/doc/pic-03.png" /></kbd>
+<kbd><img src="/assets/img/posts/2023-07-11-python-flask-redis-queue/doc/pic-03.png" /></kbd>
 <p style="text-align: center;"><a name="pic-03">pic-03</a></p>
 
-<kbd><img src="../assets/img/posts/2023-07-11-python-flask-redis-queue/doc/pic-04.png" /></kbd>
+<kbd><img src="/assets/img/posts/2023-07-11-python-flask-redis-queue/doc/pic-04.png" /></kbd>
 <p style="text-align: center;"><a name="pic-04">pic-04</a></p>
 
-<kbd><img src="../assets/img/posts/2023-07-11-python-flask-redis-queue/doc/pic-05.png" /></kbd>
+<kbd><img src="/assets/img/posts/2023-07-11-python-flask-redis-queue/doc/pic-05.png" /></kbd>
 <p style="text-align: center;"><a name="pic-05">pic-05</a></p>
 
 Тобто в  вікні (синьому) PowerShell видно лог worker,  де видно, що тілько що введені дані були вичитані з черги.
@@ -282,7 +282,7 @@ set WORKER_RUNNER=usrregworker.py
 
 Тепер більш скланіша задача. Автоматичний оборобник вертушка, що запускається та зупиняється  користувачем. А після запуску корситувачем - обробник працює  регулярно.  Архітектурно, це виглядає так, як показано на [pic-06](#pic-06).
 
-<kbd><img src="../assets/img/posts/2023-07-11-python-flask-redis-queue/doc/pic-06.png" /></kbd>
+<kbd><img src="/assets/img/posts/2023-07-11-python-flask-redis-queue/doc/pic-06.png" /></kbd>
 <p style="text-align: center;"><a name="pic-05">pic-06</a></p>
 
 Я UI не малював, але єкранна форма може послати на backend  json запит типу такого:
@@ -461,3 +461,5 @@ pause
 oc create -f %fldepl%
 pause
 ```
+
+Останній worker [todoworker.py](https://github.com/pavlo-shcherbukha/flask-redis-rq/blob/main/todoworker.py) запущений як одиничний. Для того щоб він паралелився, треба запустити worker_pool. Ну , це наступного разу
