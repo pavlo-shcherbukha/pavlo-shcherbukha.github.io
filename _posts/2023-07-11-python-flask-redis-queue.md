@@ -23,10 +23,14 @@ published: true
 
 <p style="text-align: center;">Приблизна архітектура для якої потрібно розробити прототип</p>
 
-<kbd><img src="/assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-0.png" /></kbd>
-<p style="text-align: center;"><a name="pic-0">pic-0</a></p>
+<kbd><img src="/assets/img/posts/2023-07-11-python-flask-redis-queue/doc/pic-0.png" /></kbd>
+
 
 <p style="text-align: center;"><a name="diag-1">diagram-1</a></p>
+
+
+>
+
 
 Таку архітектуру можна реалізувати на IBM IntegrationBus (AppConnect-Enterprise),  а можна реалізувати за допомогою Python  та  Redis  на контейнерах, що запуститься не важно де (в OpenShift, в Kubernetes,  на віртуалках, в контейнерах в DockerComposer і практично ) і притому в любій хмарі, на відміну від IBM IntegrationBus (AppConnect-Enterprise), яка потребує ліцензій, важко засунеться в хмару і контейнери, бо воно просто велике.
 
@@ -62,8 +66,7 @@ published: true
 - Приклад прототипу можна взяти за лінком на github [flask-redis-rq Async workes using redis and flask and redis queue](https://github.com/pavlo-shcherbukha/flask-redis-rq).
 
 
-<kbd><img src="/assets/img/posts/2023-05-11-ibmcloud-codeengine/doc/pic-02.png" /></kbd>
-<p style="text-align: center;"><a name="pic-02">pic-02</a></p>
+
 
 
 ## <a name="p-3">3. Коротко про сутності черг Redis</a>
