@@ -8,18 +8,13 @@ published: true
 ---
 
 <!-- TOC BEGIN -->
-- [1. Про що цей блог](#p-1)
-- [2. Розгортання середовища розробки](#p-2)
-- [3. Коротко про сутності черг Redis](#p-3)
-- [4. Постановка задачі для прототипа](#p-4)
-- [5. Автоматичний обробник, який буде запускатися та зупинятися користувачем](#p-5)
 
 <!-- TOC END -->
 
 ## <a name="p-1">Про що цей блог</a>
 
 Працюючи з Node-Red мені знадобилося зробити логування в JSON спеціальної структури. Переглянув я існуючі  node - вони мене не влаштували. Вирішив зробити свою. До цього я раніше їх не робив, але, як виявилося, все не так складно. За 2-3 дні  уже більш-менш запрацювало  
-Приклад можна знайти в моєму [github repo]()
+Приклад можна знайти в моєму [github repo](https://github.com/pavlo-shcherbukha/node-red-custom-node.git)
 В цьому блозі я ділюся доствідом, як створвати custom node. Фактично, мені прийшлося створити дві Node:
 - [конфігураційну  node](https://nodered.org/docs/creating-nodes/config-nodes), як є глобальною для всього flow  файлу
 - [звичайну Node](https://nodered.org/docs/creating-nodes/first-node), але яка використовує парметри конфігураційної Node.
@@ -437,3 +432,5 @@ Flow доступний за URL  http://localhost:1880
 
 <kbd><img src="/assets/img/posts/2023-09-08-node-red-custom-node/doc/pic-04.png" /></kbd>
 <p style="text-align: center;"><a name="pic-04">pic-04</a></p>
+
+Детально з приклаом можна ознайомитися за лінком: [node-red-custom-node.git](https://github.com/pavlo-shcherbukha/node-red-custom-node.git)
