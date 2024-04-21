@@ -35,7 +35,9 @@ published: true
 
 
 
-## <a name="p-2">2. Формалізація задачі та показ результатів, що вийшли</a>
+## <a name="p-2">2. Постановка завдання для прототипу</a>
 
-ввааааааааааа
-вввввіфііфыфффaaaaasssdd
+Для вивчення робити з Incoming webhook потрібно розробити webservice для выдправки повыдомлень в канал MSteams використовуючи  python flask webservice
+
+https://github.com/pavlo-shcherbukha/pyteamsmsg
+
