@@ -29,7 +29,7 @@ published: true
 Додатково можна використати такі лінки:
 
 - [How to Send Microsoft Teams Messages with Python](https://www.datacamp.com/tutorial/how-to-send-microsoft-teams-messages-with-python);
-- [ github AdaptiveCards 2020.07](https://github.com/microsoft/AdaptiveCards/releases/tag/2020.07)
+- [github AdaptiveCards 2020.07](https://github.com/microsoft/AdaptiveCards/releases/tag/2020.07)
 - [How to send message to teams using python.](https://dev.to/shadow_b/how-to-send-message-to-teams-using-python-496g)
 
 
