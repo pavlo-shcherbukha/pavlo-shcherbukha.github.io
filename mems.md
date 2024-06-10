@@ -176,3 +176,8 @@ PS. Написав, значить, у ФБ, чекаю реакції.  Чек�
 <p style="text-align: center;"><a name="sch-3">sch-3</a></p>
 
 
+
+## Про тестування в ДІЯ
+
+<kbd><img src="assets/img/mems/diia-marriage-test.png" /></kbd>
+<p style="text-align: center;"><a name="sch-4">sch-4</a></p>
