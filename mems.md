@@ -181,3 +181,8 @@ PS. Написав, значить, у ФБ, чекаю реакції.  Чек�
 
 <kbd><img src="assets/img/mems/diia-marriage-test.png" /></kbd>
 <p style="text-align: center;"><a name="sch-4">sch-4</a></p>
+
+## Про зелену енергетику
+
+<kbd><img src="assets/img/mems/green-energy.jpg" /></kbd>
+<p style="text-align: center;"><a name="sch-5">sch-5</a></p>
