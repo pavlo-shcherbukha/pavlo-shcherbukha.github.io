@@ -36,15 +36,15 @@ published: true
 - [Structured log files in Python using python-json-logger](http://web.archive.org/web/20201130054012/https://wtanaka.com/node/8201)
 Тут трошки про структуру логування в  Python.
 - [Injecting Request Information](https://flask.palletsprojects.com/en/2.3.x/logging/#injecting-request-information)
-про те, як достукатися до інформації з запиту flask
+про те, як достукатися до інформації з http запиту flask
 
-корисне, що можна взяти з пакету json-logging
+корисне, щось можна взяти з пакету json-logging
 
 ## <a name="p3">3. Опис вимог до логування</a>
 
 Основними вимогами до  мого логування є такі:
 
-- Запис логу повинна мати json-структуру з такими реквізитами:
+- Запис логу повинно мати json-структуру з такими реквізитами:
 
   - timestamp - мітка часу
   - level - рівень логування (DEBUG, INFO, WARNING, ERROR, CRITICAL)
@@ -78,7 +78,7 @@ published: true
 - response size
 Рівень логування: **INFO**
 
-Приклад показано нижче:
+Приклад логування http показано нижче:
 
 ```JSON
 {
@@ -123,8 +123,7 @@ logging.getLogger('werkzeug').disabled = True
 ```
 Детальніше про логування в flask  можна почитати за лінком [Logging Removing the Default Handler](https://flask.palletsprojects.com/en/stable/logging/)
 
-
-Другим  кроком є викоритсання Flask decorators: "@application.before_request", "@application.after_request" для логування  http- запитів. 
+Другим  кроком - є використання **Flask** **decorators**: "@application.before_request", "@application.after_request" для логування  http- запитів. 
 
 https://flask.palletsprojects.com/en/stable/api/
      
@@ -158,7 +157,7 @@ https://flask.palletsprojects.com/en/stable/api/
 
 
 
-Ось тут, нижче, в фрагмені коду показані функції, що стоять за декораторами:
+Ось тут, нижче, в фрагменті коду показані функції, що стоять за декораторами:
 
 ```py
 from flask import  g
@@ -204,17 +203,17 @@ def log_request(response):
 
 ```
 
-І потрібно звернути увагу змунну **log_params**,  що при логуванні передається як ключ **extra** -  тобто як додаткові реквіхити
+І потрібно звернути увагу змінну **log_params**,  що при логуванні передається як ключ **extra** -  тобто як додаткові реквізити
 
 ```py
 logger.info("HTTP API REQ", extra=log_params)
 ```
 
- З приводу декораторів  можна почитате ще цікаві речі  за лінком [Flask: Before and After request Decorators](https://medium.com/innovation-incubator/flask-before-and-after-request-decorators-e639b06c2128)
+ З приводу декораторів  можна почита ще цікаві речі за лінком [Flask: Before and After request Decorators](https://medium.com/innovation-incubator/flask-before-and-after-request-decorators-e639b06c2128)
 
 Третім кроком є використання стандартного логера python: [logging — Logging facility for Python](https://docs.python.org/3/library/logging.html)
 
-тобто підклчаємо стандартний логер та створюємо свій  log handler:
+Тобто, підключаємо стандартний логер та створюємо свій  log handler:
 
 ```py
 
@@ -241,13 +240,10 @@ handler = logging.StreamHandler()
 handler.setFormatter( hello_app.shjsonformatter.JSONFormatter())
 logger.addHandler(handler)
 
-
-
-
 ```
 
 
-А сам форматре створений у вигляжі кастомного класу **shjsonformatter.py**:
+А сам форматер створений у вигляді кастомного класу **shjsonformatter.py**:
 
 ```py
 import json
@@ -313,7 +309,7 @@ class JSONFormatter(logging.Formatter):
 ```
 
 І четвертий крок - це в кожній функції створюємо дочерній логер для подальшого логування.
-Таким чином в ключі **Label** завжди буде записуватися найменування модуля та функції, що є власником логуючого запису.
+Таким чином, в ключі **Label** завжди буде записуватися найменування модуля та функції, що є власником логуючого запису.
 
 
 ```py
@@ -326,7 +322,7 @@ def about():
 
 ```
 
-А в класі, з якогось модуля можемо  написати назву класа та назву функції:
+А в класі з якогось модуля, можемо  написати назву класа та назву функції:
 
 ```py
 logger=logging.getLogger(self.plogname).getChild( f"{__name__}.Eds:SignData")
@@ -339,7 +335,8 @@ logger=logging.getLogger(self.plogname).getChild( f"{__name__}.Eds:SignData")
 ```bash
 -k gevent --workers=1 --worker-connections=2000  --bind=0.0.0.0:8080 --timeout 600 --threads=50 --access-logfile=-
 ```
-кулюч **--access-logfile=-** треба прибати. 
+кулюч **--access-logfile=-** треба видалити, якщо такий ключ додавали.  
+Якщо не видалити, то серед записів в json будуть попадатися текстові рядки від gunicorn access log.
 
 ## <a name="p5">5. Приклад реалізації</a>
 
@@ -380,7 +377,7 @@ logger=logging.getLogger(self.plogname).getChild( f"{__name__}.Eds:SignData")
 }
 ```
 
-- поставити змінну  **"LOGLEVEL":"INFO"**, то будуть логуватися тільки  http  записуватися
+- поставити змінну  **"LOGLEVEL":"INFO"**, то будуть логуватися тільки  http  записи.
 
 ```json
 [
@@ -395,7 +392,7 @@ logger=logging.getLogger(self.plogname).getChild( f"{__name__}.Eds:SignData")
 ]
 
 ```
-- поставити змінну  **"LOGLEVEL":"DEBUG"**, то будуть логуватися   http  записуватися та специфічні логувальні записуватися
+- поставити змінну  **"LOGLEVEL":"DEBUG"**, то будуть логуватися   http  запити та специфічні логувальні записи.
 
 ```json
 
