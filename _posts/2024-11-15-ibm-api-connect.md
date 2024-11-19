@@ -151,6 +151,33 @@ Catalog має свої (ізольовані) сутності, що забез
 вони задеплоєні на контейненій безсерверній платформі IBM [Code Engine](https://pavlo-shcherbukha.github.io/posts/2023-05-11/ibmcloud-codeengine/) ну і 
 на зовні виставлені публічні routs для доступу по http. Публічний роути зроблені тому, щоб порівнювати роботу через API-Connect та без нього.
 Ну і в навчальних цілях, щоб не мучитися з прокопуванням каналів. 
+На роути WebServises виходить API-Connect. Ну, а споживачі API (API Consumers) вже виходять безпосередньо на API-Connect. Два WebServices зроблено для 
+того, що спробувати більш складні варіанти роутінга, а не тільки простеньку proxy.
+
+WebService1 являє собою прототип якогось банківського сервісу що робить пакетні зарахування, наприклад зарахування зарплати від різних компаній.
+Реалізовані  такі api:
+- [test-corporate-api.pdf](../assets/img/posts/2024-11-15-ibm-api-connect/doc/test-corporate-api.pdf);
+- [test-branch-api.pdf](../assets/img/posts/2024-11-15-ibm-api-connect/doc/test-branch-api.pdf);
+- [test-payment-api.pdf](../assets/img/posts/2024-11-15-ibm-api-connect/doc/test-payment-api.pdf);
+- [test-process-api.pdf](../assets/img/posts/2024-11-15-ibm-api-connect/doc/test-process-api.pdf)
+
+WebService2 являє собою модель сервісу перевірки ЕЦП да дешифрації. По факту він нічого не робить, але це допомже зробити складний роутінг через кілька сервісів
+
+В загальному це повинно працювати так:
+Організація - клієнт банку є споживачем API. За допомогою API [test-corporate-api.pdf](../assets/img/posts/2024-11-15-ibm-api-connect/doc/test-corporate-api.pdf) 
+Оорганізація себе реєструє в банку. Потім організація реєтрує підрозділи, що виплачують зарплату. Якщо організція не має філій то реєструється тільки один підрозділ.
+Ця оперція виконується за допомогою  Branch API [test-branch-api.pdf](../assets/img/posts/2024-11-15-ibm-api-connect/doc/test-branch-api.pdf).
+За допомогою payment API [test-payment-api.pdf](../assets/img/posts/2024-11-15-ibm-api-connect/doc/test-payment-api.pdf) організація передає в банк 
+зарахування зарплати співробітникам. Кожний пакет зарахувань підписаний ЕЦП та зашифрований.
+Банк виконує опрацювання платежів, що передав клієнт за допомгою ProcessApi [test-process-api.pdf](../assets/img/posts/2024-11-15-ibm-api-connect/doc/test-process-api.pdf)
+
+WebServic2 являє собою прототип якогось банківського сервісу що робить криптографічні перетворення. При отриманні пакетно зарахування зарплати співробітникам,
+цей сервіс виконує перевірку ЕЦП та дешифрацію плоатежу і уже на WebServic1  надходить "чистий"  платіж. Це придумано для "усклаження" завдання роутинга.
+
+Обидва сервіси написані на Node.js  та імплементують Rest API. Параметри запитів типу branchid, corporateid , paymentid -  передаються в path  запиту.
+
+
+
 
 
 
