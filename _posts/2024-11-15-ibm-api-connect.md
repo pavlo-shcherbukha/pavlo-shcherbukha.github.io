@@ -148,10 +148,10 @@ Catalog має свої (ізольовані) сутності, що забез
 
 WebService1 являє собою прототип якогось банківського сервісу що робить пакетні зарахування, наприклад зарахування зарплати від різних компаній.
 Реалізовані  такі api:
-- [test-corporate-api.pdf](../assets/img/posts/2024-11-15-ibm-api-connect/doc/test-corporate-api.pdf);
-- [test-branch-api.pdf](../assets/img/posts/2024-11-15-ibm-api-connect/doc/test-branch-api.pdf);
-- [test-payment-api.pdf](../assets/img/posts/2024-11-15-ibm-api-connect/doc/test-payment-api.pdf);
-- [test-process-api.pdf](../assets/img/posts/2024-11-15-ibm-api-connect/doc/test-process-api.pdf)
+- [test-corporate-api.pdf](../assets/img/posts/2024-11-15-ibm-api-connect/doc/test-corporate-api.pdf), формалізований опис openapi3.0: [extcorporateapi_1.0.0.yaml](https://github.com/pavlo-shcherbukha/apiconnect-proto/blob/main/api/extcorporateapi_1.0.0.yaml);
+- [test-branch-api.pdf](../assets/img/posts/2024-11-15-ibm-api-connect/doc/test-branch-api.pdf), формалізований опис openapi3.0: [extbranchapi-branch-dict_1.0.0.yaml](https://github.com/pavlo-shcherbukha/apiconnect-proto/blob/main/api/extbranchapi-branch-dict_1.0.0.yaml);
+- [test-payment-api.pdf](../assets/img/posts/2024-11-15-ibm-api-connect/doc/test-payment-api.pdf), формалізований опис openapi3.0: [ext-payment-api_1.0.0.yaml](https://github.com/pavlo-shcherbukha/apiconnect-proto/blob/main/api/ext-payment-api_1.0.0.yaml);
+- [test-process-api.pdf](../assets/img/posts/2024-11-15-ibm-api-connect/doc/test-process-api.pdf), формалізований опис openapi3.0:[ext-process-api_1.0.0.yaml](https://github.com/pavlo-shcherbukha/apiconnect-proto/blob/main/api/ext-process-api_1.0.0.yaml)
 
 WebService2 являє собою модель сервісу перевірки ЕЦП да дешифрації. По факту він нічого не робить, але це допомже зробити складний роутінг через кілька сервісів
 
@@ -192,7 +192,128 @@ WebServic2 являє собою прототип якогось банківс�
 
 Крім того в yaml файлі важливі відступи. Тому, на багатьох інструментах показані вертикальна решітка, що дозволяє легкто побачити кількість відступів. 
 А тут, на нижньому малюгку, відступи відсутні - тобто набирати руками в такому редакторі дуже на зручно.  Тому для підготовки формалізованих описів 
-API  потрібно використовувати сторонні програмні продукти.
+API та їх валідації потрібно використовувати сторонні програмні продукти.
+
+В режимі редагування API видно ряд вкладок. На [pic-12](#pic-12) показано призначення основних вкладок.
+<kbd><img src="../assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-12.png" /></kbd>
+<p style="text-align: center;"><a name="pic-12">pic-12</a></p>
+
+У вкладці **Design** відображається опис методів, як в стандартному openapi.
+У вкладці **Gateway** відображаються додаткові реквізити, що додає в openapi файл API-Connect, що описують налаштування роутингу та трасфомації запитів.
+Все, що додав API-Connect  знаходиться під специфічним заголовком: **x-ibm-configuration**
+ 
+Далі показані відмінності слід знати в порівнянні з базовим [openapi-3.0](https://swagger.io/docs/specification/v3_0/basic-structure/):
+
+- базовий
+
+```yaml
+openapi: 3.0.0
+info:
+  title: Sample API
+  description: Optional multiline or single-line description in [CommonMark](http://commonmark.org/help/) or HTML.
+  version: 0.1.9
+
+servers:
+  - url: http://api.example.com/v1
+    description: Optional server description, e.g. Main (production) server
+  - url: http://staging-api.example.com
+    description: Optional server description, e.g. Internal staging server for testing
+
+paths:
+  /users:
+    get:
+      summary: Returns a list of users.
+      description: Optional extended description in CommonMark or HTML.
+      responses:
+        "200": # status code
+          description: A JSON array of user names
+          content:
+            application/json:
+              schema:
+                type: string
+```
+
+- від API-Connect
+
+```yaml
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Demo API Example
+  x-ibm-name: demo-api-example
+  description: Descriptino For Demo Api Example
+# Особливість вказування url сервера. Потрібно вказувати не реальний URL а унікальний 
+# аліас вашого сервера. Справа в тому, що є реальний EndPoint DataPower
+# а цей аліас буде підставлятися EndPoint DataPower як Base URL
+servers:
+  - url: /demo-api-example
+# -------------- Додатковий розділ, що описує рутинг APIGate, Що є в API-Connect  
+x-ibm-configuration:
+  properties:
+    # Саме тут треба вказати реальний URL вашого сервіса
+    target-url:
+      value: http://example.com/operation-name
+      description: The URL of the target service
+      encoded: false
+  # для того, щоб парцювали тестові запити cors: enabled: true  повинно бути
+  cors:
+    enabled: true
+  gateway: datapower-api-gateway
+  type: rest
+  phase: realized
+  enforced: true
+  testable: true
+  # Це розділ, де як раз і конфігурується роутинг в API GateWay
+  assembly:
+    execute:
+      - invoke:
+          title: invoke
+          version: 2.0.0
+          verb: keep
+          target-url: $(target-url)
+          follow-redirects: false
+          timeout: 60
+          parameter-control:
+            type: allowlist
+            values: []
+          header-control:
+            type: blocklist
+            values: []
+          inject-proxy-headers: true
+          chunked-uploads: true
+          persistent-connection: true
+# ------------------------------------------------------          
+paths:
+  /:
+    get:
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: string
+
+```
+
+Щоб розділ **x-ibm-configuration:** знаходився на початку yaml файлу, простіше зробити пустий файл за допомогою API-Connect,
+а потім збагатити його описом ваших методів.
+
+Лінки на документацію по конфігурації API Gateway:
+
+- [Built-in policies](https://www.ibm.com/docs/en/api-connect/saas?topic=constructs-built-in-policies)
+Тут описані параметри всіх кубиків, що показані на  [pic-13](#pic-13)
+
+
+<kbd><img src="../assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-13.png" /></kbd>
+<p style="text-align: center;"><a name="pic-13">pic-13</a></p>
+
+
+
+- [Lightweight Gateway API assembly commands and policies](https://www.ibm.com/docs/en/api-connect/saas?topic=domain-lightweight-gateway-api-assembly-commands-policies)
+- [Lightweight Gateway tutorial](https://www.ibm.com/docs/en/api-connect/saas?topic=domain-lightweight-gateway-tutorial)
+
+
 
 
 
