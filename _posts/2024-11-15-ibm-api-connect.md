@@ -14,16 +14,11 @@ published: false
 - [4. Розробка бібліотеки API  в API-COnnect](#p4)
 - [4.1. Загальний огляда](#p4.1)
 - [4.2. Особливості підготовки формалізованного опису API  в форматі openapi-3.0](#p4.2)
-- [4.3. Особливості налаштування GateWay](#4.3)
+- [4.3. Особливості налаштування GateWay](#p4.3)
+- [4.4. Тестування API](#p4.4)
 
 
 
-- [2.1. Бібіліотека формалізовних описів API](#p2.1)
-- [2.2. API-GateWay](#p2.1)
-- [2.3. Каталоги опублікованих API](#p2.1)
-- [2.4. Система логування та збору статистики використання](#p2.1)
-- [2.5. Портал споживачів API](#p2.1)
-- [2.6. Система адміністрування користувачів API Connect та порталу Споживачів API](#p2.1)
 
 
 <!-- TOC END -->
@@ -356,6 +351,88 @@ paths:
 <kbd><img src="../assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-16.png" /></kbd>
 <p style="text-align: center;"><a name="pic-16">pic-16</a></p>
 
+При чому, роутинг працює навіть у випадку, коли в url (в path) у вас позначені параметри:
+
+
+```yaml
+ /corporate-api/corporate/{corporateid}:
+    get:
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                  _rev:
+                    type: string
+                  type:
+                    type: string
+                  name:
+                    type: string
+                  contacts:
+                    type: string
+                  branches:
+                    type: array
+      operationId: get_corporate_by_id
+      parameters:
+        - name: corporateid
+          in: path
+          required: true
+          schema:
+            type: string
+
+```
+
+
+В попередніх розділах я згадував про необхідність заповнення **operationid** при опису методів openapi. А тепер хочу поазати як це можна використати.
+На приклад у вас для кожної **operationid** використовуються свої URL  чи свої трансформації. Тому, вам потрібно побудувати розгалудження проксі 
+по **operationid**.  Реалізація цього способу показана на [pic-17](#pic-17)
+
+<kbd><img src="../assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-17.png" /></kbd>
+<p style="text-align: center;"><a name="pic-17">pic-17</a></p>
+
+
+
+При підготовці опису API вам, раптом, API-Connect почне малювати помилку, що показана на [pic-19](#pic-19).
+
+<kbd><img src="../assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-19.png" /></kbd>
+<p style="text-align: center;"><a name="pic-19">pic-19</a></p>
+
+Не потрібно шукати помилок в вашому описі. Просто, воно вимагає включити захист API і помилка пропаде сама собою. Але, якщо у вас правильно 
+сконфігуровано роутинг, то API буде працювати і з цією помилкою.
+
+
+### <a name="p4.4">4.4. Тестування API</a>
+
+Після підготовки формалізованого опису API  та налаштування роутингу потрібно все це протестувати. Щоб з'явилася можливість протестувати API, 
+його потрібно перевести в режим on-line. Ознаки того, що API знаходиться в режимі off_line  наведені на [pic-20](#pic-20).
+
+
+
+
+<kbd><img src="../assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-20.png" /></kbd>
+<p style="text-align: center;"><a name="pic-20">pic-20</a></p>
+
+
+
+Щоб перевести API в режим On-Line  потрібно натиснути кнопку: **Target Configuration**  та перевести в стан **On**  слайдер **Auto-Publish**, [pic-21](#pic-21).
+Переводити потрібно тоді, коли всі елементи модального віконця оновляться. Можливо API-Connect  попросить вас погодитися на створення автопродукту (але це тільки перший раз).
+
+<kbd><img src="../assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-21.png" /></kbd>
+<p style="text-align: center;"><a name="pic-21">pic-21</a></p>
+
+Зберігаємо, закриваємо вікно і повинні побачити, що API  перейшло в режим **On-Line**  та стала доступною вкладка **EndPoint**, [pic-22](#pic-22).
+
+<kbd><img src="../assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-22.png" /></kbd>
+<p style="text-align: center;"><a name="pic-22">pic-22</a></p>
+
+
+На вкладці **EndPoint** доступні реквізити: **Client ID** та **Client secret**, що будть використовуватися, якщо ви виберете варіант захисту 
+вашого  API як **ApiKey**.
 
 
 
@@ -363,39 +440,6 @@ paths:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-IBM API-Connect складається, з  таких основних компонентів:
-
-
-
-
-
-
-
-
-### <a name="p2.1">2.1. Бібіліотека формалізовних описів API</a>
-### <a name="p2.2">2.2. API-GateWay</a>
-### <a name="p2.3">2.3. Каталоги опублікованих API</a>
-### <a name="p2.4">2.4. Система логування та збору статистики використання</a>
-### <a name="p2.5">2.5. Портал споживачів API</a>
-### <a name="p2.6">2.6. Система адміністрування користувачів API Connect та порталу Споживачів API</a>
 
 
 
