@@ -328,6 +328,11 @@ paths:
 <kbd><img src="../assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-13.png" /></kbd>
 <p style="text-align: center;"><a name="pic-13">pic-13</a></p>
 
+
+- [API Connect context variables](https://www.ibm.com/docs/en/api-connect/saas?topic=reference-api-connect-context-variables)
+Тут можна знайти таблицю контекстних  змінних. На них я зміг вийти тільки через policy **switch**
+ 
+
 - [Lightweight Gateway API assembly commands and policies](https://www.ibm.com/docs/en/api-connect/saas?topic=domain-lightweight-gateway-api-assembly-commands-policies)
 За цим лінком иожна прочитати деякі корисні матеріали про декларацію змінних при трансформації
 
@@ -339,11 +344,20 @@ paths:
 
 
 Налаштування API GateWay теж має свої не очевидні особливості. 
-Так, при створенні  нового опису API, або  заванатаженні існуючого, API-Connect додає найпростіший варіант роутингу, що налаштовує роутинг типу proxy [pic-15](#pic-15).
-Як позначено на малюнку, роутинг відбувається на URL, що познчено контекстною змінною  ** $(target-url)**. Але, 
+Так, при створенні  нового опису API, або  заванатаженні існуючого, API-Connect додає найпростіший варіант роутингу, типу proxy [pic-15](#pic-15).
+Як позначено на малюнку, роутинг відбувається на URL, що познчено контекстною змінною  **$(target-url)**. Але, з таким налаштуванням кубика **"invoke"**  
 
 <kbd><img src="../assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-15.png" /></kbd>
-<p style="text-align: center;"><a name="pic-13">pic-15</a></p>
+<p style="text-align: center;"><a name="pic-15">pic-15</a></p>
+
+ваш сервіс  не піде дальі root url,  хоч як акуратно не прописуйте path's  в openapi. Для того, щоб компонент **"invoke"** розумів ваші path
+потрібно в полі **URL** прописати дві контекстні змінні  ** $(target-url)$(api.operation.path) **, [pic-16](#pic-16).  
+
+<kbd><img src="../assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-16.png" /></kbd>
+<p style="text-align: center;"><a name="pic-16">pic-16</a></p>
+
+
+
 
 
 
