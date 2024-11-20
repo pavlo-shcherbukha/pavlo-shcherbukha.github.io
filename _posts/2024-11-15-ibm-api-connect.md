@@ -308,10 +308,22 @@ paths:
 <kbd><img src="../assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-13.png" /></kbd>
 <p style="text-align: center;"><a name="pic-13">pic-13</a></p>
 
-
-
 - [Lightweight Gateway API assembly commands and policies](https://www.ibm.com/docs/en/api-connect/saas?topic=domain-lightweight-gateway-api-assembly-commands-policies)
+За цим лінком иожна прочитати деякі корисні матеріали про декларацію змінних при трансформації
+
 - [Lightweight Gateway tutorial](https://www.ibm.com/docs/en/api-connect/saas?topic=domain-lightweight-gateway-tutorial)
+За цим лінком можна прочитати як до API-Connect підключити специфічні TLS сертифікати. Також, я цікаві приклади з налаштування GateWay в API-Connect.
+
+- [Using the switch policy condition editor](https://www.ibm.com/docs/en/api-connect/saas?topic=switch-using-policy-condition-editor)
+За цим лінком можна прочитати про наявні контекстні змінні, які потім можна використати при трансформації.
+
+
+
+
+
+
+
+
 
 
 
