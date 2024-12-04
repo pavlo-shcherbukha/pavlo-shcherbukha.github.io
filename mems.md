@@ -176,7 +176,7 @@ PS. Написав, значить, у ФБ, чекаю реакції.  Чек�
 ## <a name="innovation"/> [Про іноваційні підходи](#innovation)
 
 <kbd><img src="assets/img/mems/sch-3.png" /></kbd>
-<p style="text-align: center;"><a name="sch-3">sch-3</a></p>https://github.com/pavlo-shcherbukha/pavlo-shcherbukha.github.io/actions
+<p style="text-align: center;"><a name="sch-3">sch-3</a></p>
 
 
 
