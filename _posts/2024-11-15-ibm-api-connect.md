@@ -53,18 +53,18 @@ for Integration"* існує версія, що розгортається в Op
 Робота з API Connect починається з **фази Розробки (Development)**, де визначаються дві сутності:
 - **API**;
 Тут готується формалізований опис API. На [pic-01](#pic-01) показано головне меню, де шукати.
-<kbd><img src="../assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-01.png" /></kbd>
+<kbd><img src="/assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-01.png" /></kbd>
 <p style="text-align: center;"><a name="pic-01">pic-01</a></p>
 
 На [pic-02](#pic-02) показано головне вікно з каталогом API,  що я створив в  API-Connect.
 
-<kbd><img src="../assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-02.png" /></kbd>
+<kbd><img src="/assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-02.png" /></kbd>
 <p style="text-align: center;"><a name="pic-02">pic-02</a></p>
 
 
 На [pic-03](#pic-03) показано головне вікно з каталогом Products,  що створив  в  API Connect.
 
-<kbd><img src="../assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-03.png" /></kbd>
+<kbd><img src="/assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-03.png" /></kbd>
 <p style="text-align: center;"><a name="pic-03">pic-03</a></p>
 
 
@@ -72,7 +72,7 @@ for Integration"* існує версія, що розгортається в Op
 - **Product**;
 Це формалізована сутність, що поєднує в собі один або кілька API, та додає в нього тарифний план: кількість викликів за одиницю часу [pic-04](#pic-04).
 
-<kbd><img src="../assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-04.png" /></kbd>
+<kbd><img src="/assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-04.png" /></kbd>
 <p style="text-align: center;"><a name="pic-04">pic-04</a></p>
 
 Крім того продукт має свій життєвий цикл: 
@@ -98,12 +98,12 @@ Catalog має свої (ізольовані) сутності, що забез
 
 На [pic-05](#pic-05) показано створено каталог Catalogs та як в нього попасти
 
-<kbd><img src="../assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-05.png" /></kbd>
+<kbd><img src="/assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-05.png" /></kbd>
 <p style="text-align: center;"><a name="pic-05">pic-05</a></p>
 
 А на [pic-06](#pic-06) внутрішні сутності  Catalog
 
-<kbd><img src="../assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-06.png" /></kbd>
+<kbd><img src="/assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-06.png" /></kbd>
 <p style="text-align: center;"><a name="pic-06">pic-06</a></p>
 
 - **Portal** споживача  API
@@ -113,14 +113,14 @@ Catalog має свої (ізольовані) сутності, що забез
 
 Створюється портал через Catalog так, як показано на [pic-07](#pic-07):
 
-<kbd><img src="../assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-07.png" /></kbd>
+<kbd><img src="/assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-07.png" /></kbd>
 <p style="text-align: center;"><a name="pic-07">pic-07</a></p>
 
 
 Основні елементи порталу, показані на [pic-08](#pic-08)
 
 
-<kbd><img src="../assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-08.png" /></kbd>
+<kbd><img src="/assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-08.png" /></kbd>
 <p style="text-align: center;"><a name="pic-08">pic-08</a></p>
 
 
@@ -137,7 +137,7 @@ Catalog має свої (ізольовані) сутності, що забез
 Архітектура тестового стенду показана на [pic-09](#pic-09). Для тестування створено два Node.js Web Service: 
 - [WebService1](https://github.com/pavlo-shcherbukha/apiconnect-proto/tree/main/branch-srvc);
 - WebService2.
-<kbd><img src="../assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-09.png" /></kbd>
+<kbd><img src="/assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-09.png" /></kbd>
 <p style="text-align: center;"><a name="pic-08">pic-09</a></p>
 
 Вони задеплоєні на контейненій безсерверній платформі IBM [Code Engine](https://pavlo-shcherbukha.github.io/posts/2023-05-11/ibmcloud-codeengine/) ну і 
@@ -179,7 +179,7 @@ WebServic2 являє собою прототип якогось банківс�
 але це виявилося витраченим часом. UI API-COnnect  для підготовки OpenApi  не доопрацьований. Тому рекомендую використовувати якиййсь тертій інструмент,
 на приклад [Swagger Editor](https://editor.swagger.io/). Що треба вибрати, щоб імпортувати формалізований опис сервісу openapi3.0  показано на [pic-10](#pic-10).
 
-<kbd><img src="../assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-10.png" /></kbd>
+<kbd><img src="/assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-10.png" /></kbd>
 <p style="text-align: center;"><a name="pic-10">pic-10</a></p>
 
 Як виявилося UI API Connect не дозволяє описати єлементу масиву об'єктів. І, навіть, якщо у вас описані елементи масива, UI API-Connect іх не відобразить. 
@@ -188,7 +188,7 @@ WebServic2 являє собою прототип якогось банківс�
 відображається  в UI на верхньому малюнку  а  що є на справді - на нижньому.  
 
 
-<kbd><img src="../assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-11.png" /></kbd>
+<kbd><img src="/assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-11.png" /></kbd>
 <p style="text-align: center;"><a name="pic-11">pic-11</a></p>
 
 Крім того в yaml файлі важливі відступи. Тому, на багатьох інструментах показані вертикальна решітка, що дозволяє легкто побачити кількість відступів. 
@@ -198,7 +198,7 @@ API та їх валідації потрібно використовувати
 ### <a name="p4.2">4.2. Особливості підготовки формалізованного опису API  в форматі openapi-3.0</a>
 
 В режимі редагування API видно ряд вкладок. На [pic-12](#pic-12) показано призначення основних вкладок.
-<kbd><img src="../assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-12.png" /></kbd>
+<kbd><img src="/assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-12.png" /></kbd>
 <p style="text-align: center;"><a name="pic-12">pic-12</a></p>
 
 У вкладці **Design** відображається опис методів, як в стандартному openapi.
@@ -306,7 +306,7 @@ paths:
 - Параметри запитів потрібно описувати не в розділі path а  для кожного http методу окремо [pic-14](#pic-14) 
 
 
-<kbd><img src="../assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-14.png" /></kbd>
+<kbd><img src="/assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-14.png" /></kbd>
 <p style="text-align: center;"><a name="pic-13">pic-14</a></p>
 
 
@@ -323,7 +323,7 @@ paths:
 Тут описані параметри всіх кубиків, що показані на  [pic-13](#pic-13)
 
 
-<kbd><img src="../assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-13.png" /></kbd>
+<kbd><img src="/assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-13.png" /></kbd>
 <p style="text-align: center;"><a name="pic-13">pic-13</a></p>
 
 
@@ -345,13 +345,13 @@ paths:
 Так, при створенні  нового опису API, або  заванатаженні існуючого, API-Connect додає найпростіший варіант роутингу, типу proxy [pic-15](#pic-15).
 Як позначено на малюнку, роутинг відбувається на URL, що познчено контекстною змінною  **$(target-url)**. Але, з таким налаштуванням кубика **"invoke"**  
 
-<kbd><img src="../assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-15.png" /></kbd>
+<kbd><img src="/assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-15.png" /></kbd>
 <p style="text-align: center;"><a name="pic-15">pic-15</a></p>
 
 ваш сервіс  не піде дальі root url,  хоч як акуратно не прописуйте path's  в openapi. Для того, щоб компонент **"invoke"** розумів ваші path
 потрібно в полі **URL** прописати дві контекстні змінні  ** $(target-url)$(api.operation.path) **, [pic-16](#pic-16).  
 
-<kbd><img src="../assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-16.png" /></kbd>
+<kbd><img src="/assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-16.png" /></kbd>
 <p style="text-align: center;"><a name="pic-16">pic-16</a></p>
 
 При чому, роутинг працює навіть у випадку, коли в url (в path) у вас позначені параметри:
@@ -395,14 +395,14 @@ paths:
 На приклад у вас для кожної **operationid** використовуються свої URL  чи свої трансформації. Тому, вам потрібно побудувати розгалудження проксі 
 по **operationid**.  Реалізація цього способу показана на [pic-17](#pic-17)
 
-<kbd><img src="../assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-17.png" /></kbd>
+<kbd><img src="/assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-17.png" /></kbd>
 <p style="text-align: center;"><a name="pic-17">pic-17</a></p>
 
 
 
 При підготовці опису API вам, раптом, API-Connect почне малювати помилку, що показана на [pic-19](#pic-19).
 
-<kbd><img src="../assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-19.png" /></kbd>
+<kbd><img src="/assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-19.png" /></kbd>
 <p style="text-align: center;"><a name="pic-19">pic-19</a></p>
 
 Не потрібно шукати помилок в вашому описі. Просто, воно вимагає включити захист API і помилка пропаде сама собою. Але, якщо у вас правильно 
@@ -417,7 +417,7 @@ paths:
 
 
 
-<kbd><img src="../assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-20.png" /></kbd>
+<kbd><img src="/assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-20.png" /></kbd>
 <p style="text-align: center;"><a name="pic-20">pic-20</a></p>
 
 
@@ -425,12 +425,12 @@ paths:
 Щоб перевести API в режим On-Line  потрібно натиснути кнопку: **Target Configuration**  та перевести в стан **On**  слайдер **Auto-Publish**, [pic-21](#pic-21).
 Переводити потрібно тоді, коли всі елементи модального віконця оновляться. Можливо API-Connect  попросить вас погодитися на створення автопродукту (але це тільки перший раз).
 
-<kbd><img src="../assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-21.png" /></kbd>
+<kbd><img src="/assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-21.png" /></kbd>
 <p style="text-align: center;"><a name="pic-21">pic-21</a></p>
 
 Зберігаємо, закриваємо вікно і повинні побачити, що API  перейшло в режим **On-Line**  та стала доступною вкладка **EndPoint**, [pic-22](#pic-22).
 
-<kbd><img src="../assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-22.png" /></kbd>
+<kbd><img src="/assets/img/posts/2024-11-15-ibm-api-connect/doc/pic-22.png" /></kbd>
 <p style="text-align: center;"><a name="pic-22">pic-22</a></p>
 
 
