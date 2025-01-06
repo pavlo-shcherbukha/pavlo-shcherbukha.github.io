@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>2024-12-15-rabbit-mq.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<!-- TOC BEGIN -->
+<ul>
+<li><a href="#p1">1. Постановка проблеми</a></li>
+<li><a href="#p2">2. Gро коцепцію продукта в моєму зрозумінні</a></li>
+<li><a href="#p3">3. Опис тестового стенду для вичення API-Connect</a></li>
+<li><a href="#p4">4. Розробка бібліотеки API  в API-COnnect</a></li>
+<li><a href="#p4.1">4.1. Загальний огляда</a></li>
+<li><a href="#p4.2">4.2. Особливості підготовки формалізованного опису API  в форматі openapi-3.0</a></li>
+<li><a href="#p4.3">4.3. Особливості налаштування GateWay</a></li>
+<li><a href="#p4.4">4.4. Тестування API</a></li>
+</ul>
+<!-- TOC END -->
+<h2 id="a-name%22p1%221-%D0%BF%D0%BE%D1%81%D1%82%D0%B0%D0%BD%D0%BE%D0%B2%D0%BA%D0%B0-%D0%BF%D1%80%D0%BE%D0%B1%D0%BB%D0%B5%D0%BC%D0%B8a"><a name="p1">1. Постановка проблеми</a></h2>
+<p>В процесі роботи вникла необхідність в розробці фонових процесів, що обробляють великі об'єми бінарних даних. По чистому http прокачування таких об'ємів даних завдання не просте і, взагалі то, не надійне. Тому і впав вибір на використання черг. Раніше приходилося використовувати черги Redis. Але, для великих об'ємів даних (типу image) використання redis не прийнятне.
+Є в мене досвід і з використання IBM MQ.  Але, там теж є особливості, а саме:</p>
+<ul>
+<li>потребує ліцензування;</li>
+<li>дуже &quot;важка&quot; (рідний клієнт IBM MQ  десь під 1 ГБ важить);</li>
+<li>не має &quot;нормальних&quot; клієнтів для Node.js, Python, JAVA;
+Клієнти заявлені, але працюють вони препротивно і не надійно</li>
+</ul>
+<p>А якщо почитати про Rabbit MQ  то вона практично покриває своєю функціональнісью всі рекламні тексти протипу: &quot;Чому треба використовувати IBM MQ&quot;. А на фоні відсутності нормлаьних клієнтів до IBM MQ  то вибір точно на користь Rabbit.  Ну, а якщо ж мені знадобиться інтеграція з IBM MQ,  то я постараюсть використати існуючий в IBM MQ  протокол AMQP.</p>
+<p>На  цій позитвній ноті я зайнявся вивченням Rabbit MQ  на  базі Python</p>
+<h2 id="a-name%22p2%222-%D0%BF%D0%B5%D1%80%D0%B5%D0%BB%D1%96%D0%BA-%D0%BA%D0%BE%D1%80%D0%B8%D1%81%D0%BD%D0%B8%D1%85-%D0%BB%D1%96%D0%BD%D0%BA%D1%96%D0%B2a"><a name="p2">2. Перелік корисних лінків</a></h2>
+<ul>
+<li>
+<p><a href="https://www.rabbitmq.com/tutorials">Rabbit tutorials</a>
+Це основна документація по Rabbit MQ</p>
+</li>
+<li>
+<p><a href="https://habr.com/ru/articles/434510/">habre</a></p>
+</li>
+</ul>
+<p>Тут коротенький огляд про клієнти python для RabbitMq</p>
+<ul>
+<li><a href="https://pika.readthedocs.io/en/stable/">python pika</a>, <a href="https://pypi.org/project/pika/">pypi pika</a></li>
+</ul>
+<p>Документація на клієнт rabbit MQ для Python, <strong>бібліотека pika</strong></p>
+<ul>
+<li><a href="https://dev.to/felipepaz/getting-started-with-rabbitmq-and-python-a-practical-guide-57fi">Getting Started with RabbitMQ and Python: A Practical Guide. Docker compose</a></li>
+</ul>
+<p>Тут цікавий блог, про використання RabbitMQ and Python з практичними рекомендаціями</p>
+<ul>
+<li><a href="https://hub.docker.com/_/rabbitmq/">Docker RabbitMQ</a></li>
+</ul>
+<p>Посилання на Docker container для запуску rbbit MQ на робочій станції</p>
+<h3 id="a-name%22p3%223-%D0%BF%D1%80%D0%BE%D1%82%D0%BE%D1%82%D0%B8%D0%BF-%D1%80%D0%BE%D0%B7%D0%BF%D0%BE%D0%B4%D1%96%D0%BB%D0%B5%D0%BD%D0%BD%D1%8F-%D0%B7%D0%B0%D0%B2%D0%B4%D0%B0%D0%BD%D1%8C-%D0%BC%D1%96%D0%B6-%D0%BE%D0%B1%D1%80%D0%BE%D0%B1%D0%BD%D0%B8%D0%BA%D0%B0%D0%BC%D0%B8a"><a name="p3">3. Прототип:  Розподілення завдань між обробниками</a></h3>
+<pre><code class="language-mermaid"><div class="mermaid">    C4Context
+      title Архітектура прототипу
+      
+        Person(customerA, "User A", "Завантажувач зображень")
+        Person(customerB, "User B", "Перегляд зображень")
+
+        System(WebUI1, "WebUI Image uploader", "Завантаження  зображень")
+        System(WebUI2, "WebU2 Image display", "Перегляд зображень")
+        
+        Enterprise_Boundary(b1, "Cbcntvb") {
+          System(WebApp, "Python Flask WebApp", "Завантаження та вивантеження зображень")
+          SystemQueue( TestQueue, "test_queue", "Черга зображень  на обробку")
+          System(Worker1, "Python Image processor, "Обробка зображень бібліотекоб CV2")
+          SystemQueue( TestQueue, "test_queue", "Черга зображень  на обробку")
+          SystemQueue(TestDbWrt, "test_dbwrt", "Черга оброблених зображень")
+          System(Worker2, "Python Database Writer", "Запис трансформованих зображень в базу даних")
+          SystemDb(ImageDB, "CouchDB", "База даних оброблених зображень")
+
+          System(RabbitMQ, "Rabbit MQ", "Сервер RabbitMQ")
+
+
+        }
+
+      Rel(customerA, WebUI1, "Завантаження зображення")
+      Rel(customerB, WebUI2, "Перегляд оброблених зображень")
+      BiRel(WebUI1, WebApp , "API завантаженя зображення")
+      BiRel(WebUI2, WebApp , "API отримання зображення")
+      Rel(WebApp, TestQueue, "Публікація зображення в чергу на обробку")
+      Rel(TestQueue, Worker1, "Читання черги зображень на обробку")
+      Rel(Worker1, TestDbWrt, "Публікація в чергу оброблених зображень")
+      Rel(TestDbWrt, Worker2 , "Читанн черги оброблених зображень для запису в базу даних")
+      Rel(Worker2, ImageDB, "Запис оброблених зображень")
+      Rel(ImageDB, WebApp, "Читання оброблених зображень з БД")
+
+
+      UpdateLayoutConfig($c4ShapeInRow="2", $c4BoundaryInRow="1")
+
+
+</div></code></pre>
+<p>Бізнесова модель прототипу полягає в наступному.</p>
+<ol>
+<li>
+<p>Через Web додаток користувач завантажує зображення в систему. Flask Webervice приймає масив байт зображення та публікує зображення в чергу <strong>test_queue</strong> з специфічними заголовками. В заголовках вказується тип медіаконтенту та назва файлу.</p>
+</li>
+<li>
+<p>Фоновий обробник <strong>Python image processor</strong> &quot;слухає&quot; чергу <strong>test_queue</strong> і, прочитавше повідомлення, за допомогою бібліотеки обробки зображень <a href="https://opencv.org/"> opencv, CV2</a> перетворює зображення до формату .png та робить його чорно-білим і публікує оброблене зображення в чергу <strong>test_dbwrt</strong>  для запису зображення в базу даних.</p>
+</li>
+<li>
+<p>Фоновий обробник запису зображень в базу даних <strong>Python Database Writer</strong>  слухає чергу  <strong>test_dbwrt</strong>. Прочитавши повідомлення з  черги, обробник з заголовків повідомлення черги формує  структуру документа - метадані зображення, а зображення записує, як attachment  до документу бази даних.</p>
+</li>
+<li>
+<p>Через Web додаток користувач  отримує список оброблених зображень з бази даних і має можливість прочитати зображення з БД і переглянути йогог на web  сторінці.</p>
+</li>
+</ol>
+<p>По суті, це прототип для шаблону проектування <a href="https://www.rabbitmq.com/tutorials#2-work-queues">work-queues</a></p>
+<p>Критика:
+Це не ідеальне рішення. По факту зображення можна зразу писати в базу даних, а в черги обробникам відправляти тільки метадані. Але була ціль саме перевірити, як обробляти в чергах повідомлення з бінарними об'єктами.</p>
+<h2 id="a-name%22p4%224-%D0%BE%D1%81%D0%BE%D0%B1%D0%BB%D0%B8%D0%B2%D0%BE%D1%81%D1%82%D1%96-%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BD%D0%BE%D0%B3%D0%BE-%D0%BA%D0%BE%D0%B4%D1%83-%D0%BF%D1%80%D0%BE%D1%82%D0%BE%D1%82%D0%B8%D0%BF%D1%83a"><a name="p4">4. Особливості програмного коду прототипу</a></h2>
+<p>Програмний код прототипу знаходиться в репозиторії: <a href="https://github.com/pavlo-shcherbukha/learnamqp">learnamqp</a>.</p>
+<ol>
+<li><strong>Python Flask WebApp</strong> знаходиться в каталозі <strong>./sender_web</strong>.</li>
+<li><strong>Python Image processor</strong> знаходиться в каталозі <strong>./receiver_web</strong>. Запускається з &quot;${workspaceFolder}/receiver_weber.py&quot;</li>
+<li><strong>Python Database Writer</strong> знаходиться в каталозі <strong>./writer_web</strong>. Запускається &quot;${workspaceFolder}/writer_weber.py&quot;.</li>
+</ol>
+<p>Всі додатки в комплексі запускаються за допомогою Docker Composer: <a href="https://github.com/pavlo-shcherbukha/learnamqp/blob/main/docker-compose-websender.yaml">docker-compose-websender.yaml</a>.</p>
+<p>Конфігураційні файли Docker Composer: - <a href="https://github.com/pavlo-shcherbukha/learnamqp/blob/main/docker-compose-couch.yaml">docker-compose-couch.yaml</a>;</p>
+<ul>
+<li><a href="https://github.com/pavlo-shcherbukha/learnamqp/blob/main/docker-compose-rabbit.yaml">docker-compose-rabbit.yaml</a> - використовуються для запуску тільки couchdb чи rabbit mq.</li>
+</ul>
+<p>Необхідні бібіліотеки, що є  спільні для всіх  додатків прописані в файлі <a href="https://github.com/pavlo-shcherbukha/learnamqp/blob/main/requirements.txt">requirements.txt</a>. За виключеннм бібліотеки обробки зображень, тому, що вони досить великі і займають багато часу при інсталяції. Тому в <a href="https://github.com/pavlo-shcherbukha/learnamqp/blob/main/docker-receive-web">docker-receive-web</a> установка цих бібліотек прописана окремо:</p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Install the dependencies</span>
+
+RUN python3.9 -m pip install --upgrade pip
+
+RUN /usr/libexec/s2i/assemble
+<span class="hljs-comment">#RUN pip3 install opencv-python</span>
+RUN pip3 install opencv-contrib-python
+RUN pip3 install numpy
+EXPOSE 8080
+
+<span class="hljs-comment"># Remote debug run: packages</span>
+<span class="hljs-comment"># RUN pip install ptvsd debugpy</span>
+<span class="hljs-comment"># Remote debug run: Keeps Python from generating .pyc files in the container</span>
+
+</div></code></pre>
+
+</body>
+</html>
