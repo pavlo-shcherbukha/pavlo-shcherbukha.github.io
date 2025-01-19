@@ -218,4 +218,101 @@ published: true
 </BODY>
 </HTML>
 
-Хоча, тут я мабуть не правий, бо міряти  напругу постійного струму при генерації якось не правильно. Але,всеж  як є.
+Хоча, тут я мабуть не правий, бо міряти  напругу постійного струму при генерації якось не правильно. 
+
+### <a name="p7">7. Моделювання</a>
+
+Спершу я попробував змоделювати роботу підсилювача на транзисторі 2N2222 від тестових джерел змінного струму частотою  10kHz і амплітудою 0.01V. 
+Ціль була вибрати  лінійний режим роботи транзистора. На pic-20 та pic-21  показано ідельаний режим роботи транзистора, коли амплітуда вихідного  
+сигналу десь 1.6V  і ще є запас для росту при цьому значення резистора R3  ідельано мати  близько 25K.   
+
+
+
+<TITLE> Ідеальний режим роботи каскаду</TITLE>
+</HEAD>
+<BODY>
+<TABLE BORDER="1">
+
+<TR>
+    <TD><kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-20.png" /></kbd>
+<p style="text-align: center;"><a name="pic-20">pic-20</a></p></TD>
+    <TD><kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-21.png" /></kbd>
+<p style="text-align: center;"><a name="pic-21">pic-21</a></p></TD>
+</TR>
+</TABLE>
+</BODY>
+</HTML>
+
+Тепер, якщо збільшити опір R3  десь до 50K  картина буде набагато гірша, є великий ризик обмеження амплітуди зверху і немає запасу по амплітуді
+
+
+<TITLE>Не ідельаний режим роботи каскаду</TITLE>
+</HEAD>
+<BODY>
+<TABLE BORDER="1">
+
+<TR>
+    <TD><kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-22.png" /></kbd>
+<p style="text-align: center;"><a name="pic-22">pic-22</a></p></TD>
+    <TD><kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-23.png" /></kbd>
+<p style="text-align: center;"><a name="pic-23">pic-23</a></p></TD>
+</TR>
+</TABLE>
+</BODY>
+</HTML>
+
+Ну, це очевидні речі. 
+Тепер спробуємо змоделювати генератор на 10kHz. На pic-25  зарзу показано аналіз схеми по постійному струму.
+
+<kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-26.png" /></kbd>
+<p style="text-align: center;"><a name="pic-26">pic-26</a></p>
+
+А тепер глянемо, що відбувається на виході по змінному струму. На pic-24  видно, як запускається генератор.
+тобто йому десь більзько 1.5 ms  треба, щоб він розкачався. А потім, якщо трощки збільшити масштаб графіка
+[pic-25], то можна побачити, що період сигналу десь 74us, що відповідає частоті 13.514 kHz , а повний розмах сигналу складає 8.27V. 
+Прицьому видно, що нижня частина синусоїди трошки спотворена.  
+
+<TITLE>Н</TITLE>
+</HEAD>
+<BODY>
+<TABLE BORDER="1">
+
+<TR>
+    <TD><kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-24.png" /></kbd>
+<p style="text-align: center;"><a name="pic-24">pic-24</a></p></TD>
+    <TD><kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-25.png" /></kbd>
+<p style="text-align: center;"><a name="pic-25">pic-25</a></p></TD>
+</TR>
+</TABLE>
+</BODY>
+</HTML>
+
+
+Спробуємо шлюхом зміни R3  позбавитися від цього спотворення [pic-27]. Або ж, підкорегувати 
+за допомогою зміни R6 до  190-200 Ом.
+
+<TITLE>Н</TITLE>
+</HEAD>
+<BODY>
+<TABLE BORDER="1">
+
+<TR>
+    <TD><kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-27.png" /></kbd>
+<p style="text-align: center;"><a name="pic-27">pic-27</a></p></TD>
+    <TD><kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-28.png" /></kbd>
+<p style="text-align: center;"><a name="pic-28">pic-28</a></p></TD>
+</TR>
+</TABLE>
+</BODY>
+</HTML>
+
+І останнє, якщо конденсатор C4 зманшити з 10uF  до 100nF  то і частота коливань генератор
+зміниться до 24kHz (42us). 
+
+<kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-29.png" /></kbd>
+<p style="text-align: center;"><a name="pic-29">pic-29</a></p>
+
+
+Тобто, з приводу моделювання можна зробити висновок, що воно працює і таки досить точно, 
+якщо правильно розрахувати схему з самого початку.  Але мозок моделювання не замінить 
+і досвід теж.
