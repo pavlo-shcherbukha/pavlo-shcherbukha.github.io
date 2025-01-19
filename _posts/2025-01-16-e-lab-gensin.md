@@ -166,4 +166,56 @@ published: true
 ### <a name="p6">6. Тестування генератора 10 kHz</a>
 
 
+Зараз я переключив генератор на 10kHz, [pic-12](pic-12).
 
+<kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-12.jpg" /></kbd>
+<p style="text-align: center;"><a name="pic-12">pic-12</a></p>
+
+Як видно,осцилограф підключено до оранжевого виходу, а живлення переключено на нижню шину.
+Поглянути, що показує осцилограф  можна на [pic-13](#pic-13)  та [pic-14](#pic-14).
+
+<TITLE>Покази осцилографа на 10 кГц</TITLE>
+</HEAD>
+<BODY>
+<TABLE BORDER="1">
+<TR>
+    <TH><a name="pic-13">pic-13</a> </TH>
+    <TH><a name="pic-14">pic-14</a> </TH>
+</TR>
+<TR>
+    <TD><kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-13.jpg" /></kbd>
+<p style="text-align: center;"><a name="pic-13">pic-13</a></p></TD>
+    <TD><kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-14.jpg" /></kbd>
+<p style="text-align: center;"><a name="pic-14">pic-14</a></p></TD>
+</TR>
+</TABLE>
+</BODY>
+</HTML>
+
+Як вдно, при живленні 9.2V (крона трошки відновилася) частота генерації 13.8 kHz. Тепер відключив позитивний зворотній зв'язок і  що на колекторі 
+транзистора у мене аж 6.7V  і генератор успішно працює
+
+<kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-15.jpg" /></kbd>
+<p style="text-align: center;"><a name="pic-15">pic-15</a></p>
+
+
+Але помітив, що із зменшенням напруги на колекторі транзистору збільшуються шуми на синусоїді, але генерація працює стабільно
+<TITLE>Покази осцилографа на 10 кГц з шумами</TITLE>
+</HEAD>
+<BODY>
+<TABLE BORDER="1">
+<TR>
+    <TH><a name="pic-16">pic-16</a> </TH>
+    <TH><a name="pic-17">pic-17</a> </TH>
+</TR>
+<TR>
+    <TD><kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-16.jpg" /></kbd>
+<p style="text-align: center;"><a name="pic-16">pic-16</a></p></TD>
+    <TD><kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-17.jpg" /></kbd>
+<p style="text-align: center;"><a name="pic-17">pic-17</a></p></TD>
+</TR>
+</TABLE>
+</BODY>
+</HTML>
+
+Хоча, тут я мабуть не правий, бо міряти  напругу постійного струму при генерації якось не правильно. Але,всеж  як є.
