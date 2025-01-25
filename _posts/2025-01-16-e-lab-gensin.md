@@ -32,9 +32,9 @@ published: true
     <TH>Генератор на 10 кГц </TH>
 </TR>
 <TR>
-    <TD><kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-01.png" /></kbd>
+    <TD><kbd><img src="/assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-01.png" /></kbd>
 <p style="text-align: center;"><a name="pic-01">pic-01</a></p></TD>
-    <TD><kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-02.png" /></kbd>
+    <TD><kbd><img src="/assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-02.png" /></kbd>
 <p style="text-align: center;"><a name="pic-02">pic-02</a></p></TD>
 </TR>
 </TABLE>
@@ -50,12 +50,12 @@ published: true
 Перше, що я зробив, це поклав руки на клавіатуру  комп'ютера і пошукав такі схеми. Як виявилося їх повно і в російськомвному сегменті і в англомовному. 
 Друге, що зробив, глянув свій конспект по електроніці і знайшов там щось дуже схоже:
 
-<kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-03.jpg" /></kbd>
+<kbd><img src="/assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-03.jpg" /></kbd>
 <p style="text-align: center;"><a name="pic-03">pic-03</a></p>
 
 А далі, раз ячейки Сіффера (правда я їх не знайшов) - значить потрібно шукати в англомовному сегменті інтернета. Але пошук, окрім загальних схем нічого не показав, тому взяв, 
 розрахував сам, як розумів, з використанням тих компонентів, що в мене є. 
-В процесі пошуків, я прийшов до висновку, що в англомовному сегмент інтернета ця схема генератора досить відома і викорситовується як для біполярних так і для польових 
+В процесі пошуків, я прийшов до висновку, що в англомовному сегмент інтернета ця схема генератора досить відома і використовується як для біполярних так і для польових 
 транзисторів, а ще використовується і для генераторів на операційних підсилювачах. Якщо узагальнити, то зворотній зв'язок з переворотом фази досить очевидна ідея для інжнера, 
 що знайомий з курсом ТОЕ. 
 
@@ -85,9 +85,9 @@ published: true
     <TH>Генератор на 10 кГц </TH>
 </TR>
 <TR>
-    <TD><kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-04.png" /></kbd>
+    <TD><kbd><img src="/assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-04.png" /></kbd>
 <p style="text-align: center;"><a name="pic-04">pic-04</a></p></TD>
-    <TD><kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-05.png" /></kbd>
+    <TD><kbd><img src="/assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-05.png" /></kbd>
 <p style="text-align: center;"><a name="pic-05">pic-05</a></p></TD>
 </TR>
 </TABLE>
@@ -99,8 +99,8 @@ published: true
 Для частоти в 1 kHz він повинен мати ємність 47uF і більше. Для частоти 10kHz він повинен мати ємність  10uF і більше.
 
 За допомогою змінного резистора RV1  вибираємо режим роботи транзистора так, щоб генерація була  стійкою, а синусоїда була синусоїдою з мінімальними викривленнями. 
-Транзистор 2N2222  або PN2222  одне і те саме. PN2222 вказує, зо корпус транзистора пластмасовий типу TO-92, а 2N2222 випускаються в металевому корпусі. 
-ДатаШит на цей транзистор пожна подивитися за лінком: [2N2222](../assets/img/posts/2025-01-16-e-lab-gensin/doc/2n2222_2n2222a.pdf). 
+Транзистор 2N2222  або PN2222  одне і те саме. PN2222 вказує, що корпус транзистора пластмасовий типу TO-92, а 2N2222 випускаються в металевому корпусі. 
+ДатаШит на цей транзистор пожна подивитися за лінком: [2N2222](/assets/img/posts/2025-01-16-e-lab-gensin/doc/2n2222_2n2222a.pdf). 
 За показниками тестера транзисторів в мультиметрі, коефіцієнт передачі транзисторів по току 242 і 276. 
 
 ### <a name="p4">4. Проблеми запуску на налагодження генераторів</a>
@@ -109,18 +109,18 @@ published: true
 в районі 5.1V-6.2V. Потім відновив з'єднання і генерація зразу пішла. Ну може трошки спотворена форма синусу, але за допомогою змінного резистора RV1, я її відкорегував. 
 Основною проблемою  при запуску було те, що я не оцінив важливісь конlенсатора С4 і поставив "що було під рукою", а саме неполярний 100nF. В результаті генератор видава 
 прекрасний синус на частоті 25-26 kHz, але зміна коненсаторів фазо-зміщуйочого ланціюжка призводила до зриву генерації, а зміна резисторів в ланцюжку могла монизити 
-частоту десь до 25kHz. А от як тільки замінив С4 на 100 uF,  так зразу генератори і запрацювали на потрібній частоті. Пізніше, вже дослідним шляхом підібрав найнижчі 
+частоту десь до 18kHz. А от як тільки замінив С4 на 100 uF,  так зразу генератори і запрацювали на потрібній частоті. Пізніше, вже дослідним шляхом підібрав найнижчі 
 номінали C4,  при яких частота генерації стабільна, звичайно, з того що в мене було. Фактично, отримав частоти генерації: 1,2 kHz  та 13 kHz. Тобто відхилення від номінала 
-до 30%, але поки мені це не приципово. Без конденсатора C4  генерація взагалі не запускається. При замалому номіналі C4  частота генерації збільшується. При ємності в 1uF  на 
+до 30%, але поки мені це не принципово. Без конденсатора C4  генерація взагалі не запускається. При замалому номіналі C4  частота генерації збільшується. При ємності в 1uF  на 
 генераторі 10kHz  частота піднімалася до 16kHz. Чому так відбувається, я пояснення не знайшов. Цей конденсатор повинен обмежувати  низькі частоти. Але чому він так впливає на 
 частоту генерації - поки не знаю. 
 
 А ще, у мене нижній сегмент синусоїди був трошки спотворений, незважаючи на всі мої спроби акуратно покрутити резистор RV1.  Цю проблему я виправив, шляхом 
-збільшення негативного зворотнього зв'язку по постійному струму, а саме збільшив номінал R6 зі 100 до 150kOm
+збільшення негативного зворотнього зв'язку по постійному струму, а саме збільшив номінал R6 зі 100 до 150 Om, але зважаючи на модель, то можливо і 200 Ом буде нормально.
 
-Зовнішній вигляд змантованих генераторів на макетній платі показано на: [pic-06](#pic-06).
+Зовнішній вигляд змонтованих генераторів на макетній платі показано на: [pic-06](#pic-06).
 
-<kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-06.jpg" /></kbd>
+<kbd><img src="/assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-06.jpg" /></kbd>
 <p style="text-align: center;"><a name="pic-06">pic-06</a></p>
 
 
@@ -131,10 +131,10 @@ published: true
 
 ### <a name="p5">5. Тестування генератора 1 kHz</a>
 
-<kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-07.jpg" /></kbd>
+<kbd><img src="/assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-07.jpg" /></kbd>
 <p style="text-align: center;"><a name="pic-07">pic-07</a></p>
 
-Тепер трошки займемося вимірами генератора на 1 kHz. Далі наведені покази осцилографа для шенератора на 1 кГц
+Тепер трошки займемося вимірами генератора на 1 kHz. Далі наведені покази осцилографа для генератора на 1 кГц
 
 <TITLE>Покази осцилографа на 1 кГц</TITLE>
 </HEAD>
@@ -145,9 +145,9 @@ published: true
     <TH><a name="pic-09">pic-09</a> </TH>
 </TR>
 <TR>
-    <TD><kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-08.jpg" /></kbd>
+    <TD><kbd><img src="/assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-08.jpg" /></kbd>
 <p style="text-align: center;"><a name="pic-08">pic-08</a></p></TD>
-    <TD><kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-09.jpg" /></kbd>
+    <TD><kbd><img src="/assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-09.jpg" /></kbd>
 <p style="text-align: center;"><a name="pic-09">pic-09</a></p></TD>
 </TR>
 </TABLE>
@@ -155,11 +155,11 @@ published: true
 </HTML>
 
 Як бачимо, синусоїда досить прийнятна, частотою 1.25kHz. Тепер глянемо робочу точку транзистора. При живлені 8.84V [pic-10](#pic-10)
-<kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-10.jpg" /></kbd>
+<kbd><img src="/assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-10.jpg" /></kbd>
 <p style="text-align: center;"><a name="pic-10">pic-10</a></p>
 я відключив звортній зв'язок і заміряв напругу на  колекторі транзистора. Як бачиом, 5.1V. 
 
-<kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-11.jpg" /></kbd>
+<kbd><img src="/assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-11.jpg" /></kbd>
 <p style="text-align: center;"><a name="pic-11">pic-11</a></p>
 
 
@@ -168,7 +168,7 @@ published: true
 
 Зараз я переключив генератор на 10kHz, [pic-12](pic-12).
 
-<kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-12.jpg" /></kbd>
+<kbd><img src="/assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-12.jpg" /></kbd>
 <p style="text-align: center;"><a name="pic-12">pic-12</a></p>
 
 Як видно,осцилограф підключено до оранжевого виходу, а живлення переключено на нижню шину.
@@ -183,9 +183,9 @@ published: true
     <TH><a name="pic-14">pic-14</a> </TH>
 </TR>
 <TR>
-    <TD><kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-13.jpg" /></kbd>
+    <TD><kbd><img src="/assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-13.jpg" /></kbd>
 <p style="text-align: center;"><a name="pic-13">pic-13</a></p></TD>
-    <TD><kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-14.jpg" /></kbd>
+    <TD><kbd><img src="/assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-14.jpg" /></kbd>
 <p style="text-align: center;"><a name="pic-14">pic-14</a></p></TD>
 </TR>
 </TABLE>
@@ -209,9 +209,9 @@ published: true
     <TH><a name="pic-17">pic-17</a> </TH>
 </TR>
 <TR>
-    <TD><kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-16.jpg" /></kbd>
+    <TD><kbd><img src="/assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-16.jpg" /></kbd>
 <p style="text-align: center;"><a name="pic-16">pic-16</a></p></TD>
-    <TD><kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-17.jpg" /></kbd>
+    <TD><kbd><img src="/assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-17.jpg" /></kbd>
 <p style="text-align: center;"><a name="pic-17">pic-17</a></p></TD>
 </TR>
 </TABLE>
@@ -222,7 +222,7 @@ published: true
 
 ### <a name="p7">7. Моделювання</a>
 
-Спершу я попробував змоделювати роботу підсилювача на транзисторі 2N2222 від тестових джерел змінного струму частотою  10kHz і амплітудою 0.01V. 
+Спершу я спробував змоделювати роботу підсилювача на транзисторі 2N2222 від тестових джерел змінного струму частотою  10kHz і амплітудою 0.01V. 
 Ціль була вибрати  лінійний режим роботи транзистора. На pic-20 та pic-21  показано ідельаний режим роботи транзистора, коли амплітуда вихідного  
 сигналу десь 1.6V  і ще є запас для росту при цьому значення резистора R3  ідельано мати  близько 25K.   
 
@@ -234,9 +234,9 @@ published: true
 <TABLE BORDER="1">
 
 <TR>
-    <TD><kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-20.png" /></kbd>
+    <TD><kbd><img src="/assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-20.png" /></kbd>
 <p style="text-align: center;"><a name="pic-20">pic-20</a></p></TD>
-    <TD><kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-21.png" /></kbd>
+    <TD><kbd><img src="/assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-21.png" /></kbd>
 <p style="text-align: center;"><a name="pic-21">pic-21</a></p></TD>
 </TR>
 </TABLE>
@@ -252,9 +252,9 @@ published: true
 <TABLE BORDER="1">
 
 <TR>
-    <TD><kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-22.png" /></kbd>
+    <TD><kbd><img src="/assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-22.png" /></kbd>
 <p style="text-align: center;"><a name="pic-22">pic-22</a></p></TD>
-    <TD><kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-23.png" /></kbd>
+    <TD><kbd><img src="/assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-23.png" /></kbd>
 <p style="text-align: center;"><a name="pic-23">pic-23</a></p></TD>
 </TR>
 </TABLE>
@@ -262,15 +262,15 @@ published: true
 </HTML>
 
 Ну, це очевидні речі. 
-Тепер спробуємо змоделювати генератор на 10kHz. На pic-25  зарзу показано аналіз схеми по постійному струму.
+Тепер спробуємо змоделювати генератор на 10kHz. На pic-25  зразу показано аналіз схеми по постійному струму.
 
-<kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-26.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-26.png" /></kbd>
 <p style="text-align: center;"><a name="pic-26">pic-26</a></p>
 
 А тепер глянемо, що відбувається на виході по змінному струму. На pic-24  видно, як запускається генератор.
-тобто йому десь більзько 1.5 ms  треба, щоб він розкачався. А потім, якщо трощки збільшити масштаб графіка
+тобто йому десь близько 1.5 ms  треба, щоб він розкачався. А потім, якщо трошки збільшити масштаб графіка
 [pic-25], то можна побачити, що період сигналу десь 74us, що відповідає частоті 13.514 kHz , а повний розмах сигналу складає 8.27V. 
-Прицьому видно, що нижня частина синусоїди трошки спотворена.  
+Прицьому видно, що нижня частина синусоїди трошки спотворена.  Але по частоті генерації можна сказати, що теоретичний і практичний результати співпали.
 
 <TITLE>Н</TITLE>
 </HEAD>
@@ -278,9 +278,9 @@ published: true
 <TABLE BORDER="1">
 
 <TR>
-    <TD><kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-24.png" /></kbd>
+    <TD><kbd><img src="/assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-24.png" /></kbd>
 <p style="text-align: center;"><a name="pic-24">pic-24</a></p></TD>
-    <TD><kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-25.png" /></kbd>
+    <TD><kbd><img src="/assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-25.png" /></kbd>
 <p style="text-align: center;"><a name="pic-25">pic-25</a></p></TD>
 </TR>
 </TABLE>
@@ -288,7 +288,7 @@ published: true
 </HTML>
 
 
-Спробуємо шлюхом зміни R3  позбавитися від цього спотворення [pic-27]. Або ж, підкорегувати 
+Спробуємо шляхом зміни R3  позбавитися від цього спотворення [pic-27]. Або ж, підкорегувати 
 за допомогою зміни R6 до  190-200 Ом.
 
 <TITLE>Н</TITLE>
@@ -297,22 +297,23 @@ published: true
 <TABLE BORDER="1">
 
 <TR>
-    <TD><kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-27.png" /></kbd>
+    <TD><kbd><img src="/assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-27.png" /></kbd>
 <p style="text-align: center;"><a name="pic-27">pic-27</a></p></TD>
-    <TD><kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-28.png" /></kbd>
+    <TD><kbd><img src="/assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-28.png" /></kbd>
 <p style="text-align: center;"><a name="pic-28">pic-28</a></p></TD>
 </TR>
 </TABLE>
 </BODY>
 </HTML>
 
-І останнє, якщо конденсатор C4 зманшити з 10uF  до 100nF  то і частота коливань генератор
-зміниться до 24kHz (42us). 
+І останнє, якщо конденсатор C4 зменшити з 10uF  до 100nF  то і частота коливань генератора
+зміниться до 24kHz (42us). Тобто тут теж модель і практичний результат досить близькі.
 
-<kbd><img src="../assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-29.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-01-16-e-lab-gensin/doc/pic-29.png" /></kbd>
 <p style="text-align: center;"><a name="pic-29">pic-29</a></p>
 
 
 Тобто, з приводу моделювання можна зробити висновок, що воно працює і таки досить точно, 
 якщо правильно розрахувати схему з самого початку.  Але мозок моделювання не замінить 
 і досвід теж.
+
