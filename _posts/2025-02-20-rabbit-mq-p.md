@@ -208,7 +208,7 @@ def pil_image_to_byte_array(image):
    - придумати щось своє, містечкове.
 
    От я пішов своїм шляхом, моржливо і не правильним. Я створив собі окремий exchange **doclin_repl** і окрему чергу **worker_replay** і всі обробники в неї відповідаю своїми повідомленнями.
-   А вже Flow-Consumer розбирається що далі з цими повідомленнями робити. Структура повідомлення в чергу має вуигляд:
+   А вже Flow-Consumer розбирається що далі з цими повідомленнями робити. Структура повідомлення в чергу, після трансформації в Markdown? має вигляд:
 
    ```json
      {"document_id": "18fcf8f58006a7064aa9bb3ad80026de", "dbname": "dbmd", "mdname": "PN2222A.md", "status": "MarkDownCreated"}
@@ -247,7 +247,17 @@ routing key виконує маршрутизацію повідомлень і 
 <kbd><img src="../assets/img/posts/2025-02-20-rabbitmq-p/doc/pic-06.png" /></kbd>
 <p style="text-align: center;"><a name="pic-06">pic-06</a></p>
 
-Після роботи worker json трохи зміниться:
+Два інших **routing key**, що показані на [pic-06-1](#pic-06-1)  викристовуються для класифікації
+джерела відповіді, і, відповідну роутингу на відповвідний обробник в flow
+
+<kbd><img src="../assets/img/posts/2025-02-20-rabbitmq-p/doc/pic-6-1.png" /></kbd>
+<p style="text-align: center;"><a name="pic-06-1">pic-06-1</a></p>
+
+
+
+
+
+Після роботи worker, що сформував Markdown json трохи зміниться:
 
 - з'явиться ключ "converter";
 - зміниться  "proc_status": "MarkDownCreated".
@@ -277,6 +287,174 @@ routing key виконує маршрутизацію повідомлень і 
 
 ```
 
-#s#<a name="p4">4. Приклад програмного коді </a>
+А коли відпрацюють обробники, що завантажують файли зображень в хмару, то  фінальний JSON  буде виглядати ось так:
+
+
+```json
+
+{
+  "_id": "d22b78e50454605eab9941d7140a76ed",
+  "_rev": "16-4a16511a7625479d2ba0ab3c72db3589",
+  "name": "Roman.docx",
+  "content_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "proc_status": "MarkDownCreated",
+  "converter": {
+    "mdname": "Roman.md",
+    "dbname": "dbmd"
+  },
+  "az_upload": [
+    {
+      "file_name": "Roman.md-picture-1.png",
+      "file_id": "d22b78e50454605eab9941d7140a7a4e",
+      "blobName": "Roman.md-picture-1.png",
+      "containerName": "images"
+    },
+    {
+      "file_name": "Roman.md-picture-6.png",
+      "file_id": "d22b78e50454605eab9941d7140aa727",
+      "blobName": "Roman.md-picture-6.png",
+      "containerName": "images"
+    },
+    {
+      "file_name": "Roman.md-picture-5.png",
+      "file_id": "d22b78e50454605eab9941d7140aa350",
+      "blobName": "Roman.md-picture-5.png",
+      "containerName": "images"
+    },
+    {
+      "file_name": "Roman.md-picture-3.png",
+      "file_id": "d22b78e50454605eab9941d7140a8eee",
+      "blobName": "Roman.md-picture-3.png",
+      "containerName": "images"
+    },
+    {
+      "file_name": "Roman.md-picture-7.png",
+      "file_id": "d22b78e50454605eab9941d7140aa7ee",
+      "blobName": "Roman.md-picture-7.png",
+      "containerName": "images"
+    },
+    {
+      "file_name": "Roman.md-picture-4.png",
+      "file_id": "d22b78e50454605eab9941d7140a9507",
+      "blobName": "Roman.md-picture-4.png",
+      "containerName": "images"
+    },
+    {
+      "file_name": "Roman.md-picture-2.png",
+      "file_id": "d22b78e50454605eab9941d7140a81a4",
+      "blobName": "RFC-6413.md-picture-2.png",
+      "containerName": "images"
+    }
+  ],
+  "ibm_upload": [
+    {
+      "file_name": "Roman.md-picture-6.png",
+      "file_id": "d22b78e50454605eab9941d7140aa727",
+      "blobName": "Roman.md-picture-6.png",
+      "containerName": "cloud-object-storage-cos-standard-mrh"
+    },
+    {
+      "file_name": "Roman.md-picture-5.png",
+      "file_id": "d22b78e50454605eab9941d7140aa350",
+      "blobName": "Roman.md-picture-5.png",
+      "containerName": "cloud-object-storage-cos-standard-mrh"
+    },
+    {
+      "file_name": "Roman.md-picture-3.png",
+      "file_id": "d22b78e50454605eab9941d7140a8eee",
+      "blobName": "Roman.md-picture-3.png",
+      "containerName": "cloud-object-storage-cos-standard-mrh"
+    },
+    {
+      "file_name": "Roman.md-picture-4.png",
+      "file_id": "d22b78e50454605eab9941d7140a9507",
+      "blobName": "Roman.md-picture-4.png",
+      "containerName": "cloud-object-storage-cos-standard-mrh"
+    },
+    {
+      "file_name": "Roman.md-picture-1.png",
+      "file_id": "d22b78e50454605eab9941d7140a7a4e",
+      "blobName": "Roman.md-picture-1.png",
+      "containerName": "cloud-object-storage-cos-standard-mrh"
+    },
+    {
+      "file_name": "Roman.md-picture-7.png",
+      "file_id": "d22b78e50454605eab9941d7140aa7ee",
+      "blobName": "Roman.md-picture-7.png",
+      "containerName": "cloud-object-storage-cos-standard-mrh"
+    },
+    {
+      "file_name": "Roman.md-picture-2.png",
+      "file_id": "d22b78e50454605eab9941d7140a81a4",
+      "blobName": "RFC-6413.md-picture-2.png",
+      "containerName": "cloud-object-storage-cos-standard-mrh"
+    }
+  ],
+  "_attachments": {
+    "Roman.docx": {
+      "content_type": "application/octet-stream",
+      "revpos": 1,
+      "digest": "md5-G4iqIRqxYrP055AkemGdpw==",
+      "length": 681411,
+      "stub": true
+    }
+  }
+}
+
+
+```
+
+Тобто в ключах **az_upload** та  **ibm_upload** будуть записані всі файли, що були завантажені
+в дві хмари. 
+Але є в цьмоу рішенні, є великий підвоний камінь. 
+Паралельно вкачуються файли в оидві хмаи і летять відповіді, які оцей flow  хоче зареєструвати. Звичайно, виникне конкуренція з доступ до документу.
+Будуть з'являьися помилки. Тому ту треба, або коректно обробляти помилки, або я використав DelayNode, що налаштована пропускати 1 повыдмлення в 4 секунди.
+Не, найкраще рішення. Але для цього проекту підійде [pic-06-2](#pic-06-2).
+
+
+<kbd><img src="../assets/img/posts/2025-02-20-rabbitmq-p/doc/pic-6-2.png" /></kbd>
+<p style="text-align: center;"><a name="pic-06-2">pic-06-2</a></p>
+
+
+### <a name="p3-4">3.4 Node-Red: AZURE Cloud Sender, IBM Cloud Sender </a>
+
+Цей компонент складається  з двох потоків
+- ImageSender
+- WriteToBlobStorage
+
+#### ImageSender 
+
+Після отримання Replay  про успішне створення Markdown  по _id  документу вибирає всі, пов'язані з ним images, та відправляє їх бінарні образи 
+в чрегу для відправки  вже в хмари. На [pic-07](#pic-07)  показано, як потоки **ProcessReplays** та **ImageSender** взаэмодыють через чергу.
+
+<kbd><img src="../assets/img/posts/2025-02-20-rabbitmq-p/doc/pic-07.png" /></kbd>
+<p style="text-align: center;"><a name="pic-07">pic-07</a></p>
+
+
+В **ImageSender** видно, що сперщу вичитэться "великий" json  з масивом всіх документів. Потім проганяється все через splitter **SplitArrayOfDocuments**.
+і кожний елемент масиву перетворюється в окреме  повідомлення. 
+Щоб вичитати бінарний образ image  прийшлося використати http API  до CouchDB,  тому що використані ноди  не дають  такої можливості: **ReadImageAttachment**.
+І останній вузол, що публікує повідомлння в чергу побудований по приципу  fanout, [pic-08](#pic-08).
+
+
+
+<kbd><img src="../assets/img/posts/2025-02-20-rabbitmq-p/doc/pic-08.png" /></kbd>
+<p style="text-align: center;"><a name="pic-08">pic-08</a></p>
+
+
+#### WriteToBlobStorage - вичитує бінарні образи і записує images  в різні черги хмари на BlobStorages.
+
+Зовнішній вигляд  потоку показано на: [pic-09](#pic-09).
+<kbd><img src="../assets/img/posts/2025-02-20-rabbitmq-p/doc/pic-09.png" /></kbd>
+<p style="text-align: center;"><a name="pic-09">pic-09</a></p>
+
+Вузли, що безпосередньо завантажубть в хмари, використовуючи ъх API: **ibmCloudStorage**, **azBlobStorage**  -  написані кастомні. Тобто там тільки upload.
+Єдине, що траб сказати, то для AZURE використовується не логін та APIKEY, як я бачив в подібних. В хмарі я налаштував авутентифіацю через 
+[Service Principal](https://github.com/pavlo-shcherbukha/azlearning/blob/tz-000001/azcopy_p.md), що набагато більше підходить для автоматичних додатків.
+
+
+
+
+##<a name="p4">4. Приклад програмного коді </a>
 
 [Docling File Transformer](https://github.com/pavlo-shcherbukha/nodered-doclin-trnsf)
