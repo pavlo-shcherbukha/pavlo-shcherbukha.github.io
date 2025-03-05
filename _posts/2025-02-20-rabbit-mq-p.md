@@ -70,7 +70,7 @@ BlobStorage ( в IBM Cloud  та в AZURE Cloud)  для подальшої об
 ну і вивчити можливості різних бібліотек. В моєму випадку це [RabbitMQ nodes  для Node-Red](https://flows.nodered.org/node/@mnn-o/node-red-rabbitmq)  
 та python  бібліотека [pika](https://pypi.org/project/pika/).
 
-<kbd><img src="../assets/img/posts/2025-02-20-rabbitmq-p/doc/docling-ctx-dgm.svg" /></kbd>
+<kbd><img src="/assets/img/posts/2025-02-20-rabbitmq-p/doc/docling-ctx-dgm.svg" /></kbd>
 <p style="text-align: center;"><a name="pic-01">pic-01</a></p>
 
 Трансформація  файлів виконується за допомогою бібліотеки [Docling](https://pypi.org/project/docling/) на Python. А всі інші маніпуляції виконуються за допомогою 
@@ -84,14 +84,14 @@ BlobStorage ( в IBM Cloud  та в AZURE Cloud)  для подальшої об
 
 Більш детальна модель додатків та їх зв'язків показана на [pic-02](#pic-02). Вивилося торошки мутно, тому далі просто опублікю потоки Node-Red  з поясненнями
 
-<kbd><img src="../assets/img/posts/2025-02-20-rabbitmq-p/doc/docling-app-dgm.svg" /></kbd>
+<kbd><img src="/assets/img/posts/2025-02-20-rabbitmq-p/doc/docling-app-dgm.svg" /></kbd>
 <p style="text-align: center;"><a name="pic-02">pic-02</a></p>
 Ще для себе  зробив висновок, що коли замінити Node-Red  на "чистий" Node.js  чи Python -  то скоріше за все в мене б додалося стільки ж контейнерів - скільки потоків Node-Red 
 зроблено.  
 
 ### <a name="p3-1">3.1. Node-Red: File Uploader</a>
 Компонент виконує завантаження файлів та збереження їх контенту в базів даних **ufile**. Потік показано на [pic-03](#pic-03).
-<kbd><img src="../assets/img/posts/2025-02-20-rabbitmq-p/doc/pic-03-11.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-02-20-rabbitmq-p/doc/pic-03-11.png" /></kbd>
 <p style="text-align: center;"><a name="pic-03">pic-03</a></p>
 
 Бінарний образ файлу зберігається в базі даних десь в такому форматі.
@@ -157,7 +157,7 @@ return msgq;
 і публікуємо повідомлення в чергу для подальшої обробки трансформатором файлів. Це паттерн обміну типу "direct" тому потрібні специфічні налаштування покказані на [pic-04](#pic-04)
 
 
-<kbd><img src="../assets/img/posts/2025-02-20-rabbitmq-p/doc/pic-04.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-02-20-rabbitmq-p/doc/pic-04.png" /></kbd>
 <p style="text-align: center;"><a name="pic-04">pic-04</a></p>
 
 
@@ -229,7 +229,7 @@ def pil_image_to_byte_array(image):
   Ну і в **worker_replay** повідомлення записується з **routing_key='converter'**
 
 
-<kbd><img src="../assets/img/posts/2025-02-20-rabbitmq-p/doc/pic-05.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-02-20-rabbitmq-p/doc/pic-05.png" /></kbd>
 <p style="text-align: center;"><a name="pic-05">pic-05</a></p>
                
 Ну а далі  потрібно розглянути як обробляються відповіді.
@@ -244,13 +244,13 @@ routing key виконує маршрутизацію повідомлень і 
 вноситься інформація про сформований markdown  файл. Потім публікується 
 повідомлення в чергу.
 
-<kbd><img src="../assets/img/posts/2025-02-20-rabbitmq-p/doc/pic-06.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-02-20-rabbitmq-p/doc/pic-06.png" /></kbd>
 <p style="text-align: center;"><a name="pic-06">pic-06</a></p>
 
 Два інших **routing key**, що показані на [pic-06-1](#pic-06-1)  викристовуються для класифікації
 джерела відповіді, і, відповідну роутингу на відповвідний обробник в flow
 
-<kbd><img src="../assets/img/posts/2025-02-20-rabbitmq-p/doc/pic-6-1.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-02-20-rabbitmq-p/doc/pic-6-1.png" /></kbd>
 <p style="text-align: center;"><a name="pic-06-1">pic-06-1</a></p>
 
 
@@ -412,7 +412,7 @@ routing key виконує маршрутизацію повідомлень і 
 Не, найкраще рішення. Але для цього проекту підійде [pic-06-2](#pic-06-2).
 
 
-<kbd><img src="../assets/img/posts/2025-02-20-rabbitmq-p/doc/pic-6-2.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-02-20-rabbitmq-p/doc/pic-6-2.png" /></kbd>
 <p style="text-align: center;"><a name="pic-06-2">pic-06-2</a></p>
 
 
@@ -427,7 +427,7 @@ routing key виконує маршрутизацію повідомлень і 
 Після отримання Replay  про успішне створення Markdown  по _id  документу вибирає всі, пов'язані з ним images, та відправляє їх бінарні образи 
 в чрегу для відправки  вже в хмари. На [pic-07](#pic-07)  показано, як потоки **ProcessReplays** та **ImageSender** взаэмодыють через чергу.
 
-<kbd><img src="../assets/img/posts/2025-02-20-rabbitmq-p/doc/pic-07.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-02-20-rabbitmq-p/doc/pic-07.png" /></kbd>
 <p style="text-align: center;"><a name="pic-07">pic-07</a></p>
 
 
@@ -438,14 +438,14 @@ routing key виконує маршрутизацію повідомлень і 
 
 
 
-<kbd><img src="../assets/img/posts/2025-02-20-rabbitmq-p/doc/pic-08.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-02-20-rabbitmq-p/doc/pic-08.png" /></kbd>
 <p style="text-align: center;"><a name="pic-08">pic-08</a></p>
 
 
 #### WriteToBlobStorage - вичитує бінарні образи і записує images  в різні черги хмари на BlobStorages.
 
 Зовнішній вигляд  потоку показано на: [pic-09](#pic-09).
-<kbd><img src="../assets/img/posts/2025-02-20-rabbitmq-p/doc/pic-09.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-02-20-rabbitmq-p/doc/pic-09.png" /></kbd>
 <p style="text-align: center;"><a name="pic-09">pic-09</a></p>
 
 Вузли, що безпосередньо завантажубть в хмари, використовуючи ъх API: **ibmCloudStorage**, **azBlobStorage**  -  написані кастомні. Тобто там тільки upload.
