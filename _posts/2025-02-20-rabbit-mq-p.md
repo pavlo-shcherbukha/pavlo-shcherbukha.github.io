@@ -457,4 +457,7 @@ routing key виконує маршрутизацію повідомлень і 
 
 ##<a name="p4">4. Приклад програмного коді </a>
 
-[Docling File Transformer](https://github.com/pavlo-shcherbukha/nodered-doclin-trnsf)
+[Docling File Transformer](https://github.com/pavlo-shcherbukha/nodered-doclin-trnsf-p)
+
+[Node  для завантаження в IBM Cloud Object Storage](https://github.com/pavlo-shcherbukha/cos-node-red)
+[Node  для завантаєення в Azure Blob Storage](https://github.com/pavlo-shcherbukha/az-blob-strg-node)
