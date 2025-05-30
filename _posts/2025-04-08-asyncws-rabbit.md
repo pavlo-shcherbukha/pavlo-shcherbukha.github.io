@@ -38,7 +38,7 @@ published: true
 В нашому випадку ми не повинні закривати http з'єднання до тих пір, пок обробка не закінчиться. По закінчинню обробки повинні повернути http status 200 або помилку.
 
 
-<kbd><img src="../assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-1.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-1.png" /></kbd>
 <p style="text-align: center;"><a name="pic-01">pic-01</a></p>
 
 
@@ -369,7 +369,7 @@ export default function report_router (app) {
 
  - конфігурація rabbitMQ  створюється за допомогою її адміністративного Rest API в [bash скрипті](https://github.com/pavlo-shcherbukha/asyncws-p/blob/main/rabbit-cfg/create-q-cfg.sh). Потрібно тільки логін/пароль проставити свій до RabbitMQ. На [pic-02](#pic-02) показана конфігурація черг.
 
- <kbd><img src="../assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-2.svg" /></kbd>
+ <kbd><img src="/assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-2.svg" /></kbd>
 <p style="text-align: center;"><a name="pic-02">pic-02</a></p>
 
 Зважаючи на те, що Node.JS API [api-srvc/server.js](https://github.com/pavlo-shcherbukha/asyncws-p/blob/main/api-srvc/server/server.js#L58) виконує підключення до rabbitMQ при старті  додатка, то зразу ж створюється і тимчасова черга (1). При рестарті додатку ця черга і пропаде автоматично.
@@ -377,7 +377,7 @@ export default function report_router (app) {
 
 Потім створено exchange **syncws_exchange** та через **routing key** виконана прив'язка до відповідних черг. Кожний **routing key** має однозначну віжповідність з реалізованими на Node.JS API [pic-03](#pic-03).
 
- <kbd><img src="../assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-03.svg" /></kbd>
+ <kbd><img src="/assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-03.svg" /></kbd>
 <p style="text-align: center;"><a name="pic-03">pic-03</a></p>
 
 Відповідність методів API  та **routing key**:
@@ -397,18 +397,18 @@ export default function report_router (app) {
 
 Потік Back-End показано на [pic-04](#pic-04).
 
-<kbd><img src="../assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-04.svg" /></kbd>
+<kbd><img src="/assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-04.svg" /></kbd>
 <p style="text-align: center;"><a name="pic-04">pic-04</a></p>
 
 Всі оброники реалізовані у вигляді subflows. Ліворуч видно 2 чреги, що слухає цей flow: одна для "нормлаьних" запитів, а друга для "важких". На [pic-05](#pic-05) показано
 , як виконується роутинг і де шукати в Back-End заголовки повідомлення, що "приїхали" з фронта.
-<kbd><img src="../assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-05.svg" /></kbd>
+<kbd><img src="/assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-05.svg" /></kbd>
 <p style="text-align: center;"><a name="pic-05">pic-05</a></p>
 
 Тут робота вузла **"switch"** досить очевидна.
 
 Кожний subflow - обробник має шаблонну побудову: один вхідний термінал, два вихідних термінала. Перший вихід - виходить повідомлення у випадку успішної обробки. Другий вихід - повідомлення про помилку уже у вигляді, для передачі по http [pic-06](#pic-06).
-<kbd><img src="../assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-06.svg" /></kbd>
+<kbd><img src="/assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-06.svg" /></kbd>
 <p style="text-align: center;"><a name="pic-06">pic-06</a></p>
 
 Але треба звернути особливу увагу на те, що в коді обробника треба вказати куди публікувати відповідь. Тобто треба дістати з заголовка с найменування черги в поставити його в заголовку topic. А заголовок **replyTo** видалити взагалі.
@@ -422,16 +422,16 @@ return msg;
 ```
 А вже при публікації в чергу використати msg.topic, як показано на  [pic-07](#pic-07)
 
-<kbd><img src="../assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-07.svg" /></kbd>
+<kbd><img src="/assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-07.svg" /></kbd>
 <p style="text-align: center;"><a name="pic-07">pic-07</a></p>
 
 Важливо не забути про те, що вам по http  треба відпавити ще і http-status-code. В прототипі я не дуже мудрив і під час генерації помилки додава поле з status code 422. 
 
-<kbd><img src="../assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-08.svg" /></kbd>
+<kbd><img src="/assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-08.svg" /></kbd>
 <p style="text-align: center;"><a name="pic-08">pic-08</a></p>
 
 А вже перд самою публікацією фронт за бакендом домовилися що httpStatusCode  будуть передавати в прикладних заголовках **headers** [pic-09](#pic-09).
-<kbd><img src="../assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-09.svg" /></kbd>
+<kbd><img src="/assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-09.svg" /></kbd>
 <p style="text-align: center;"><a name="pic-09">pic-09</a></p>
 або  в коді [server.js](https://github.com/pavlo-shcherbukha/asyncws-p/blob/main/api-srvc/server/server.js#L79).
 
