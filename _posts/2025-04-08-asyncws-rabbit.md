@@ -318,11 +318,26 @@ export default function report_router (app) {
  Вибір фронтової частини Web Service зробити на Node.js пов'язаний з тим, що асинхронна природа цього фреймфорку найбільше, на мій погляд, підходить для цієї реалізації завдяки її event loop. Зваичайно, можна фронтову частину написати і на Node-Red і на Python Flask. Але з приводу  Python Flask -у мене найбільші сумніви, що він придатний для таких речей. На Node-Red, мені здається, таке запросто можна зробити, але треба подумати як. Ну і я так прогнозую, що в майбутньому мені знадобиться саме така архітектура.
 
  Прототип опубліковано за лінком: [Project asyncws - Prototype async web service with Node.js Node-Red and Rabbit MQ](https://github.com/pavlo-shcherbukha/asyncws-p.git).
+
  ### Основні ключові моменти цього прототипу 
 
  - прототип реалізує більшість міркувань, що були описані в п. [2. Опис архітектури прототипа та міркування з приводу надійності та масштабування](#p2).
 
- - API, що розроблені в рамках цього прототипу ніякої бізнес логіки не несуть і є виклчно демонстраційними. Тут, навтіь не підключав ніякої бази даних, щоб не ускладнювати.
+ - API, що розроблені в рамках цього прототипу ніякої бізнес логіки не несуть і є виклчно демонстраційними. Тут, навтіь не підключав ніякої бази даних, щоб не ускладнювати. Перелік API  такий:
+    - Створити Branch (підрозділ). Method: HTTP-POST, Path: /api/branch.
+    Звичайне Rest APi. Json - request, Json response.
+    - Прочитати список всіх  Branches (підрозділів). Method: HTTP-GET, Path: /api/branch.
+    Звичайне Rest APi. request (нічого, або параметри), Json response.
+    - Отримати глобальний час за переданим регіоном та містом. Method: HTTP-POST, Path: /api/globaltime.
+    Звичайне Rest APi. Json - request, Json response. Але використовується третій сторонній сервіс, який більше не відповідає, ніж відповідає. Дуже зручний, для тестуання обробки помилок (:=, но не для отримання часу.
+    - Запросити звіт. Method: HTTP-POST, Path: /api/report.
+    Звичайне Rest APi. Json - request, Json response, але великий. Там щось масив у кілька сотень записів. Відноситься до категорії "важких" методів по великому об'єму даних, що повертаються.
+    - Завантажити файл як вкладення та передати дані форми. Method: HTTP-POST, Path: /api/uplfile.
+    Завантажує файл та дані форми. multypart/form-data request, Json response. Відноситься до категорії "важких" методів бо завантажується файлі кидається в чергу разом з полями форми. Можна завантажити і кілька файлів.
+    - Перевірити працездатність самого фронтового Node.js API.  Method: HTTP-GET, Path: /api/health.
+    Просто повретає ok,  якщо до додатку достукалися. Ніяких взаємодій с backend  тут немає.
+
+
 
  - запускаєьться все в [docker composer](https://github.com/pavlo-shcherbukha/asyncws-p/blob/main/docker-compose.yml). Можна запустити і локально,  якщо налаштувати env - змінні.
 
@@ -336,10 +351,21 @@ export default function report_router (app) {
 Зважаючи на те, що Node.JS API [api-srvc/server.js](https://github.com/pavlo-shcherbukha/asyncws-p/blob/main/api-srvc/server/server.js#L58) виконує підключення до rabbitMQ при старті  додатка, то зразу ж створюється і тимчасова черга (1). При рестарті додатку ця черга і пропаде автоматично.
 Дві інші черги, що приймають запити створені спеціально, щоб з моделювати розподілення запитів на "важкі" та "нормальні" та продемострувати роутинг повідомлень.
 
-Потім створено exchange **syncws_exchange** та через **routing key** виконана прив'язка до відповідних черг. Кожний **routing key** має однозначну віжповідність з реалізованими на Node.JS API.
+Потім створено exchange **syncws_exchange** та через **routing key** виконана прив'язка до відповідних черг. Кожний **routing key** має однозначну віжповідність з реалізованими на Node.JS API [pic-03](#pic-03).
 
  <kbd><img src="../assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-03.svg" /></kbd>
 <p style="text-align: center;"><a name="pic-03">pic-03</a></p>
 
+Відповідність методів API  та **routing key**:
 
+    - Створити Branch (підрозділ). Method: HTTP-POST, Path: /api/branch -> **api-srvc.create-branch.worker**.
+   
+    - Прочитати список всіх  Branches (підрозділів). Method: HTTP-GET, Path: /api/branch -> **api-srvc.read-branch-list.worker**.
+    
+    - Отримати глобальний час за переданим регіоном та містом. Method: HTTP-POST, Path: /api/globaltime -> **api-srvc.read-branch-list.worker**.
+    
+    - Запросити звіт. Method: HTTP-POST, Path: /api/report -> **api-srvc.read-branch-list.worker**.
+    
+    - Завантажити файл як вкладення та передати дані форми. Method: HTTP-POST, Path: /api/uplfile -> **api-srvc.read-branch-list.worker**.
 
+  
