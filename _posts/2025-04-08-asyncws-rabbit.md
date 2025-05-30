@@ -337,11 +337,34 @@ export default function report_router (app) {
     - Перевірити працездатність самого фронтового Node.js API.  Method: HTTP-GET, Path: /api/health.
     Просто повретає ok,  якщо до додатку достукалися. Ніяких взаємодій с backend  тут немає.
 
+    Всі роутери досить однотипні і "легкі", але в кожному роутері викликається своя функція публікації повідомлення в exchange. Там уже прописується ключові особливості повідомлення, з яким  його публікувати в чергу: **corellationId**,  **Routing Key**, **ідентифікатор http метода**  [srvc-rabbitmq.js](https://github.com/pavlo-shcherbukha/asyncws-p/blob/main/api-srvc/server/services/srvc-rabbitmq.js#L93). Всі роутери знаходяться в [/server/routers](https://github.com/pavlo-shcherbukha/asyncws-p/tree/main/api-srvc/server/routers). При публікації важливо не забути вказати, в яку чергу back end  повинен відповідсти, тобто вказати **replyTo**. Ідентифікатор методу, який публікує повудомлення в чергу передається в групі прикладних заголовків **headers.x-request-type** і по цьому параметру back end буде відправляти повідомлення потрібному обробнику. 
 
+    ```js
+        const published = this.channel.publish(
+            exchangeName,
+            routingKey,
+            messageBuffer,
+            { 
+                persistent: true,
+                correlationId: correlationId,
+                replyTo: replyToQueue,
+                contentType: 'application/json',
+                headers: {
+                    'x-cerrelation-id': correlationId,
+                    'x-request-id': correlationId,
+                    'x-request-type': 'uploadfile'
+
+                }
+            } 
+            
+                                
+        );
+    ```
+ В групу прикладних заголовків **headers** можна записати і все, що потрібно  додатково для повідомлення: службові http-заголовки тощо.
 
  - запускаєьться все в [docker composer](https://github.com/pavlo-shcherbukha/asyncws-p/blob/main/docker-compose.yml). Можна запустити і локально,  якщо налаштувати env - змінні.
 
- - Дослідів з масштабуванням я не робив, бо для цього потрібно в схему включити балансер і фронтовий сервісOзапустити так, щоб  кожний екзеимпляр стартував по своєму порту. Простіше задеплоїти це на якийсь OpenShift/Kubernetes і  там уже  робити  досліди, але про це ще один блог можна написати. 
+ - Дослідів з масштабуванням я не робив, бо для цього потрібно в схему включити балансер і фронтовий сервіс запустити так, щоб  кожний екзеимпляр стартував по своєму порту. Простіше задеплоїти це на якийсь OpenShift/Kubernetes і  там уже  робити  досліди, але про це ще один блог можна написати. Ну і в мене то десь Rabbit MQ немає, а де вона є, то я сам нічого задеплоїти не можу, коротше - то краснуха - то золотуха. Тому все демо на Raspberry PI-5, 8GB. 
 
  - конфігурація rabbitMQ  створюється за допомогою її адміністративного Rest API в [bash скрипті](https://github.com/pavlo-shcherbukha/asyncws-p/blob/main/rabbit-cfg/create-q-cfg.sh). Потрібно тільки логін/пароль проставити свій до RabbitMQ. На [pic-02](#pic-02) показана конфігурація черг.
 
@@ -367,5 +390,47 @@ export default function report_router (app) {
     - Запросити звіт. Method: HTTP-POST, Path: /api/report -> **api-srvc.read-branch-list.worker**.
     
     - Завантажити файл як вкладення та передати дані форми. Method: HTTP-POST, Path: /api/uplfile -> **api-srvc.read-branch-list.worker**.
+
+
+- Ключові особливості Node-Red Back-End.
+
+Потік Back-End показано на [pic-04](#pic-04).
+
+<kbd><img src="../assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-04.svg" /></kbd>
+<p style="text-align: center;"><a name="pic-04">pic-04</a></p>
+
+Всі оброники реалізовані у вигляді subflows. Ліворуч видно 2 чреги, що слухає цей flow: одна для "нормлаьних" запитів, а друга для "важких". На [pic-05](#pic-05) показано
+, як виконується роутинг і де шукати в Back-End заголовки повідомлення, що "приїхали" з фронта.
+<kbd><img src="../assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-05.svg" /></kbd>
+<p style="text-align: center;"><a name="pic-05">pic-05</a></p>
+
+Тут робота вузла **"switch"** досить очевидна.
+
+Кожний subflow - обробник має шаблонну побудову: один вхідний термінал, два вихідних термінала. Перший вихід - виходить повідомлення у випадку успішної обробки. Другий вихід - повідомлення про помилку уже у вигляді, для передачі по http [pic-06](#pic-06).
+<kbd><img src="../assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-06.svg" /></kbd>
+<p style="text-align: center;"><a name="pic-06">pic-06</a></p>
+
+Але треба звернути особливу увагу на те, що в коді обробника треба вказати куди публікувати відповідь. Тобто треба дістати з заголовка с найменування черги в поставити його в заголовку topic. А заголовок **replyTo** видалити взагалі.
+
+```js
+if (msg.properties && msg.properties.replyTo) {
+    msg.topic = msg.properties.replyTo; // Встановлюємо topic як replyTo
+} 
+delete msg.properties.replyTo;
+return msg;
+```
+А вже при публікації в чергу використати msg.topic, як показано на  [pic-07](#pic-07)
+
+<kbd><img src="../assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-07.svg" /></kbd>
+<p style="text-align: center;"><a name="pic-07">pic-07</a></p>
+
+Важливо не забути про те, що вам по http  треба відпавити ще і http-status-code. В прототипі я не дуже мудрив і під час генерації помилки додава поле з status code 422. 
+
+<kbd><img src="../assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-08.svg" /></kbd>
+<p style="text-align: center;"><a name="pic-08">pic-08</a></p>
+
+
+
+
 
   
