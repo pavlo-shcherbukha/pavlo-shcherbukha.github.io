@@ -429,8 +429,9 @@ return msg;
 <kbd><img src="../assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-08.svg" /></kbd>
 <p style="text-align: center;"><a name="pic-08">pic-08</a></p>
 
-
-
+А вже перд самою публікацією фронт за бакендом домовилися що httpStatusCode  будуть передавати в прикладних заголовках **headers** [pic-09](#pic-09).
+<kbd><img src="../assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-09.svg" /></kbd>
+<p style="text-align: center;"><a name="pic-09">pic-09</a></p>
 
 
   
