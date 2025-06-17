@@ -82,6 +82,39 @@ http://$XHOST:$XPORT/api/queues/%2F/main-queue
 
 
 
+### Створення конфігурації **Retry**  на прикладі RabbitMQ
+
+Конфігурація показана на [pic-101](#pic-101)
+
+<kbd><img src="../assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-101.svg" /></kbd>
+<p style="text-align: center;"><a name="pic-101">pic-101</a></p>
+
+
+
+По суті є основна черга **main_queue** та exchange **main_exchange** через який в **main_queue**  потрапляють повідомлення. 
+
+- **якщо повідомлення оброблено успішно**, то відповідь публікується в чергу **reply-queue**. Публікація повідмолення відбувається таким чином:
+
+```js
+    // Якщо треба відправити відповідь у replyTo:
+    if (msg.properties.replyTo) {
+        channel.sendToQueue(
+            msg.properties.replyTo,
+            Buffer.from('{"status":"ok"}'),
+            { correlationId: msg.properties.correlationId, contentType: 'application/json' }
+        );
+    }
+```
+Я бачимо, тут exhange  не вказується (або вказується пусьитй рядок), а в якості routing key вказується назва черга. При такій публікації повідомлення пройде через exchange: (AMQP default). По суті, до цього  exchange "прив'язуються" всі черги з routing key який співпадає з назвою черги.
+
+- ****
+
+Є черга **retry_queue** в яку повідомлення попадають у випадку помилки обробки. 
+
+
+
+
+Далі consumer  читає повідомлення, одне за одним і обробляє його. У випадку успішної обробки ми закриваємо транзакцію, даючи підтвредження **ACK** (ну деякий аналог commit). У випадку, коли повідомлення обробилося з помилкою, ми сигналізуємо про помилку сигналом **NACK** ( щось на кшталт **rollback**). Але при цьому повідомлення переноситься в     
 
 
 
@@ -93,7 +126,14 @@ http://$XHOST:$XPORT/api/queues/%2F/main-queue
 
 
 
-<kbd><img src="/assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-1.png" /></kbd>
-<p style="text-align: center;"><a name="pic-01">pic-01</a></p>
+
+
+
+
+
+
+
+
+
 
 
