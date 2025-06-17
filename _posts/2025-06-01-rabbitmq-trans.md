@@ -84,7 +84,7 @@ http://$XHOST:$XPORT/api/queues/%2F/main-queue
 
 Конфігурація показана на [pic-101](#pic-101)
 
-<kbd><img src="../assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-101.svg" /></kbd>
+<kbd><img src="/assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-101.svg" /></kbd>
 <p style="text-align: center;"><a name="pic-101">pic-101</a></p>
 
 По суті є основна черга **main_queue** та exchange **main_exchange** через який в **main_queue**  потрапляють повідомлення. 
