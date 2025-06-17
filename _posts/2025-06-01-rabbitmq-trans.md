@@ -68,19 +68,17 @@ published: true
 
 Зразу потрібно зауважити, що на Node-Red мені не вдалося зробити такий прототип, тому, що бульшість вузлів: або дуже старі, або є обмеження фукнціональності вузла що не дозволяють це зробити. Проблема в тому, що вузли самі, автоматично створюють чергу, якщо її немає. А якщо ви вже створили конфігурацію черг та обмінників з додатковими аргуентами, то отримаєте помилку підключення, тому що простенька декларація черги у вузлі не співпадає з тим, що на справді створено в RabbitMQ
 
-Так, в каталозі **test**  знаходиться  bash-скрипт для створення конфігурації **create-cfg.sh**. Нижче показано його фрагмент для створення черги **main-queue**. 
+Так, в каталозі **test**  знаходиться  bash-скрипт для створення конфігурації **create-cfg.sh**. Нижче показано його фрагменти для створення конфігурації з поясненнями. 
 
+В цьому фрагменті заповнено ключ **"arguments"**. А ноди для Node-Red  не передбачають його заповення.
 ```bash
 curl -u $XUSR:$XPSW -X PUT \
 -H "Content-Type: application/json" \
 -d '{"auto_delete":false,"durable":true,"arguments":{"x-dead-letter-exchange": "retry-exchange"}}' \
 http://$XHOST:$XPORT/api/queues/%2F/main-queue
 ```
-В цьому фрагменті заповнено ключ **"arguments"**. А ноди для Node-Red  не передбачають його заповення. В цей момент і виникає помилка. На додаток в багатьох комплекатх нод відсутнє ручен управління транзакцією. 
-В реальрному ж житті мені приходилося дуже часто використовувати саме цей шаблон, правда на чергах IBM MQ. Тому я змушений був написати прототип на Node.JS.
-
-
-
+ В цей момент і виникає помилка. На додаток в багатьох комплекатх вузлів Node-Red відсутнє ручне управління транзакцією. 
+В реальному житті мені приходилося дуже часто використовувати саме цей шаблон, правда на чергах IBM MQ. Тому я змушений був написати прототип на Node.JS.
 
 ### Створення конфігурації **Retry**  на прикладі RabbitMQ
 
@@ -89,11 +87,18 @@ http://$XHOST:$XPORT/api/queues/%2F/main-queue
 <kbd><img src="../assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-101.svg" /></kbd>
 <p style="text-align: center;"><a name="pic-101">pic-101</a></p>
 
-
-
 По суті є основна черга **main_queue** та exchange **main_exchange** через який в **main_queue**  потрапляють повідомлення. 
 
-- **якщо повідомлення оброблено успішно**, то відповідь публікується в чергу **reply-queue**. Публікація повідмолення відбувається таким чином:
+- **Якщо повідомлення оброблено успішно**. 
+
+Надсилаємо в канал повідомлення **ACK**, закриваючи транзакцію.
+
+```js
+    channel.ack(msg);
+    console.log(" [x] Message ACKed");
+```
+
+Відповідь публікується в чергу **reply-queue**. Публікація повідмолення відбувається таким чином:
 
 ```js
     // Якщо треба відправити відповідь у replyTo:
@@ -105,35 +110,128 @@ http://$XHOST:$XPORT/api/queues/%2F/main-queue
         );
     }
 ```
-Я бачимо, тут exhange  не вказується (або вказується пусьитй рядок), а в якості routing key вказується назва черга. При такій публікації повідомлення пройде через exchange: (AMQP default). По суті, до цього  exchange "прив'язуються" всі черги з routing key який співпадає з назвою черги.
+Як бачимо, тут exhange  не вказується (або вказується пустий рядок), а в якості routing key вказується назва черги. При такій публікації повідомлення пройде через exchange: (AMQP default). По суті, до цього  exchange "прив'язуються" всі черги з routing key який співпадає з назвою черги.
 
-- ****
+- **Якщо виникла помилка при обробці повідомлення**.
+У разі помилки повідомлення повинно автоматично відправитися в чергу **retry_queue**. В цій черзі повідомлення деякий час полежить в надії на те, що зміняться зовнішні умови і повідомлення  повернеться в чергу main_queue і спробує попасти на обробку повторно. Щоб повідомленя могло автоматично перенестися в іншу чергу, потрібно зробити наступне:
 
-Є черга **retry_queue** в яку повідомлення попадають у випадку помилки обробки. 
+1. При створенні черги  **main-queue** потрібно вказати додаткові аргументи *"arguments":{"x-dead-letter-exchange": "retry-exchange"}*, де ключ **"x-dead-letter-exchange"** вказує на назву exchange, що перенаправить повідомлення в **retry_queue**. Далі показано скрипт для створення main_queue. 
+
+```bash
+echo "Creating RabbitMQ main-queue"
+curl -u $XUSR:$XPSW -X PUT \
+-H "Content-Type: application/json" \
+-d '{"auto_delete":false,"durable":true,"arguments":{"x-dead-letter-exchange": "retry-exchange"}}' \
+http://$XHOST:$XPORT/api/queues/%2F/main-queue
+
+```
+
+```bash
+echo "Creating RabbitMQ main-exchange"
+curl -u $XUSR:$XPSW -X PUT \
+-H "Content-Type: application/json" \
+-d '{"type":"direct","durable":true,"auto_delete":false,"internal":false,"arguments":{}}' \
+http://$XHOST:$XPORT/api/exchanges/%2F/main-exchange
+```
+
+```bash
+echo "Bind queue to exchange main"
+curl -u $XUSR:$XPSW -X POST \
+-H "Content-Type: application/json" \
+-d '{"routing_key":"srvc.transact.cash","arguments":{}}' \
+http://$XHOST:$XPORT/api/bindings/%2F/e/main-exchange/q/main-queue
+```
 
 
+2. Створити **retry-exchange**.
+Тут є одна особливість: не повинен змінюватися оригінальний **routing key**. Для цього ідеально підходить **fanout exchange**. Exchange такого типу ігнорує **routing key**, але його не видаляє і не змінює. **Fanout exchange** прив'язує до себе черги з порожнім **routing key**.
+
+**Створення  retry exchange типу fanout**
+
+```bash
+echo "Creating RabbitMQ retry-exchange"
+curl -u $XUSR:$XPSW -X PUT \
+-H "Content-Type: application/json" \
+-d '{"type":"fanout","durable":true,"auto_delete":false,"internal":false,"arguments":{}}' \
+http://$XHOST:$XPORT/api/exchanges/%2F/retry-exchange
+
+```
+3. Створити чергу **retry-queue**.
+При створенні черги знадобляться додаткові аргументи:
+- треба встановити термін "життя" повідомлення **TTL**;
+- треба встановити **"x-dead-letter-exchange"** з назвою exchange, що пов'язаний з **main_queue**.
+
+Тут показано, створення черги. TTL "x-message-ttl": 30000 вказує, що повідомлення буде "жити" в **retry_queue** 30 секунд. 
+
+```bash
+echo "Creating RabbitMQ retry-queue"
+curl -u $XUSR:$XPSW -X PUT \
+-H "Content-Type: application/json" \
+-d '{"auto_delete":false,"durable":true,"arguments":{ "x-message-ttl": 30000, "x-dead-letter-exchange": "main-exchange" }}' \
+http://$XHOST:$XPORT/api/queues/%2F/retry-queue
+
+```
+
+4. Зв'яжемо exchange  та retry-queue.
+
+```bash
+echo "baind retry q of exhcange retry"
+curl -u $XUSR:$XPSW -X POST \
+-H "Content-Type: application/json" \
+-d '{"routing_key":"","arguments":{}}' \
+http://$XHOST:$XPORT/api/bindings/%2F/e/retry-exchange/q/retry-queue
+
+```
+
+тут треба звернути увагу, що **"routing_key":""** (пустий) . 
 
 
-Далі consumer  читає повідомлення, одне за одним і обробляє його. У випадку успішної обробки ми закриваємо транзакцію, даючи підтвредження **ACK** (ну деякий аналог commit). У випадку, коли повідомлення обробилося з помилкою, ми сигналізуємо про помилку сигналом **NACK** ( щось на кшталт **rollback**). Але при цьому повідомлення переноситься в     
+5. В програмному коді, при виникненні помилки треба в чергу надіслати сигнал **NACK**.
+
+Щось на кшталт оцього фраменту коду.
+```js
+    if (parsedContent.amount > 100.00) {
+        console.error(" [!] Amount exceedds limit:", parsedContent.amount);
+        channel.nack(msg, false, false);
+        console.log(" [x] Message NACKed due to invalid amount");
+        return;       
+    }
 
 
+```
 
+В даному випадку реалізовано перекладання повідомлення в retry-queue, але таке повідомлення може ходити безкінечну кількість раз. Щоб такого не сталося вводиться ще одна черга **parking_queue**. В цю чергу перекладаються повідомлення, що використали задану кількість спроб обробки і не обробилися.
 
+Декларація **parking_queue**
 
+```bash
+echo "Creating RabbitMQ parking queue"
 
+curl -u $XUSR:$XPSW -X PUT \
+-H "Content-Type: application/json" \
+-d '{"auto_delete":false,"durable":true,"arguments":{}}' \
+http://$XHOST:$XPORT/api/queues/%2F/parking-queue
 
+```
 
+Публікувати повідомлення будемо так як і в reply-queue через default exchange.
 
+```js
+    const xDeath = msg.properties.headers['x-death'];
+    let retryCount = 0;
+    if (xDeath && Array.isArray(xDeath) && xDeath.length > 0) {
+        retryCount = xDeath[0].count;
+    }
 
+    if (retryCount >= MAX_RETRY) {
+        // Перенаправити у parking queue
+        channel.sendToQueue( parking_queue, msg.content, msg.properties);
+        channel.ack(msg);
+        console.log('Message sent to parking queue');
+        return;
+    } 
 
-
-
-
-
-
-
-
-
+```
 
 
 
