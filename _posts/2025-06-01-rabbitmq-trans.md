@@ -9,10 +9,14 @@ published: true
 
 <!-- TOC BEGIN -->
 - [1. Про що цей блог](#p1)
-- [2. Опис архітектури прототипа та міркування з приводу надійності та масштабування](#p2)
-- [3. Побудова WebService  на Node.js  та Backend  на Node-Red](#p3)
-- [3.1 Основні ключові моменти цього прототипу](#p3.1)
-
+- [2. Сценарій 1. "Чиста" транзакційність (File Transfer/Data Replication)](#p2)
+- [3. Сценарій 2: Асинхронна обробка з можливістю тимчасових помилок (Банківські платежі)](#p3)
+- [4. Сценарій 3. Синхронно-асинхронні веб-сервіси (одноразова обробка)](#p4)
+- [5. Висновки та додаткові міркування](#p5)
+- [6. Прототип реалізацію метод **Retry queue** та **Dead Letter Queues** (Сценарій 2) на базі RabbitMQ](#p6)
+- [6.1 Створення конфігурації **Retry**  на прикладі RabbitMQ](#p6.1)
+- [6.2 Створеня прототипу на Node.js](#p6.2)
+- [6.3 Node-Red: Невдала спроба створеня прототипу](#p6.3)
 <!-- TOC END -->
 
 ## <a name="p1">1. Про що цей блог</a>
@@ -62,13 +66,15 @@ published: true
 - Атомарність обробки повідомлення: повідомлення буде успішно оброблене повністю або не оброблене взагалі.
 - Розподілені транзакції: Це складніший патерн, який забезпечує атомарність операцій, що охоплюють кілька систем (наприклад, базу даних, зовнішній API та чергу).
 
-## <a name="p6">6. Прототип реалізацію метод **Retry queue** та **Dead Letter Queues** (Сценарій 2) на базі RabbitMQ</a>
+## <a name="p6">6. Прототип реалізацію метод **Retry queue** та **Dead Letter Queues** (Сценарій 2) на базі Rabb</a>
 
-Зробити прототип на базі класичної транзакційності - задача досить очевидна, тому мабуть немає сенсу на неї витрачати час. А сценарій синхронно-асинхронного web service описано в попередньому блозі і там уже є прототип. Тому залишається **Retry queue**.
-
+Зробити прототип на базі класичної транзакційності - задача досить очевидна, тому мабуть немає сенсу на неї витрачати час. А сценарій синхронно-асинхронного web service описано в попередньому блозі [Async Web Service with RabbitMQ](https://pavlo-shcherbukha.github.io/posts/2025-05-08/asyncws-rabbitmq/) і там уже є прототип. Тому залишається **Retry queue**. Оособливістю цього прототипа є необхідність створення відповідної конфігурації черг RabbitMq, що пов'язані з цим прототипом (з вашою бізнеслогіогікою).
+Сам прототип знаходиться за лінком [asyncretry-p](https://github.com/pavlo-shcherbukha/asyncretry-p).
+---
 Зразу потрібно зауважити, що на Node-Red мені не вдалося зробити такий прототип, тому, що бульшість вузлів: або дуже старі, або є обмеження фукнціональності вузла що не дозволяють це зробити. Проблема в тому, що вузли самі, автоматично створюють чергу, якщо її немає. А якщо ви вже створили конфігурацію черг та обмінників з додатковими аргуентами, то отримаєте помилку підключення, тому що простенька декларація черги у вузлі не співпадає з тим, що на справді створено в RabbitMQ
 
-Так, в каталозі **test**  знаходиться  bash-скрипт для створення конфігурації **create-cfg.sh**. Нижче показано його фрагменти для створення конфігурації з поясненнями. 
+
+Так, в каталозі **test**  знаходиться  bash-скрипт для створення конфігурації **create-cfg.sh** . Нижче показано його фрагменти для створення конфігурації з поясненнями. 
 
 В цьому фрагменті заповнено ключ **"arguments"**. А ноди для Node-Red  не передбачають його заповення.
 ```bash
@@ -79,8 +85,9 @@ http://$XHOST:$XPORT/api/queues/%2F/main-queue
 ```
  В цей момент і виникає помилка. На додаток в багатьох комплекатх вузлів Node-Red відсутнє ручне управління транзакцією. 
 В реальному житті мені приходилося дуже часто використовувати саме цей шаблон, правда на чергах IBM MQ. Тому я змушений був написати прототип на Node.JS.
+---
 
-### Створення конфігурації **Retry**  на прикладі RabbitMQ
+### <a name="p6.1">6.1 Створення конфігурації **Retry**  на прикладі RabbitMQ</a>
 
 Конфігурація показана на [pic-101](#pic-101)
 
@@ -88,10 +95,18 @@ http://$XHOST:$XPORT/api/queues/%2F/main-queue
 <p style="text-align: center;"><a name="pic-101">pic-101</a></p>
 
 По суті є основна черга **main_queue** та exchange **main_exchange** через який в **main_queue**  потрапляють повідомлення. 
+Для повторної обробки є додаткові черга **retry-queue** та exchange **retry-exchange**.
+Якщо за задану кількість циклів повідомлення не вдалося обробити, до воно відкидається в чергу **parking-queue**.  
+Створити конфігурацію в один клік можна за допомогою bash скрипта [/tests/create-cfg.sh](https://github.com/pavlo-shcherbukha/asyncretry-p/blob/main/tests/create-cfg.sh), використовуючи адміністративний Rest API. 
+Видалити конфігурацію в один клік можна за допомогою bash скрипта [/tests/delete-cfg.sh](https://github.com/pavlo-shcherbukha/asyncretry-p/blob/main/tests/delete-cfg.sh).
+
+Всі інші  bash-скрипти в катагозі **test** наведені для демонстрації базових можливостей адміністративного rest API.
+
+**Міркування з приводу особливостей обробки повідомлення в прив'язці до RabbitMQ:**
 
 - **Якщо повідомлення оброблено успішно**. 
 
-Надсилаємо в канал повідомлення **ACK**, закриваючи транзакцію.
+Надсилаємо в канал повідомлення **ACK**, закриваючи транзакцію (щось на кшталт commit  в базах даних).
 
 ```js
     channel.ack(msg);
@@ -110,12 +125,14 @@ http://$XHOST:$XPORT/api/queues/%2F/main-queue
         );
     }
 ```
-Як бачимо, тут exhange  не вказується (або вказується пустий рядок), а в якості routing key вказується назва черги. При такій публікації повідомлення пройде через exchange: (AMQP default). По суті, до цього  exchange "прив'язуються" всі черги з routing key який співпадає з назвою черги.
+Як бачимо, тут exhange  не вказується (або вказується пустий рядок), а в якості routing key вказується назва черги. При такій публікації, повідомлення пройде через exchange: (AMQP default). По суті, до цього службового exchange "прив'язуються" всі черги з routing key який співпадає з назвою черги.
 
 - **Якщо виникла помилка при обробці повідомлення**.
-У разі помилки повідомлення повинно автоматично відправитися в чергу **retry_queue**. В цій черзі повідомлення деякий час полежить в надії на те, що зміняться зовнішні умови і повідомлення  повернеться в чергу main_queue і спробує попасти на обробку повторно. Щоб повідомленя могло автоматично перенестися в іншу чергу, потрібно зробити наступне:
+У разі помилки повідомлення повинно автоматично відправитися в чергу **retry_queue**. В цій черзі повідомлення деякий час полежить в надії на те, що зміняться зовнішні умови і повідомлення  повернеться в чергу main_queue і  попаде на обробку повторно. Щоб повідомленя могло автоматично перенестися в іншу чергу, потрібно зробити наступне ( далі ідуть фрагменти з [/tests/create-cfg.sh](https://github.com/pavlo-shcherbukha/asyncretry-p/blob/main/tests/create-cfg.sh) та пояснення до них):
 
-1. При створенні черги  **main-queue** потрібно вказати додаткові аргументи *"arguments":{"x-dead-letter-exchange": "retry-exchange"}*, де ключ **"x-dead-letter-exchange"** вказує на назву exchange, що перенаправить повідомлення в **retry_queue**. Далі показано скрипт для створення main_queue. 
+1. При створенні черги  **main-queue** потрібно вказати додаткові аргументи *"arguments":{"x-dead-letter-exchange": "retry-exchange"}*, де ключ **"x-dead-letter-exchange"** вказує на назву exchange, що перенаправить повідомлення в **retry_queue**. 
+
+Тут показано скрипт для створення main_queue. 
 
 ```bash
 echo "Creating RabbitMQ main-queue"
@@ -125,6 +142,7 @@ curl -u $XUSR:$XPSW -X PUT \
 http://$XHOST:$XPORT/api/queues/%2F/main-queue
 
 ```
+Тут показано скрипт для створення main_exchange. 
 
 ```bash
 echo "Creating RabbitMQ main-exchange"
@@ -134,6 +152,8 @@ curl -u $XUSR:$XPSW -X PUT \
 http://$XHOST:$XPORT/api/exchanges/%2F/main-exchange
 ```
 
+А тут зв'язувіання queue та exchange. 
+
 ```bash
 echo "Bind queue to exchange main"
 curl -u $XUSR:$XPSW -X POST \
@@ -141,10 +161,10 @@ curl -u $XUSR:$XPSW -X POST \
 -d '{"routing_key":"srvc.transact.cash","arguments":{}}' \
 http://$XHOST:$XPORT/api/bindings/%2F/e/main-exchange/q/main-queue
 ```
-
+Як бачимо, що повідомлдення попаде в чергу, якщо буде вказано routing key: **"srvc.transact.cash"**
 
 2. Створити **retry-exchange**.
-Тут є одна особливість: не повинен змінюватися оригінальний **routing key**. Для цього ідеально підходить **fanout exchange**. Exchange такого типу ігнорує **routing key**, але його не видаляє і не змінює. **Fanout exchange** прив'язує до себе черги з порожнім **routing key**.
+Тут є одна особливість: не повинен змінюватися оригінальний **routing key**. Для цього ідеально підходить **fanout exchange**. Exchange такого типу ігнорує **routing key**, але його не видаляє і не змінює, а просто копіює і передає далі. **Fanout exchange** прив'язує до себе черги з порожнім **routing key**.
 
 **Створення  retry exchange типу fanout**
 
@@ -171,6 +191,7 @@ curl -u $XUSR:$XPSW -X PUT \
 http://$XHOST:$XPORT/api/queues/%2F/retry-queue
 
 ```
+Тобто повідомлення з retry-queue  з тим же routing key  через main-exchange  знову попаде в main_queue  через 30 секунд. А в retry_queue  воно "пропаде".
 
 4. Зв'яжемо exchange  та retry-queue.
 
@@ -182,9 +203,7 @@ curl -u $XUSR:$XPSW -X POST \
 http://$XHOST:$XPORT/api/bindings/%2F/e/retry-exchange/q/retry-queue
 
 ```
-
 тут треба звернути увагу, що **"routing_key":""** (пустий) . 
-
 
 5. В програмному коді, при виникненні помилки треба в чергу надіслати сигнал **NACK**.
 
@@ -196,8 +215,6 @@ http://$XHOST:$XPORT/api/bindings/%2F/e/retry-exchange/q/retry-queue
         console.log(" [x] Message NACKed due to invalid amount");
         return;       
     }
-
-
 ```
 
 В даному випадку реалізовано перекладання повідомлення в retry-queue, але таке повідомлення може ходити безкінечну кількість раз. Щоб такого не сталося вводиться ще одна черга **parking_queue**. В цю чергу перекладаються повідомлення, що використали задану кількість спроб обробки і не обробилися.
@@ -232,6 +249,282 @@ http://$XHOST:$XPORT/api/queues/%2F/parking-queue
     } 
 
 ```
+Тут треба звернути увагу на властивості (заголовки) повідмолення. Коли ви в канал передаєте NACK, то автоматично додається у вдастивість (заголовок) повідомелння headers.x-death[]. Це масив структур. В кожній структурі є ключ **counter**, що показує скульки раз повідомлення попадало на обробку.
+
+```json
+{ 
+  "contentType": "application/json",
+  ...
+  ...,  
+  "headers": { 
+    "x-death": [
+       {"counter": 3, .....},
+       {"counter": 1, .....}        
+    ]
+  }
+}
+
+```
+З приводу створення конфігурації - все.
+
+### <a name="p6.2">6.2 Створеня прототипу на Node.js</a>
+
+Чому взявся спершу створити прототип на Node.js - та тому, що в своїй базі всі ноди Node-Red побудовані навколо бібіліотеки Node.JS [amqplib](https://www.npmjs.com/package/amqplib). Знаходиться прототип в каталозі [msg-srvc](https://github.com/pavlo-shcherbukha/asyncretry-p/tree/main/msg-srvc). Складається прототип з двох елементів:
+- публікатор повідомлень [/msg-srvc/publisher.js](https://github.com/pavlo-shcherbukha/asyncretry-p/blob/main/msg-srvc/publisher.js).
+
+В чергу *main_queue** (через exchange **main-exchange**) публікує повідомленя - json
+
+```json
+{"num": 1000, "dbt": "1001001", "krd": "1007222", "amount": 10.23, "remark": "cash payment"}
+```
+
+А до повідомлення додаються заголовки:
+
+```json
+{ 
+    "persistent": true,
+    "correlationId": "${correlationId}",
+    "replyTo": "${replyToQueue}",
+    "contentType": "application/json",
+    "headers": {
+        "x-cerrelation-id": "${correlationId}",
+        "x-request-type": "cash-transaction"
+
+    }
+}
+```
+
+сама публікація покказана тут:
+
+```js
+    const correlationId = uuidv4();
+    const replyToQueue  = "reply-queue";
+    const exchange= "main-exchange";
+    const routingKey = "srvc.transact.cash";
+    .....
+    .....
+
+    // Publish message to the exchange with routing key
+    channel.publish(exchange, routingKey, Buffer.from( JSON.stringify(msg) ),
+                { 
+                    persistent: true,
+                    correlationId: correlationId,
+                    replyTo: replyToQueue,
+                    contentType: 'application/json',
+                    headers: {
+                        'x-cerrelation-id': correlationId,
+                        'x-request-type': 'cash-transaction'
+
+                    }
+                }); 
+
+```
+
+- споживач повідомлень [/msg-srvc/consumer.js](https://github.com/pavlo-shcherbukha/asyncretry-p/blob/main/msg-srvc/consumer.js)
+
+Споживач підключається до **main-queue**. При обробці повідомлень побудована така логіка. Якщо в отриманому повідомленні ключ **amount** більше 100.00, то генерується прикладна помилка. Відповідно, повідомлення відправиться в Retry. Пізніше, коли повідомлення спробує обробитися 3 рази і не обробиться - воно відправиться в **parking-queue**.
+Мені не вдалося протестувати повідомлення тільки за допомогою адмівністративного Rest API -  тому і написав на Node.js.
+
+Ствремо конфігурацію RabbitMQ  та опублікуємо кілька "нормальних" повідомлень, та одне "ядовите", що поверне його в retray щоб подивитися, як працює конфігурація:
+
+```bash
+..../asyncretry/tests $ ./create-cfg.sh
+Create RabbitMQ Retry queue configuration
+Creating RabbitMQ retry-queue
+Creating RabbitMQ main-queue
+Creating RabbitMQ reply-queue
+Creating RabbitMQ parking queue
+Creating RabbitMQ retry-exchange
+Creating RabbitMQ main-exchange
+Bind queue to exchange main
+baind retry q of exhcange retry
+press any key to continue
+
+..../asyncretry/tests $ cd ..
+..../asyncretry $ cd ./msg-srvc
+..../asyncretry/msg-srvc $ ls
+consumer.js  node_modules  package.json  package-lock.json  publisher.js
+..../asyncretry/msg-srvc $ npm run pub
+
+> publisher@1.0.0 pub
+> node publisher.js
+
+ [x] Sent '{"num":1000,"dbt":"1001001","krd":"1007222","amount":10.23,"remark":"cash payment"}' with routing key 'srvc.transact.cash'
+.../asyncretry/msg-srvc $ npm run pub
+
+> publisher@1.0.0 pub
+> node publisher.js
+
+ [x] Sent '{"num":1000,"dbt":"1001001","krd":"1007222","amount":10.23,"remark":"cash payment"}' with routing key 'srvc.transact.cash'
+.../asyncretry/msg-srvc $ npm run pub
+
+> publisher@1.0.0 pub
+> node publisher.js
+
+ [x] Sent '{"num":1000,"dbt":"1001001","krd":"1007222","amount":210.23,"remark":"cash payment"}' with routing key 'srvc.transact.cash'
+..../asyncretry/msg-srvc $ 
+
+```
+Останнє повідомлення має реквізит **amount** > 100.00 і тому викличе помилку обробки (за бізнес логікою).
+
+Запустимо читання повідомлень з черги та ролдивимось по логах, що відбужеться:
+
+```bash
+..../asyncretry/msg-srvc $ npm run con
+
+> publisher@1.0.0 con
+> node consumer.js
+
+ [*] Waiting for messages. To exit press CTRL+C
+Retry count: 0
+Retry count: undefined
+ [x] Received message with correlationId: a295d1fc-7470-4795-91d5-da2a8bb95ab0
+ [x] Received message with contentType: application/json
+ [x] Received: {"num":1000,"dbt":"1001001","krd":"1007222","amount":10.23,"remark":"cash payment"}
+ [X] Parsing content: ok
+ [x] Message ACKed
+Retry count: 0
+Retry count: undefined
+ [x] Received message with correlationId: 3eba9aee-6864-4a4c-a642-e0fe069ca283
+ [x] Received message with contentType: application/json
+ [x] Received: {"num":1000,"dbt":"1001001","krd":"1007222","amount":10.23,"remark":"cash payment"}
+ [X] Parsing content: ok
+ [x] Message ACKed
+Retry count: 0
+Retry count: undefined
+ [x] Received message with correlationId: 6a19fff1-560b-4e24-8bc4-b94d34487b72
+ [x] Received message with contentType: application/json
+ [x] Received: {"num":1000,"dbt":"1001001","krd":"1007222","amount":210.23,"remark":"cash payment"}
+ [X] Parsing content: ok
+ [!] Amount exceedds limit: 210.23
+ [x] Message NACKed due to invalid amount
+Retry count: 1
+Retry count: [
+  {
+    "count": 1,
+    "reason": "expired",
+    "queue": "retry-queue",
+    "time": {
+      "!": "timestamp",
+      "value": 1750251800
+    },
+    "exchange": "retry-exchange",
+    "routing-keys": [
+      "srvc.transact.cash"
+    ]
+  },
+  {
+    "count": 1,
+    "reason": "rejected",
+    "queue": "main-queue",
+    "time": {
+      "!": "timestamp",
+      "value": 1750251770
+    },
+    "exchange": "main-exchange",
+    "routing-keys": [
+      "srvc.transact.cash"
+    ]
+  }
+]
+ [x] Received message with correlationId: 6a19fff1-560b-4e24-8bc4-b94d34487b72
+ [x] Received message with contentType: application/json
+ [x] Received: {"num":1000,"dbt":"1001001","krd":"1007222","amount":210.23,"remark":"cash payment"}
+ [X] Parsing content: ok
+ [!] Amount exceedds limit: 210.23
+ [x] Message NACKed due to invalid amount
+Retry count: 2
+Retry count: [
+  {
+    "count": 2,
+    "reason": "expired",
+    "queue": "retry-queue",
+    "time": {
+      "!": "timestamp",
+      "value": 1750251800
+    },
+    "exchange": "retry-exchange",
+    "routing-keys": [
+      "srvc.transact.cash"
+    ]
+  },
+  {
+    "count": 2,
+    "reason": "rejected",
+    "queue": "main-queue",
+    "time": {
+      "!": "timestamp",
+      "value": 1750251770
+    },
+    "exchange": "main-exchange",
+    "routing-keys": [
+      "srvc.transact.cash"
+    ]
+  }
+]
+ [x] Received message with correlationId: 6a19fff1-560b-4e24-8bc4-b94d34487b72
+ [x] Received message with contentType: application/json
+ [x] Received: {"num":1000,"dbt":"1001001","krd":"1007222","amount":210.23,"remark":"cash payment"}
+ [X] Parsing content: ok
+ [!] Amount exceedds limit: 210.23
+ [x] Message NACKed due to invalid amount
+Message sent to parking queue
+^C
+.../asyncretry/msg-srvc $ 
+
+```
+Як бачимо по логах, після 3 спроб обробити повідомлення, його життєвий цикл закінчивчя в **parking_queue**.
+
+На [pic-102](#pic-102) можна побачити початкове розподілення повідомлень  по чергам (на верхньому малюнку).
+
+<kbd><img src="/assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-102.svg" /></kbd>
+<p style="text-align: center;"><a name="pic-102">pic-102</a></p>
+
+Та фінальне розподілення повідомлень по чергам: 
+- два нормальних знаходяться в retry-queue
+- одне (ядовите) перекочувало в parking_queue.
 
 
+Додаткову, хочу звернути увагу на інформацію, яка присутня у властивості **"x-death"** 
 
+```json
+"x-death": [ 
+  {
+    "count": 2,
+    "reason": "expired",
+    "queue": "retry-queue",
+    "time": {
+      "!": "timestamp",
+      "value": 1750251800
+    },
+    "exchange": "retry-exchange",
+    "routing-keys": [
+      "srvc.transact.cash"
+    ]
+  },
+  {
+    "count": 2,
+    "reason": "rejected",
+    "queue": "main-queue",
+    "time": {
+      "!": "timestamp",
+      "value": 1750251770
+    },
+    "exchange": "main-exchange",
+    "routing-keys": [
+      "srvc.transact.cash"
+    ]
+  }
+]
+
+
+```
+
+### <a name="p6.3">6.3 Node-Red: Невдала спроба створеня прототипу</a>
+
+На жаль на Node-Red такий прототип створити не вийшло.
+- Перша причнина, це те, що на вузлах не можливо вказати додаткові аргументи при створенні черги, які я вказував через адміністративне API 
+  
+- Друга причина, це те, що при відсутності черги - consumer  автоматично її пробує створити, але без додаткових аргумсентів. А коли RabbitMQ отримує команду на створення чекрги, яка вжек існує, то вона порівнює їх парампетри. І, у випадку якщо параметри черг відрізнюяться - вузол не підключається до rabbit MQ.
+
+Яому так зроблено - питання риторичне. Я кілька вузлів перепробував - результат вийшов не успішний.
