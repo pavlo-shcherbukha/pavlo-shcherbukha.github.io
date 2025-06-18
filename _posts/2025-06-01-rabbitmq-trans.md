@@ -15,7 +15,7 @@ published: true
 - [5. Висновки та додаткові міркування](#p5)
 - [6. Прототип реалізацію метод **Retry queue** та **Dead Letter Queues** (Сценарій 2) на базі RabbitMQ](#p6)
 - [6.1 Створення конфігурації **Retry**  на прикладі RabbitMQ](#p6.1)
-
+- [6.2 Створеня прототипу на Node.js](#p6.2)
 <!-- TOC END -->
 
 ## <a name="p1">1. Про що цей блог</a>
@@ -266,5 +266,256 @@ http://$XHOST:$XPORT/api/queues/%2F/parking-queue
 ```
 З приводу створення конфігурації - все.
 
+### <a name="p6.2">6.2 Створеня прототипу на Node.js</a>
 
+Чому взявся спершу створити прототип на Node.js - та тому, що в своїй базі всі ноди Node-Red побудовані навколо бібіліотеки Node.JS [amqplib](https://www.npmjs.com/package/amqplib). Знаходиться прототип в каталозі [msg-srvc](https://github.com/pavlo-shcherbukha/asyncretry-p/tree/main/msg-srvc). Складається прототип з двох елементів:
+- публікатор повідомлень [/msg-srvc/publisher.js](https://github.com/pavlo-shcherbukha/asyncretry-p/blob/main/msg-srvc/publisher.js).
+
+В чергу *main_queue** (через exchange **main-exchange**) публікує повідомленя - json
+
+```json
+{"num": 1000, "dbt": "1001001", "krd": "1007222", "amount": 10.23, "remark": "cash payment"}
+```
+
+А до повідомлення додаються заголовки:
+
+```json
+{ 
+    "persistent": true,
+    "correlationId": "${correlationId}",
+    "replyTo": "${replyToQueue}",
+    "contentType": "application/json",
+    "headers": {
+        "x-cerrelation-id": "${correlationId}",
+        "x-request-type": "cash-transaction"
+
+    }
+}
+```
+
+сама публікація покказана тут:
+
+```js
+    const correlationId = uuidv4();
+    const replyToQueue  = "reply-queue";
+    const exchange= "main-exchange";
+    const routingKey = "srvc.transact.cash";
+    .....
+    .....
+
+    // Publish message to the exchange with routing key
+    channel.publish(exchange, routingKey, Buffer.from( JSON.stringify(msg) ),
+                { 
+                    persistent: true,
+                    correlationId: correlationId,
+                    replyTo: replyToQueue,
+                    contentType: 'application/json',
+                    headers: {
+                        'x-cerrelation-id': correlationId,
+                        'x-request-type': 'cash-transaction'
+
+                    }
+                }); 
+
+```
+
+- споживач повідомлень [/msg-srvc/consumer.js](https://github.com/pavlo-shcherbukha/asyncretry-p/blob/main/msg-srvc/consumer.js)
+
+Споживач підключається до **main-queue**. При обробці повідомлень побудована така логіка. Якщо в отриманому повідомленні ключ **amount** більше 100.00, то генерується прикладна помилка. Відповідно, повідомлення відправиться в Retry. Пізніше, коли повідомлення спробує обробитися 3 рази і не обробиться - воно відправиться в **parking-queue**.
+Мені не вдалося протестувати повідомлення тільки за допомогою адмівністративного Rest API -  тому і написав на Node.js.
+
+Ствремо конфігурацію RabbitMQ  та опублікуємо кілька "нормальних" повідомлень, та одне "ядовите", що поверне його в retray щоб подивитися, як працює конфігурація:
+
+```bash
+..../asyncretry/tests $ ./create-cfg.sh
+Create RabbitMQ Retry queue configuration
+Creating RabbitMQ retry-queue
+Creating RabbitMQ main-queue
+Creating RabbitMQ reply-queue
+Creating RabbitMQ parking queue
+Creating RabbitMQ retry-exchange
+Creating RabbitMQ main-exchange
+Bind queue to exchange main
+baind retry q of exhcange retry
+press any key to continue
+
+..../asyncretry/tests $ cd ..
+..../asyncretry $ cd ./msg-srvc
+..../asyncretry/msg-srvc $ ls
+consumer.js  node_modules  package.json  package-lock.json  publisher.js
+..../asyncretry/msg-srvc $ npm run pub
+
+> publisher@1.0.0 pub
+> node publisher.js
+
+ [x] Sent '{"num":1000,"dbt":"1001001","krd":"1007222","amount":10.23,"remark":"cash payment"}' with routing key 'srvc.transact.cash'
+.../asyncretry/msg-srvc $ npm run pub
+
+> publisher@1.0.0 pub
+> node publisher.js
+
+ [x] Sent '{"num":1000,"dbt":"1001001","krd":"1007222","amount":10.23,"remark":"cash payment"}' with routing key 'srvc.transact.cash'
+.../asyncretry/msg-srvc $ npm run pub
+
+> publisher@1.0.0 pub
+> node publisher.js
+
+ [x] Sent '{"num":1000,"dbt":"1001001","krd":"1007222","amount":210.23,"remark":"cash payment"}' with routing key 'srvc.transact.cash'
+..../asyncretry/msg-srvc $ 
+
+```
+Останнє повідомлення має реквізит **amount** > 100.00 і тому викличе помилку обробки (за бізнес логікою).
+
+Запустимо читання повідомлень з черги та ролдивимось по логах, що відбужеться:
+
+```bash
+..../asyncretry/msg-srvc $ npm run con
+
+> publisher@1.0.0 con
+> node consumer.js
+
+ [*] Waiting for messages. To exit press CTRL+C
+Retry count: 0
+Retry count: undefined
+ [x] Received message with correlationId: a295d1fc-7470-4795-91d5-da2a8bb95ab0
+ [x] Received message with contentType: application/json
+ [x] Received: {"num":1000,"dbt":"1001001","krd":"1007222","amount":10.23,"remark":"cash payment"}
+ [X] Parsing content: ok
+ [x] Message ACKed
+Retry count: 0
+Retry count: undefined
+ [x] Received message with correlationId: 3eba9aee-6864-4a4c-a642-e0fe069ca283
+ [x] Received message with contentType: application/json
+ [x] Received: {"num":1000,"dbt":"1001001","krd":"1007222","amount":10.23,"remark":"cash payment"}
+ [X] Parsing content: ok
+ [x] Message ACKed
+Retry count: 0
+Retry count: undefined
+ [x] Received message with correlationId: 6a19fff1-560b-4e24-8bc4-b94d34487b72
+ [x] Received message with contentType: application/json
+ [x] Received: {"num":1000,"dbt":"1001001","krd":"1007222","amount":210.23,"remark":"cash payment"}
+ [X] Parsing content: ok
+ [!] Amount exceedds limit: 210.23
+ [x] Message NACKed due to invalid amount
+Retry count: 1
+Retry count: [
+  {
+    "count": 1,
+    "reason": "expired",
+    "queue": "retry-queue",
+    "time": {
+      "!": "timestamp",
+      "value": 1750251800
+    },
+    "exchange": "retry-exchange",
+    "routing-keys": [
+      "srvc.transact.cash"
+    ]
+  },
+  {
+    "count": 1,
+    "reason": "rejected",
+    "queue": "main-queue",
+    "time": {
+      "!": "timestamp",
+      "value": 1750251770
+    },
+    "exchange": "main-exchange",
+    "routing-keys": [
+      "srvc.transact.cash"
+    ]
+  }
+]
+ [x] Received message with correlationId: 6a19fff1-560b-4e24-8bc4-b94d34487b72
+ [x] Received message with contentType: application/json
+ [x] Received: {"num":1000,"dbt":"1001001","krd":"1007222","amount":210.23,"remark":"cash payment"}
+ [X] Parsing content: ok
+ [!] Amount exceedds limit: 210.23
+ [x] Message NACKed due to invalid amount
+Retry count: 2
+Retry count: [
+  {
+    "count": 2,
+    "reason": "expired",
+    "queue": "retry-queue",
+    "time": {
+      "!": "timestamp",
+      "value": 1750251800
+    },
+    "exchange": "retry-exchange",
+    "routing-keys": [
+      "srvc.transact.cash"
+    ]
+  },
+  {
+    "count": 2,
+    "reason": "rejected",
+    "queue": "main-queue",
+    "time": {
+      "!": "timestamp",
+      "value": 1750251770
+    },
+    "exchange": "main-exchange",
+    "routing-keys": [
+      "srvc.transact.cash"
+    ]
+  }
+]
+ [x] Received message with correlationId: 6a19fff1-560b-4e24-8bc4-b94d34487b72
+ [x] Received message with contentType: application/json
+ [x] Received: {"num":1000,"dbt":"1001001","krd":"1007222","amount":210.23,"remark":"cash payment"}
+ [X] Parsing content: ok
+ [!] Amount exceedds limit: 210.23
+ [x] Message NACKed due to invalid amount
+Message sent to parking queue
+^C
+.../asyncretry/msg-srvc $ 
+
+```
+Як бачимо по логах, після 3 спроб обробити повідомлення, його життєвий цикл закінчивчя в **parking_queue**.
+
+На [pic-102](#pic-102) можна побачити початкове розподілення повідомлень  по чергам (на верхньому малюнку).
+
+<kbd><img src="/assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-102.svg" /></kbd>
+<p style="text-align: center;"><a name="pic-102">pic-102</a></p>
+
+Та фінальне розподілення повідомлень по чергам: 
+- два нормальних знаходяться в retry-queue
+- одне (ядовите) перекочувало в parking_queue.
+
+
+Додаткову, хочу звернути увагу на інформацію, яка присутня у властивості **"x-death"** 
+
+```json
+"x-death": [ 
+  {
+    "count": 2,
+    "reason": "expired",
+    "queue": "retry-queue",
+    "time": {
+      "!": "timestamp",
+      "value": 1750251800
+    },
+    "exchange": "retry-exchange",
+    "routing-keys": [
+      "srvc.transact.cash"
+    ]
+  },
+  {
+    "count": 2,
+    "reason": "rejected",
+    "queue": "main-queue",
+    "time": {
+      "!": "timestamp",
+      "value": 1750251770
+    },
+    "exchange": "main-exchange",
+    "routing-keys": [
+      "srvc.transact.cash"
+    ]
+  }
+]
+
+
+```
 
