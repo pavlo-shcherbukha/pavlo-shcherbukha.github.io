@@ -75,7 +75,7 @@ graph TD
 <details>
   <summary>MermaId діаграма</summary>
 
-```mermaid
+<pre><code class="language-mermaid">
 graph TD
     subgraph "Взаємодія із Зовнішнім Сервісом 1"
         ES1["Зовнішній Сервіс 1"] -- "HTTP POST" --> MyApp["Наш додаток отримувач даних"]
@@ -87,7 +87,7 @@ graph TD
         MessageQueue -- "Отримує повідмолення" --> MyAppConsumer["Наш додаток-споживач повідомлень"]
         MyAppConsumer -- "Відправляє повідомлення по http" --> ES3["Зовнішній Сервіс 3 (Ненадійний Endpoint)"]
     end
-```
+</code></pre>
 
 </details>
 
@@ -154,8 +154,7 @@ graph TD
 <details>
   <summary>MermaId діаграма</summary>
 
-
-```mermaid
+<pre><code class="language-mermaid">
 graph TD
     subgraph "Взаємодія із Зовнішнім Сервісом 1"
         ES1["Зовнішній Сервіс 1"] -- "HTTP POST" --> MyAPI["Наш API (Приймальний Сервіс)"]
@@ -182,8 +181,8 @@ graph TD
     style RetryWorker fill:#fcf,stroke:#333,stroke-width:2px
     style ES3 fill:#f66,stroke:#333,stroke-width:2px
     style DLQ fill:#fbb,stroke:#333,stroke-width:2px
-```
 
+</code></pre>
 
 </details>
 
@@ -270,7 +269,7 @@ graph TD
 <details>
   <summary>MermaId діаграма</summary>
 
-```mermaid
+<pre><code class="language-mermaid">
 graph TD
     subgraph "Взаємодія із Зовнішнім Сервісом 1"
         ES1["Зовнішній Сервіс 1"] -- "HTTP POST" --> MyAPI_Node["Наш API (Node.js)"]
@@ -307,7 +306,7 @@ graph TD
     style DLX fill:#ADD8E6,stroke:#333,stroke-width:2px
     style RetryQueue fill:#FFB6C1,stroke:#333,stroke-width:2px
     style FailedQueue fill:#E6B0AA,stroke:#333,stroke-width:2px
-```
+</code></pre>
 
 
 </details>
