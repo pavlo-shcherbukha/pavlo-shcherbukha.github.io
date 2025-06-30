@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>2025-06-26-queue-async-task.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<!-- TOC BEGIN -->
+<ul>
+<li><a href="#p1">1. Про що цей блог</a></li>
+</ul>
+<h2 id="a-name%22p1%221-%D0%BF%D1%80%D0%BE-%D1%89%D0%BE-%D1%86%D0%B5%D0%B9-%D0%B1%D0%BB%D0%BE%D0%B3a"><a name="p1">1. Про що цей блог</a></h2>
+<p>Виникла цікава оптимізаційна архітектурна задачка. Може я дарма над нею задумався. Сама задачка полягає в тому що:</p>
+<ul>
+<li>Від одного зовнішнього сервісу ви отримали дані. Ви їх успішно обробили: записали в базу даних і відправили тому зовнішньому сервісу http status code 200 і ви з ним успішо розпрощался.</li>
+<li>Але, вам  потрібно ці ж дані, з деяким збагаченням і якоюсь трансформацією тут же вичитати з бази даних і відправити їх по http  на endpoint  третьому  сервісу.</li>
+<li>Відповідно, потрібен воркер, який,с формує повідомленя і відправить його по http. Але з третім сервісом є нюанс:
+<ul>
+<li>третій сервіс дуже &quot;вередливий&quot; з точки зору короткочасних пропадань мережі, тобто дуже часто до нього не можан достукатися, а через секунду можна. Або перший запит він не прийме, а другий, третій прийме (довго запускаєтья)</li>
+<li>З завидною регулярністю кілька разів на місяць він стає не доступним з різних причин: то оновлення розтяглося на три дні, то він &quot;ліг відпочити&quot; і ніхто не помітив. Коротше часто сервіс &quot;unavailable&quot;.
+Питання полягає в тому, як побудувати архітектуру нашого ворекера так, щоб компенсувати  неприємності з короткочасними та довготривалими  проблемами третього сервісу. При цьому приускаємо, що сервіс толерантний до даних, що надійшли повторно (ну, або це не критично). От пошук рішення для цієї задачки з використанням різних типів інстументів  є змістом цього блогу. Тут необхідно наголосити, що використання одного ж і того архутектруного шаблону на різних інструментах одного і того ж типу виглядає настільки невпізнанно - що, якщо ти хлочеш зробити (намалювати) якийсь архітектурний шаблон -то вивчи той інстумент, який ти хочеш використовувати.</li>
+</ul>
+</li>
+</ul>
+<h2 id="a-name%22p2%222-%D0%BA%D0%BE%D1%80%D0%BE%D1%82%D0%BA%D0%B8%D0%B9-%D0%BE%D0%B3%D0%B4%D1%8F%D0%B4-%D1%80%D1%96%D1%88%D0%B5%D0%BD%D1%8C-%D0%B2%D1%96%D0%B4-%22%D0%B2%D0%B5%D0%BB%D0%B8%D0%BA%D0%B8%D1%85-%D0%BA%D0%B2%D0%B0%D0%B4%D1%80%D0%B0%D1%82%D1%96%D0%B2%22a"><a name="p2">2. Короткий огдяд рішень від &quot;великих квадратів&quot;</a></h2>
+<p>Якщо намалювати діаграму &quot;великів квадартів&quot;, що за звичай розглядають на великих екранах за довгими столами, то виглядадтиме це приблизно так. І НЕ ПРАВИЛЬНО. ВОНО НЕ ПРАЦЕЗДАТНЕ. Це стиль думання монолітом.</p>
+<pre><code class="language-mermaid"><div class="mermaid">graph TD
+
+    ES1["Зовнішній Сервіс 1"] -- "HTTP POST" --> MyApp["Наш додаток"]
+    MyApp -- "Збереження даних" --> DB["База Даних"]
+    DB -- "Читає та збагачує дані " --> MyApp
+    MyApp -- "Відправляє отримані дані" --> ES3["Зовнішній Сервіс 3 (Ненадійний Endpoint)"]
+</div></code></pre>
+<p>Виникає питання чому?</p>
+<p>На цій діаграмі відстні елементи взаємодії пор http.</p>
+<ul>
+<li>коли &quot;Наш додаток&quot; відправить підтвердження що обробив (або не обробив запит)</li>
+<li>коли наш додатко ініціює запит по http до &quot;Зовнішній Сервіс 3&quot;</li>
+</ul>
+<p>Якщо  &quot;Наш додаток&quot;  почне http  взаємодію з &quot;Зовнішній Сервіс 3&quot; не закривши з'єднання з &quot;Зовнішній Сервіс 1&quot;, то &quot;Зовнішній Сервіс 1&quot; отримає помилку, що іеіційована  http  взаємодією з &quot;Зовнішній Сервіс 3&quot;.</p>
+<p>Якщо &quot;Наш додаток&quot; почне http  взаємодію закривши з'єднання з &quot;Зовнішній Сервіс 1&quot;, але  отримає помилку - то вона запишеться десь в логи і ми будемо решгулярно дивитися в ті логи і казати, що: &quot;у вас сервіс не достпний&quot;. А знайти причину не доступності буде досить складно - тому що вона часто криється  на мережевому рівні.</p>
+<p>А кщо у вас &quot;Зовнішній Сервіс 3&quot; взагалі &quot;ліг&quot; на кілька днів, то  треба або зупинити додаток &quot;Наш додаток&quot;, або бути готовим читати велику кількість логів з помилками, взагалі то і не портібних. Але вони будуть споживати дисковий простір, пам'ять та процесорний ресурс. Але, якщо ви зупините додаток, то буде не заслужено страждати  &quot;Зовнішній Сервіс 1&quot;, тому що він стукається до  &quot;Наш додаток&quot;, а тм нічого немає.</p>
+<p>І так складається такий собі ланцюжок неприємностей. Тому на великих екранах за довгими столами вже навчилися малювати жирну лінію і казати що отут буде черга.</p>
+<pre><code class="language-mermaid"><div class="mermaid">graph TD
+    subgraph "Взаємодія із Зовнішнім Сервісом 1"
+        ES1["Зовнішній Сервіс 1"] -- "HTTP POST" --> MyApp["Наш додаток отримувач даних"]
+        MyApp -- "Збереження даних" --> DB["База Даних"]
+        DB -- "Читає та збагачує дані " --> MyApp
+        MyApp -- "Відправляє отримані дані" --> MessageQueue["Черга повідомлень для зовнішнього сервіса"]
+    end
+    subgraph "Взаємодія із Зовнішнім Сервісом 3"
+        MessageQueue -- "Отримує повідмолення" --> MyAppConsumer["Наш додаток-споживач повідомлень"]
+        MyAppConsumer -- "Відправляє повідомлення по http" --> ES3["Зовнішній Сервіс 3 (Ненадійний Endpoint)"]
+    end
+</div></code></pre>
+<p>На цій діаграмі моноліт &quot;&quot;Наш додаток&quot; розбито на два компоненти:</p>
+<ul>
+<li>&quot;Наш додаток отримувач даних&quot;;</li>
+<li>&quot;Наш додаток-споживач повідомлень&quot;.</li>
+</ul>
+<p>По суті це два не залежні компоненти. Вони зв'язані між собою &quot;м'яким зв'язком&quot;. Тобто, зупинка компонента &quot;Наш додаток-споживач повідомлень&quot; - ніяким чином не вплине на &quot;Наш додаток отримувач даних&quot;. Просто в черзі будуть накопичуватися повідомлення для
+&quot;Зовнішній Сервіс 3&quot;. А от коли &quot;Наш додаток-споживач повідомлень&quot;запустять, то &quot;Зовнішній Сервіс 3&quot; отримає всі повідмолення, що накопичилися за час простою.
+Вже трошки краще, але всерівно не зрозуміло, коли даємо відповідь &quot;Зовнішній Сервіс 1&quot; по http. Так як &quot;Зовнішній Сервіс 3&quot; є за визначенням не надійним, то при короткострокових проблемах інфраструктури, чи &quot;Зовнішній Сервіс 3&quot;  раптом &quot;втомиться&quot; - то всі ці повідомлення вилетять тільки в лог з помилками. Знову ж таки хорошого в цьому мало, тому, що копирасатися в логах і пояснювати власникам &quot;Зовнішній Сервіс 3&quot;, чому по таймаут (проблеми мережі) нічого не дішло - теж справа безнадійна, особливо коли немає впливу на інфраструктуру. І по діаграмі не зрозуміло, а що робити коли Зовнішній Сервіс 3&quot; почне відповідати помилками.</p>
+<p>Отут і настає привід для вивчення і використання архітектурних шаблонів, а саме для цього і використовують <a href="https://pavlo-shcherbukha.github.io/posts/2025-06-01/queue-transaction/">3. Сценарій 2: Асинхронна обробка з можливістю тимчасових помилок (Банківські платежі)</a>.</p>
+<h3 id="a-name%22p11%2211-%D0%BF%D1%80%D0%B8%D0%B1%D0%BB%D0%B8%D0%B7%D0%BD%D0%B0-%D0%B0%D1%80%D1%85%D1%96%D1%82%D0%B5%D0%BA%D1%82%D1%83%D1%80%D0%B0-retry-pattern-%D0%BD%D0%B0-ace-%D1%82%D0%B0-ibm-mq-a"><a name="p1.1">1.1. Приблизна архітектура Retry pattern на ACE та IBM MQ </a></h3>
+<p>Перш ніж малювати архітектуру, спробую розказати, як це прауює в IBM MQ. Найпростіший та рекомендований варіант Retry Pattern, це варіант мінімально вимагає додаткової логіки в ACE, покладаючись на вбудовані можливості IBM MQ.</p>
+<ul>
+<li>
+<p><strong>Налаштування IBM MQ (Обов'язково)</strong>:</p>
+<p>INPUT.QUEUE (Моя вхідна черга, наприклад <strong>psh.in2</strong>):</p>
+<p>На черзі треба встановити чергу проблемних повідомлень BACKOUT.QUEUE за допомогою QueMnager UI  або за допомогою магії команд mqsi. В даному випадку це буде <strong>psh.in</strong>.</p>
+<p>На черзі треба встановит значення BOTHRESH(3): Встановіть поріг відкату. 3 є гарним стартовим значенням. Це означає, що повідомлення буде спробувано 3 рази.</p>
+<p>На QueManager треба встановити параметри BOINTERVAL: Цей параметр надзвичайно важливий для боротьби з короткочасними негараздами. Він визначає затримку в мілісекундах, перш ніж повідомлення, яке було відкочено в INPUT.QUEUE, буде знову доступним для споживання з INPUT.QUEUE. Це дозволяє зовнішньому сервісу відновитися після тимчасових збоїв.
+АЛЕ ЦЕЙ ПАРАМЕТРИ ВСТАНОВЛЮЄТЬСЯ НА ВЕСЬ QUEUE MANAGER. А ЩЕ В QUEUE MANAGER ВЕРСІЇ 9 ВІН ВІДСТНІЙ В UI. ЙОГО МОЖНА ВСТАНОВИТИ ТІЛЬКИ МАГІЄЮ КОМАНД MQSI.</p>
+</li>
+</ul>
+<pre><code class="language-mermaid"><div class="mermaid">graph TD
+    subgraph "Взаємодія із Зовнішнім Сервісом 1"
+        ES1["Зовнішній Сервіс 1"] -- "HTTP POST" --> MyAPI["Наш API (Приймальний Сервіс)"]
+        MyAPI -- "Збереження даних" --> DB["База Даних"]
+        DB -- "Читає та збагачує дані" --> MyAPI
+        MyAPI -- "Публікує повідомлення" --> MessageQueue["Черга Повідомлень (IBM MQ)"]
+        MyAPI -- "HTTP 200 OK" --> ES1
+    end
+
+    subgraph "Обробка та Доставка Даних (Наша Система)"
+        MessageQueue -- "Споживає повідомлення (Асинхронно)" --> RetryWorker["Воркер Retry (IBM ACE Flow)"]
+        RetryWorker -- "HTTP POST (Може провалитись)" --> ES3["Зовнішній Сервіс 3 (Ненадійний Endpoint)"]
+
+        subgraph "Механізм Retry для ES3"
+            RetryWorker -- "Короткочасний збій/Retry" --> MessageQueue
+            MessageQueue -- "Якщо перевищено ліміт спроб (BOTHRESH)" --> DLQ["Черга Dead-Letter (IBM MQ BACKOUT.QUEUE)"]
+            DLQ -- "Моніторинг/Ручне втручання/Переміщення" --> Human["Оператор / Моніторинг"]
+        end
+    end
+
+    style MyAPI fill:#f9f,stroke:#333,stroke-width:2px
+    style DB fill:#ccf,stroke:#333,stroke-width:2px
+    style MessageQueue fill:#bbf,stroke:#333,stroke-width:2px
+    style RetryWorker fill:#fcf,stroke:#333,stroke-width:2px
+    style ES3 fill:#f66,stroke:#333,stroke-width:2px
+    style DLQ fill:#fbb,stroke:#333,stroke-width:2px
+</div></code></pre>
+<p>Пояснення архітектурної діаграми (&quot;великих квадратів&quot;):</p>
+<pre><code>&quot;External Service 1 Interaction&quot; (Взаємодія із Зовнішнім Сервісом 1):
+
+    Зовнішній Сервіс 1 (ES1): Відправляє дані на наш API.
+
+    Наш API (Приймальний Сервіс): Отримує дані, успішно їх обробляє (зберігає в базу даних) і негайно відповідає ES1 зі HTTP 200 OK. Це робить взаємодію з ES1 синхронною та швидкою, незважаючи на подальшу обробку.
+
+    База Даних (DB): Зберігає отримані дані. Це перше місце, де дані стають &quot;безпечними&quot; і зберігаються.
+
+&quot;Data Processing &amp; Delivery (Our System)&quot; (Обробка та Доставка Даних - Наша Система):
+
+    Процесор Даних (Воркер): Цей компонент відповідає за вичитування щойно збережених даних з бази даних, їх збагачення та трансформацію. Це може бути окремий мікросервіс, функція бази даних (тригер), або інший воркер, який активується після запису в DB.
+
+    Черга Повідомлень (Напр. IBM MQ): Це ключовий елемент архітектури. Замість прямого виклику ненадійного сервісу 3, процесор даних асинхронно відправляє підготовлене повідомлення до черги.
+
+        Перевага: Якщо Сервіс 3 недоступний, повідомлення просто чекає в черзі, не блокуючи процесор даних і не змушуючи його повторювати спроби відправки. Черга виступає як буфер.
+
+    Воркер Retry (Напр. IBM ACE Flow): Це окремий компонент (у вашому випадку, це ваш ACE Flow), який споживає повідомлення з черги. Він відповідає за фактичну відправку повідомлення на Зовнішній Сервіс 3.
+
+        Оскільки він працює асинхронно, він може мати власну внутрішню логіку retry.
+
+    Зовнішній Сервіс 3 (Ненадійний Endpoint): Це той самий &quot;вередливий&quot; сервіс, який може мати короткочасні та довготривалі проблеми.
+
+&quot;Retry Mechanism for ES3&quot; (Механізм повторних спроб для Сервісу 3):
+
+    Короткочасний збій/Retry: Якщо RetryWorker не може достукатися до ES3 (мережа, таймаут, перший запит не прийнятий), він відкатує транзакцію (викидає виняток, як ми обговорювали). Повідомлення повертається до тієї ж Черги Повідомлень, але з лічильником відкатів, і чекає на BOINTERVAL перед наступною спробою.
+
+    Черга Dead-Letter (DLQ - Напр. IBM MQ BACKOUT.QUEUE): Якщо повідомлення перевищує заданий ліміт спроб (ваші BOTHRESH), воно автоматично переміщується до DLQ.
+
+    Оператор / Моніторинг: DLQ є сигналом про серйозніші проблеми. Оператори або системи моніторингу повинні стежити за цією чергою, щоб виявляти постійно проблемні повідомлення та втручатися вручну (наприклад, виправити дані, перевірити доступність ES3, перемістити повідомлення для повторної обробки вручну).
+</code></pre>
+<p>Ця архітектура чітко розділяє синхронну відповідь першому сервісу від асинхронної, стійкої доставки даних третьому сервісу, компенсуючи його ненадійність за рахунок буферизації та механізмів retry в черзі повідомлень. Це класичний приклад шаблону &quot;Producer-Consumer&quot; з додатковими шарами стійкості.</p>
+<h3 id="a-name%22p12%2212-%D0%BF%D1%80%D0%B8%D0%B1%D0%BB%D0%B8%D0%B7%D0%BD%D0%B0-%D0%B0%D1%80%D1%85%D1%96%D1%82%D0%B5%D0%BA%D1%82%D1%83%D1%80%D0%B0-%D1%80%D1%96%D1%88%D0%B5%D0%BD%D0%BD%D1%8F-%D0%BD%D0%B0-nodejs-%D1%82%D0%B0-rabbitmq-a"><a name="p1.2">1.2. Приблизна архітектура рішення на Node.js  та RabbitMQ </a></h3>
+<pre><code class="language-mermaid"><div class="mermaid">graph TD
+    subgraph "Взаємодія із Зовнішнім Сервісом 1"
+        ES1["Зовнішній Сервіс 1"] -- "HTTP POST" --> MyAPI_Node["Наш API (Node.js)"]
+        MyAPI_Node -- "Збереження даних" --> DB_Node[(База Даних)]
+        MyAPI_Node -- "HTTP 200 OK" --> ES1
+    end
+
+    subgraph "Обробка та Доставка Даних (Наша Система Node.js + RabbitMQ)"
+        DB_Node -- "Тригер/API-виклик/Воркер" --> DataProducer_Node["Node.js Data Producer"]
+        DataProducer_Node -- "JSON Трансформація та Збагачення" --> DataProducer_Node
+        DataProducer_Node -- "Публікує повідомлення" --> RabbitMQ["Брокер повідомлень (RabbitMQ)"]
+
+        subgraph "RabbitMQ Retry Mechanism"
+            RabbitMQ -- "Відправляє до" --> OriginalQueue["Основна Черга (Напр. 'data.to.es3')"]
+            OriginalQueue -- "Споживає" --> Worker_Node["Node.js Worker (для ES3)"]
+            Worker_Node -- "HTTP POST (Може провалитись)" --> ES3_Node["Зовнішній Сервіс 3 (Ненадійний Endpoint)"]
+
+            Worker_Node -- "Відхилення (NACK)" --> OriginalQueue
+            OriginalQueue -- "Якщо NACKed/TTL Expired" --> DLX["Dead Letter Exchange (DLX)"]
+            DLX -- "Маршрутизує до" --> RetryQueue["Retry Черга (З TTL для затримки)"]
+            RetryQueue -- "TTL минає" --> DLX --> OriginalQueue
+            
+            RetryQueue -- "Якщо перевищено retry ліміт" --> FailedQueue["Failed/Parked Черга"]
+            FailedQueue -- "Моніторинг/Ручне втручання" --> Human_Node["Оператор / Моніторинг"]
+        end
+    end
+
+    style MyAPI_Node fill:#f9f,stroke:#333,stroke-width:2px
+    style DB_Node fill:#ccf,stroke:#333,stroke-width:2px
+    style RabbitMQ fill:#A0D468,stroke:#333,stroke-width:2px
+    style OriginalQueue fill:#E4E6EA,stroke:#333,stroke-width:2px
+    style Worker_Node fill:#fcf,stroke:#333,stroke-width:2px
+    style ES3_Node fill:#f66,stroke:#333,stroke-width:2px
+    style DLX fill:#ADD8E6,stroke:#333,stroke-width:2px
+    style RetryQueue fill:#FFB6C1,stroke:#333,stroke-width:2px
+    style FailedQueue fill:#E6B0AA,stroke:#333,stroke-width:2px
+</div></code></pre>
+<p>Пояснення архітектурної діаграми (Node.js + RabbitMQ):</p>
+<pre><code>&quot;Взаємодія із Зовнішнім Сервісом 1&quot;:
+
+    Наш API (Node.js): Залишається аналогічним, приймає запит, зберігає в базу даних і відповідає HTTP 200 OK. Node.js тут виступає як ефективна платформа для швидких I/O операцій.
+
+    База Даних (DB): Зберігає дані.
+
+&quot;Обробка та Доставка Даних (Наша Система Node.js + RabbitMQ)&quot;:
+
+    Node.js Data Producer: Цей Node.js воркер читає дані з DB (або активується тригером), збагачує та трансформує їх.
+
+    Брокер повідомлень (RabbitMQ): Замість IBM MQ, тут використовується RabbitMQ. Producer публікує повідомлення в RabbitMQ.
+
+&quot;RabbitMQ Retry Mechanism&quot; (Механізм Retry в RabbitMQ):
+
+    Основна Черга ('data.to.es3'): Повідомлення спочатку надходить сюди.
+
+    Node.js Worker (для ES3): Це Node.js додаток (споживач), який читає повідомлення з 'Основної Черги'. Він виконує HTTP POST запит до Зовнішнього Сервісу 3.
+
+    Зовнішній Сервіс 3 (Ненадійний Endpoint): Той самий проблемний сервіс.
+
+    Механізм Retry в RabbitMQ (основна відмінність):
+
+        Відхилення (NACK): Якщо 'Node.js Worker' не може доставити повідомлення до ES3 (через збій, таймаут тощо), він відхиляє повідомлення (NACK) з опцією requeue: false. Це запобігає негайному поверненню повідомлення в оригінальну чергу.
+
+        Dead Letter Exchange (DLX) і Dead Lettering: 'Основна Черга' конфігурується з аргументом x-dead-letter-exchange. Коли повідомлення відхиляється, воно автоматично перенаправляється в DLX.
+
+        Retry Черга (З TTL для затримки): DLX маршрутизує повідомлення до спеціальної 'Retry Черги'. Ця 'Retry Черга' налаштована з x-message-ttl (Time-To-Live) та x-dead-letter-exchange, що вказує на той самий DLX, з якого повідомлення прийшло.
+
+            Як це працює: Повідомлення перебуває в 'Retry Черзі' протягом встановленого TTL. Після закінчення TTL, воно &quot;dead-lettered&quot; назад у DLX, який потім маршрутизує його назад до 'Основної Черги'. Це створює цикл повторних спроб із затримкою.
+
+        Якщо перевищено retry ліміт: 'Node.js Worker' (або логіка в 'Retry Черзі' через x-max-length) може вести власний лічильник спроб (наприклад, у заголовках повідомлення). Якщо лічильник досягає певного порогу, повідомлення переміщується до 'Failed/Parked Черги'.
+
+        Failed/Parked Черга: Це аналог BACKOUT.QUEUE в IBM MQ. Сюди потрапляють повідомлення, які не вдалося обробити після всіх спроб.
+
+        Оператор / Моніторинг: Як і раніше, ця черга потребує моніторингу та, можливо, ручного втручання.
+</code></pre>
+<p>Ключові відмінності порівняно з IBM MQ + ACE:</p>
+<pre><code>Розподіл функціоналу Retry: У RabbitMQ механізм затримки та перенаправлення для retry (через TTL, DLX та окрему Retry Queue) є більш явним і налаштовується на рівні RabbitMQ. В IBM MQ це відбувається через BOINTERVAL та BOTHRESH на самій вхідній черзі.
+
+Управління лічильником спроб: У RabbitMQ часто доводиться реалізовувати логіку лічильника спроб (наприклад, у заголовках повідомлення) у самому воркері Node.js. У IBM MQ MQMD.BackoutCount є вбудованим і автоматично підтримується менеджером черг.
+
+Гнучкість Retry-сценаріїв: RabbitMQ, з його DLX/TTL механізмом, надає більшу гнучкість для створення складних retry-графіків (наприклад, експоненціальна затримка) без потреби в окремих воркерах, які постійно повертають повідомлення.
+
+Стек технологій: Відхід від корпоративного стеку IBM до більш &quot;легковажних&quot; рішень Node.js та RabbitMQ.
+</code></pre>
+<h2 id="a-name%22p2%222-%D0%BC%D1%96%D1%80%D0%BA%D1%83%D0%B2%D0%B0%D0%BD%D0%BD%D1%8F--a"><a name="p2">2. Міркування .... </a></h2>
+
+</body>
+</html>
