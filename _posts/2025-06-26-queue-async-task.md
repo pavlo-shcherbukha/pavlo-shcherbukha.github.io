@@ -1,9 +1,9 @@
 ---
 layout: post
 title: "Як використати архітектурний шаблон Retry"
-date: 2025-06-01 10:00:01
+date: 2025-06-028 10:00:01
 categories: [queue]
-permalink: posts/2025-06-26/queue-retry=pattern/
+permalink: posts/2025-06-28/queue-retry=pattern/
 published: true
 ---
 
