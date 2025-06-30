@@ -70,7 +70,7 @@ graph TD
 
 <details>
   <summary>MermaId діаграма</summary>
-  
+
 ```mermaid
 graph TD
     subgraph "Взаємодія із Зовнішнім Сервісом 1"
@@ -141,6 +141,16 @@ graph TD
 
 Цей же самий принцип використаний і в основній задачці. Архітектурна діаграма та її опис наведено нижче
 
+
+
+<kbd><img src="/assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-206.png" /></kbd>
+<p style="text-align: center;"><a name="pic-206">pic-206</a></p>
+
+
+<details>
+  <summary>MermaId діаграма</summary>
+
+
 ```mermaid
 graph TD
     subgraph "Взаємодія із Зовнішнім Сервісом 1"
@@ -169,6 +179,11 @@ graph TD
     style ES3 fill:#f66,stroke:#333,stroke-width:2px
     style DLQ fill:#fbb,stroke:#333,stroke-width:2px
 ```
+
+
+</details>
+
+
 
 Пояснення архітектурної діаграми ("великих квадратів"):
 
@@ -217,6 +232,16 @@ graph TD
 
 Тут наведена діаграма тої ж архітектури, тільки якби її реалізовували на RabbitMQ  та з Node.js  чи Pyhton. Можна проаналізувати і її. Відверто кажучи - цей варіант мені здається більш зрозумілим і "красивим".
 
+
+
+
+<kbd><img src="/assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-207.png" /></kbd>
+<p style="text-align: center;"><a name="pic-207">pic-207</a></p>
+
+
+<details>
+  <summary>MermaId діаграма</summary>
+
 ```mermaid
 graph TD
     subgraph "Взаємодія із Зовнішнім Сервісом 1"
@@ -256,6 +281,8 @@ graph TD
     style FailedQueue fill:#E6B0AA,stroke:#333,stroke-width:2px
 ```
 
+
+</details>
 
 Пояснення архітектурної діаграми (Node.js + RabbitMQ):
 
