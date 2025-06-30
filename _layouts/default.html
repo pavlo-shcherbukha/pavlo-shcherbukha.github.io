@@ -24,14 +24,13 @@
 
 
     {% include head-custom.html %}
-
-
-  </head>
-  <body>
     <script type="module">
       import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
       mermaid.initialize({ startOnLoad: true });
-    </script>        
+    </script>   
+
+  </head>
+  <body>
     <div class="wrapper">
       <header>
         <h1><a href="{{ "/" | absolute_url }}">{{ site.title | default: site.github.repository_name }}</a></h1>
