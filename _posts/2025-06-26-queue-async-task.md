@@ -36,7 +36,7 @@ published: true
 
 
 <details>
-  <summary>MeramId діаграма</summary>
+  <summary>MermaId діаграма</summary>
 
 ```mermaid
 graph TD
@@ -62,6 +62,15 @@ graph TD
 А кщо у вас "Зовнішній Сервіс 3" взагалі "ліг" на кілька днів, то  треба або зупинити додаток "Наш додаток", або бути готовим читати велику кількість логів з помилками, взагалі то і не портібних. Але вони будуть споживати дисковий простір, пам'ять та процесорний ресурс. Але, якщо ви зупините додаток, то буде не заслужено страждати  "Зовнішній Сервіс 1", тому що він стукається до  "Наш додаток", а тм нічого немає.
 
 І так складається такий собі ланцюжок неприємностей. Тому на великих екранах за довгими столами вже навчилися малювати жирну лінію і казати що отут буде черга.
+
+
+<kbd><img src="/assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-205.png" /></kbd>
+<p style="text-align: center;"><a name="pic-205">pic-205</a></p>
+
+
+<details>
+  <summary>MermaId діаграма</summary>
+
 ```mermaid
 graph TD
     subgraph "Взаємодія із Зовнішнім Сервісом 1"
@@ -75,6 +84,9 @@ graph TD
         MyAppConsumer -- "Відправляє повідомлення по http" --> ES3["Зовнішній Сервіс 3 (Ненадійний Endpoint)"]
     end
 ```
+
+</details>
+
 
 На цій діаграмі моноліт ""Наш додаток" розбито на два компоненти:
 - "Наш додаток отримувач даних";
@@ -129,6 +141,16 @@ graph TD
 
 Цей же самий принцип використаний і в основній задачці. Архітектурна діаграма та її опис наведено нижче
 
+
+
+<kbd><img src="/assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-206.png" /></kbd>
+<p style="text-align: center;"><a name="pic-206">pic-206</a></p>
+
+
+<details>
+  <summary>MermaId діаграма</summary>
+
+
 ```mermaid
 graph TD
     subgraph "Взаємодія із Зовнішнім Сервісом 1"
@@ -157,6 +179,11 @@ graph TD
     style ES3 fill:#f66,stroke:#333,stroke-width:2px
     style DLQ fill:#fbb,stroke:#333,stroke-width:2px
 ```
+
+
+</details>
+
+
 
 Пояснення архітектурної діаграми ("великих квадратів"):
 
@@ -205,6 +232,16 @@ graph TD
 
 Тут наведена діаграма тої ж архітектури, тільки якби її реалізовували на RabbitMQ  та з Node.js  чи Pyhton. Можна проаналізувати і її. Відверто кажучи - цей варіант мені здається більш зрозумілим і "красивим".
 
+
+
+
+<kbd><img src="/assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-207.png" /></kbd>
+<p style="text-align: center;"><a name="pic-207">pic-207</a></p>
+
+
+<details>
+  <summary>MermaId діаграма</summary>
+
 ```mermaid
 graph TD
     subgraph "Взаємодія із Зовнішнім Сервісом 1"
@@ -244,6 +281,8 @@ graph TD
     style FailedQueue fill:#E6B0AA,stroke:#333,stroke-width:2px
 ```
 
+
+</details>
 
 Пояснення архітектурної діаграми (Node.js + RabbitMQ):
 
