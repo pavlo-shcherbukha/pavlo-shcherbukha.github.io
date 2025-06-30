@@ -95,11 +95,58 @@
       </footer>
     </div>
     <script src="{{ "/assets/js/scale.fix.js" | relative_url }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-    <script>
-      // Без type="module" та import
-      mermaid.initialize({ startOnLoad: true });
-    </script>
+  <script src="[https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js](https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js)"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      // Якщо Mermaid все ще не знаходить блоки, додайте ці параметри
+      // Це вказує Mermaid шукати <pre> теги з класом language-mermaid
+      // або просто <div> з класом mermaid (якщо ви переналаштуєте Markdown-рендерер)
+      // class: 'language-mermaid' // Можливо, це не потрібно, якщо нижче код спрацює
+    });
+
+    // Ручний рендеринг: знаходить всі блоки з класом 'language-mermaid' та рендерить їх
+    document.addEventListener('DOMContentLoaded', function() {
+      const mermaidElements = document.querySelectorAll('pre code.language-mermaid');
+      mermaidElements.forEach((element, index) => {
+        const mermaidCode = element.textContent;
+        const mermaidDiv = document.createElement('div');
+        mermaidDiv.classList.add('mermaid'); // Додаємо клас, який Mermaid очікує
+        mermaidDiv.innerHTML = mermaidCode; // Вставляємо код діаграми
+
+        // Замінюємо оригінальний <pre><code> блок на новий <div>
+        element.parentNode.replaceChild(mermaidDiv, element.parentNode);
+        // Або можна просто замінити вміст element.parentNode.innerHTML = '<div class="mermaid">' + mermaidCode + '</div>';
+        // Якщо ви хочете залишити `<details>` блок, то маніпулюйте елементами всередині нього.
+        // У випадку `<details>`, `<pre>` є прямим нащадком `<details>`
+        // Тоді element.parentNode - це <pre>, а element.parentNode.parentNode - це <details>
+
+        // Простіший варіант, який працює для більшості випадків
+        // Створюємо тимчасовий div і рендеримо в нього, потім вставляємо SVG
+        // ID потрібен для render, щоб уникнути конфліктів
+        const id = 'mermaid-chart-' + index;
+        mermaidDiv.id = id;
+
+        try {
+          mermaid.render(id, mermaidCode)
+            .then( ({ svg, bindFunctions }) => {
+              mermaidDiv.innerHTML = svg;
+              if (bindFunctions) {
+                  bindFunctions(mermaidDiv);
+              }
+            })
+            .catch(err => {
+              console.error("Mermaid rendering error:", err);
+              mermaidDiv.innerHTML = '<pre>' + mermaidCode + '</pre>'; // Повернути текст у разі помилки
+            });
+        } catch (e) {
+          console.error("Mermaid sync rendering error:", e);
+          mermaidDiv.innerHTML = '<pre>' + mermaidCode + '</pre>';
+        }
+
+      });
+    });
+  </script>
 
   </body>
 </html>
