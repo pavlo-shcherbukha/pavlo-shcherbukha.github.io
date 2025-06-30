@@ -98,7 +98,7 @@
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <script>
     // Без type="module" та import
-    mermaid.initialize({ startOnLoad: true });
+    mermaid.initialize({ startOnLoad: true, class: 'language-mermaid' });
     // Ручний рендеринг: знаходить всі блоки з класом 'language-mermaid' та рендерить їх
       document.addEventListener('DOMContentLoaded', function() {
         const mermaidElements = document.querySelectorAll('pre code.language-mermaid');
