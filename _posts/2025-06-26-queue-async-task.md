@@ -35,8 +35,7 @@ published: true
 <p style="text-align: center;"><a name="pic-204">pic-204</a></p>
 
 
-<details>
-  <summary>MermaId діаграма</summary>
+- test diagram
 
 ```mermaid
 graph TD
@@ -46,6 +45,11 @@ graph TD
     DB -- "Читає та збагачує дані " --> MyApp
     MyApp -- "Відправляє отримані дані" --> ES3["Зовнішній Сервіс 3 (Ненадійний Endpoint)"]
 ```
+
+<details>
+  <summary>MermaId діаграма</summary>
+тут буде діаграмам
+
 </details>
 
 
