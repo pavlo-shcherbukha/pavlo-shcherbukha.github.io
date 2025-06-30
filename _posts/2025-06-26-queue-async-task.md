@@ -34,6 +34,7 @@ published: true
 <kbd><img src="/assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-204.svg" /></kbd>
 <p style="text-align: center;"><a name="pic-204">pic-204</a></p>
 
+
 <details>
   <summary>MeramId діаграма</summary>
 
@@ -46,6 +47,7 @@ graph TD
     MyApp -- "Відправляє отримані дані" --> ES3["Зовнішній Сервіс 3 (Ненадійний Endpoint)"]
 ```
 </details>
+
 
 Виникає питання чому?  
 
