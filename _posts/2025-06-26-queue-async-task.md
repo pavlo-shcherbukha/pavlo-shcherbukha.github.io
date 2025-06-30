@@ -75,7 +75,7 @@ graph TD
 <details>
   <summary>MermaId діаграма</summary>
 
-<pre><code class="language-mermaid">
+<div class="mermaid">
 graph TD
     subgraph "Взаємодія із Зовнішнім Сервісом 1"
         ES1["Зовнішній Сервіс 1"] -- "HTTP POST" --> MyApp["Наш додаток отримувач даних"]
@@ -87,7 +87,7 @@ graph TD
         MessageQueue -- "Отримує повідмолення" --> MyAppConsumer["Наш додаток-споживач повідомлень"]
         MyAppConsumer -- "Відправляє повідомлення по http" --> ES3["Зовнішній Сервіс 3 (Ненадійний Endpoint)"]
     end
-</code></pre>
+</div>
 
 </details>
 
