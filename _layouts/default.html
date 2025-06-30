@@ -110,7 +110,8 @@
 
           // Замінюємо оригінальний <pre><code> блок на новий <div>
           //element.parentNode.replaceChild(mermaidDiv, element.parentNode);
-          element.parentNode.parentNode.replaceChild(mermaidDiv, element.parentNode);
+          //element.parentNode.parentNode.replaceChild(mermaidDiv, element.parentNode);
+          element.parentNode.innerHTML = '<div class="mermaid">' + mermaidCode + '</div>';
           // Або можна просто замінити вміст element.parentNode.innerHTML = '<div class="mermaid">' + mermaidCode + '</div>';
           // Якщо ви хочете залишити `<details>` блок, то маніпулюйте елементами всередині нього.
           // У випадку `<details>`, `<pre>` є прямим нащадком `<details>`
