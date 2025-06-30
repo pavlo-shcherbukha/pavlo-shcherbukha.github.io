@@ -86,13 +86,13 @@ graph TD
 На [pic-202](#pic-202) показано flow, що вичитує JSON  з чреги **psh.in2** та пробує відправити його по http. Якщо виникне помилка, то повідомлення буде повернуто в чергу **psh.in2**. 
 
 
-<kbd><img src="../assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-201.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-201.png" /></kbd>
 <p style="text-align: center;"><a name="pic-201">pic-201</a></p>
 
 
 
 
-<kbd><img src="../assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-202.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-202.png" /></kbd>
 <p style="text-align: center;"><a name="pic-202">pic-202</a></p>
 
 
@@ -113,7 +113,7 @@ graph TD
 
 Налаштування черги BackOut  показано на [pic-203](#pic-203).
 
-<kbd><img src="../assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-203.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-04-08-asyncws-rabbit/doc/pic-203.png" /></kbd>
 <p style="text-align: center;"><a name="pic-203">pic-203</a></p>
 
 Цей же самий принцип використаний і в основній задачці. Архітектурна діаграма та її опис наведено нижче
