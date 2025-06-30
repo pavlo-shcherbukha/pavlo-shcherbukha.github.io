@@ -35,20 +35,18 @@ published: true
 <p style="text-align: center;"><a name="pic-204">pic-204</a></p>
 
 
-- test diagram
-
-```mermaid
-graph TD
-
-    ES1["Зовнішній Сервіс 1"] -- "HTTP POST" --> MyApp["Наш додаток"]
-    MyApp -- "Збереження даних" --> DB["База Даних"]
-    DB -- "Читає та збагачує дані " --> MyApp
-    MyApp -- "Відправляє отримані дані" --> ES3["Зовнішній Сервіс 3 (Ненадійний Endpoint)"]
-```
-
 <details>
   <summary>MermaId діаграма</summary>
 тут буде діаграмам
+    <div class="mermaid">
+        graph TD
+
+        ES1["Зовнішній Сервіс 1"] -- "HTTP POST" --> MyApp["Наш додаток"]
+        MyApp -- "Збереження даних" --> DB["База Даних"]
+        DB -- "Читає та збагачує дані " --> MyApp
+        MyApp -- "Відправляє отримані дані" --> ES3["Зовнішній Сервіс 3 (Ненадійний Endpoint)"]
+
+    </div>
 
 </details>
 
