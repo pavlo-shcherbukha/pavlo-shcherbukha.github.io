@@ -75,19 +75,19 @@ graph TD
 <details>
   <summary>MermaId діаграма</summary>
 
-<div class="mermaid">
-graph TD
-    subgraph "Взаємодія із Зовнішнім Сервісом 1"
-        ES1["Зовнішній Сервіс 1"] -- "HTTP POST" --> MyApp["Наш додаток отримувач даних"]
-        MyApp -- "Збереження даних" --> DB["База Даних"]
-        DB -- "Читає та збагачує дані " --> MyApp
-        MyApp -- "Відправляє отримані дані" --> MessageQueue["Черга повідомлень для зовнішнього сервіса"]
-    end
-    subgraph "Взаємодія із Зовнішнім Сервісом 3"
-        MessageQueue -- "Отримує повідмолення" --> MyAppConsumer["Наш додаток-споживач повідомлень"]
-        MyAppConsumer -- "Відправляє повідомлення по http" --> ES3["Зовнішній Сервіс 3 (Ненадійний Endpoint)"]
-    end
-</div>
+    <div class="mermaid">
+        graph TD
+            subgraph "Взаємодія із Зовнішнім Сервісом 1"
+                ES1["Зовнішній Сервіс 1"] -- "HTTP POST" --> MyApp["Наш додаток отримувач даних"]
+                MyApp -- "Збереження даних" --> DB["База Даних"]
+                DB -- "Читає та збагачує дані " --> MyApp
+                MyApp -- "Відправляє отримані дані" --> MessageQueue["Черга повідомлень для зовнішнього сервіса"]
+            end
+            subgraph "Взаємодія із Зовнішнім Сервісом 3"
+                MessageQueue -- "Отримує повідмолення" --> MyAppConsumer["Наш додаток-споживач повідомлень"]
+                MyAppConsumer -- "Відправляє повідомлення по http" --> ES3["Зовнішній Сервіс 3 (Ненадійний Endpoint)"]
+            end
+    </div>
 
 </details>
 
@@ -154,35 +154,35 @@ graph TD
 <details>
   <summary>MermaId діаграма</summary>
 
-<pre><code class="language-mermaid">
-graph TD
-    subgraph "Взаємодія із Зовнішнім Сервісом 1"
-        ES1["Зовнішній Сервіс 1"] -- "HTTP POST" --> MyAPI["Наш API (Приймальний Сервіс)"]
-        MyAPI -- "Збереження даних" --> DB["База Даних"]
-        DB -- "Читає та збагачує дані" --> MyAPI
-        MyAPI -- "Публікує повідомлення" --> MessageQueue["Черга Повідомлень (IBM MQ)"]
-        MyAPI -- "HTTP 200 OK" --> ES1
-    end
+    <div class="mermaid">
+        graph TD
+            subgraph "Взаємодія із Зовнішнім Сервісом 1"
+                ES1["Зовнішній Сервіс 1"] -- "HTTP POST" --> MyAPI["Наш API (Приймальний Сервіс)"]
+                MyAPI -- "Збереження даних" --> DB["База Даних"]
+                DB -- "Читає та збагачує дані" --> MyAPI
+                MyAPI -- "Публікує повідомлення" --> MessageQueue["Черга Повідомлень (IBM MQ)"]
+                MyAPI -- "HTTP 200 OK" --> ES1
+            end
 
-    subgraph "Обробка та Доставка Даних (Наша Система)"
-        MessageQueue -- "Споживає повідомлення (Асинхронно)" --> RetryWorker["Воркер Retry (IBM ACE Flow)"]
-        RetryWorker -- "HTTP POST (Може провалитись)" --> ES3["Зовнішній Сервіс 3 (Ненадійний Endpoint)"]
+            subgraph "Обробка та Доставка Даних (Наша Система)"
+                MessageQueue -- "Споживає повідомлення (Асинхронно)" --> RetryWorker["Воркер Retry (IBM ACE Flow)"]
+                RetryWorker -- "HTTP POST (Може провалитись)" --> ES3["Зовнішній Сервіс 3 (Ненадійний Endpoint)"]
 
-        subgraph "Механізм Retry для ES3"
-            RetryWorker -- "Короткочасний збій/Retry" --> MessageQueue
-            MessageQueue -- "Якщо перевищено ліміт спроб (BOTHRESH)" --> DLQ["Черга Dead-Letter (IBM MQ BACKOUT.QUEUE)"]
-            DLQ -- "Моніторинг/Ручне втручання/Переміщення" --> Human["Оператор / Моніторинг"]
-        end
-    end
+                subgraph "Механізм Retry для ES3"
+                    RetryWorker -- "Короткочасний збій/Retry" --> MessageQueue
+                    MessageQueue -- "Якщо перевищено ліміт спроб (BOTHRESH)" --> DLQ["Черга Dead-Letter (IBM MQ BACKOUT.QUEUE)"]
+                    DLQ -- "Моніторинг/Ручне втручання/Переміщення" --> Human["Оператор / Моніторинг"]
+                end
+            end
 
-    style MyAPI fill:#f9f,stroke:#333,stroke-width:2px
-    style DB fill:#ccf,stroke:#333,stroke-width:2px
-    style MessageQueue fill:#bbf,stroke:#333,stroke-width:2px
-    style RetryWorker fill:#fcf,stroke:#333,stroke-width:2px
-    style ES3 fill:#f66,stroke:#333,stroke-width:2px
-    style DLQ fill:#fbb,stroke:#333,stroke-width:2px
+            style MyAPI fill:#f9f,stroke:#333,stroke-width:2px
+            style DB fill:#ccf,stroke:#333,stroke-width:2px
+            style MessageQueue fill:#bbf,stroke:#333,stroke-width:2px
+            style RetryWorker fill:#fcf,stroke:#333,stroke-width:2px
+            style ES3 fill:#f66,stroke:#333,stroke-width:2px
+            style DLQ fill:#fbb,stroke:#333,stroke-width:2px
 
-</code></pre>
+    </div>
 
 </details>
 
@@ -269,44 +269,44 @@ graph TD
 <details>
   <summary>MermaId діаграма</summary>
 
-<pre><code class="language-mermaid">
-graph TD
-    subgraph "Взаємодія із Зовнішнім Сервісом 1"
-        ES1["Зовнішній Сервіс 1"] -- "HTTP POST" --> MyAPI_Node["Наш API (Node.js)"]
-        MyAPI_Node -- "Збереження даних" --> DB_Node[(База Даних)]
-        MyAPI_Node -- "HTTP 200 OK" --> ES1
-    end
+    <div class="mermaid">
+        graph TD
+            subgraph "Взаємодія із Зовнішнім Сервісом 1"
+                ES1["Зовнішній Сервіс 1"] -- "HTTP POST" --> MyAPI_Node["Наш API (Node.js)"]
+                MyAPI_Node -- "Збереження даних" --> DB_Node[(База Даних)]
+                MyAPI_Node -- "HTTP 200 OK" --> ES1
+            end
 
-    subgraph "Обробка та Доставка Даних (Наша Система Node.js + RabbitMQ)"
-        DB_Node -- "Тригер/API-виклик/Воркер" --> DataProducer_Node["Node.js Data Producer"]
-        DataProducer_Node -- "JSON Трансформація та Збагачення" --> DataProducer_Node
-        DataProducer_Node -- "Публікує повідомлення" --> RabbitMQ["Брокер повідомлень (RabbitMQ)"]
+            subgraph "Обробка та Доставка Даних (Наша Система Node.js + RabbitMQ)"
+                DB_Node -- "Тригер/API-виклик/Воркер" --> DataProducer_Node["Node.js Data Producer"]
+                DataProducer_Node -- "JSON Трансформація та Збагачення" --> DataProducer_Node
+                DataProducer_Node -- "Публікує повідомлення" --> RabbitMQ["Брокер повідомлень (RabbitMQ)"]
 
-        subgraph "RabbitMQ Retry Mechanism"
-            RabbitMQ -- "Відправляє до" --> OriginalQueue["Основна Черга (Напр. 'data.to.es3')"]
-            OriginalQueue -- "Споживає" --> Worker_Node["Node.js Worker (для ES3)"]
-            Worker_Node -- "HTTP POST (Може провалитись)" --> ES3_Node["Зовнішній Сервіс 3 (Ненадійний Endpoint)"]
+                subgraph "RabbitMQ Retry Mechanism"
+                    RabbitMQ -- "Відправляє до" --> OriginalQueue["Основна Черга (Напр. 'data.to.es3')"]
+                    OriginalQueue -- "Споживає" --> Worker_Node["Node.js Worker (для ES3)"]
+                    Worker_Node -- "HTTP POST (Може провалитись)" --> ES3_Node["Зовнішній Сервіс 3 (Ненадійний Endpoint)"]
 
-            Worker_Node -- "Відхилення (NACK)" --> OriginalQueue
-            OriginalQueue -- "Якщо NACKed/TTL Expired" --> DLX["Dead Letter Exchange (DLX)"]
-            DLX -- "Маршрутизує до" --> RetryQueue["Retry Черга (З TTL для затримки)"]
-            RetryQueue -- "TTL минає" --> DLX --> OriginalQueue
-            
-            RetryQueue -- "Якщо перевищено retry ліміт" --> FailedQueue["Failed/Parked Черга"]
-            FailedQueue -- "Моніторинг/Ручне втручання" --> Human_Node["Оператор / Моніторинг"]
-        end
-    end
+                    Worker_Node -- "Відхилення (NACK)" --> OriginalQueue
+                    OriginalQueue -- "Якщо NACKed/TTL Expired" --> DLX["Dead Letter Exchange (DLX)"]
+                    DLX -- "Маршрутизує до" --> RetryQueue["Retry Черга (З TTL для затримки)"]
+                    RetryQueue -- "TTL минає" --> DLX --> OriginalQueue
+                    
+                    RetryQueue -- "Якщо перевищено retry ліміт" --> FailedQueue["Failed/Parked Черга"]
+                    FailedQueue -- "Моніторинг/Ручне втручання" --> Human_Node["Оператор / Моніторинг"]
+                end
+            end
 
-    style MyAPI_Node fill:#f9f,stroke:#333,stroke-width:2px
-    style DB_Node fill:#ccf,stroke:#333,stroke-width:2px
-    style RabbitMQ fill:#A0D468,stroke:#333,stroke-width:2px
-    style OriginalQueue fill:#E4E6EA,stroke:#333,stroke-width:2px
-    style Worker_Node fill:#fcf,stroke:#333,stroke-width:2px
-    style ES3_Node fill:#f66,stroke:#333,stroke-width:2px
-    style DLX fill:#ADD8E6,stroke:#333,stroke-width:2px
-    style RetryQueue fill:#FFB6C1,stroke:#333,stroke-width:2px
-    style FailedQueue fill:#E6B0AA,stroke:#333,stroke-width:2px
-</code></pre>
+            style MyAPI_Node fill:#f9f,stroke:#333,stroke-width:2px
+            style DB_Node fill:#ccf,stroke:#333,stroke-width:2px
+            style RabbitMQ fill:#A0D468,stroke:#333,stroke-width:2px
+            style OriginalQueue fill:#E4E6EA,stroke:#333,stroke-width:2px
+            style Worker_Node fill:#fcf,stroke:#333,stroke-width:2px
+            style ES3_Node fill:#f66,stroke:#333,stroke-width:2px
+            style DLX fill:#ADD8E6,stroke:#333,stroke-width:2px
+            style RetryQueue fill:#FFB6C1,stroke:#333,stroke-width:2px
+            style FailedQueue fill:#E6B0AA,stroke:#333,stroke-width:2px
+    </div>
 
 
 </details>
