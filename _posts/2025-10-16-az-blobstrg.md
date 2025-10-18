@@ -48,6 +48,11 @@ published: true
     Я не буду детально порівнбвати разні варіанти об'єктових сховищ типу: [AWS S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html), [IBM Cloud Object Storage](https://www.ibm.com/products/cloud-object-storage), [Azure Blob Storage](https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blobs-introduction). Моя ціль - вивчення azure cloud.
 
 
+**Зауваження:**
+
+Можна, звичайно, прочитати відповдіний розділ :
+[ Develop solutions that use Blob storage](https://learn.microsoft.com/en-us/training/paths/develop-solutions-that-use-blob-storage/)  або навіть отримати сертифікат з "AZ-204 Developing Solution for Microsoft Azure". Або ж знайти відповдіний розділ в "AZ-900: Microsoft Azure Fundamentals" чи теж, отримати сертифікат. Їх читання та вивчення не буде лишнім. Але ж фактично зробити руками чи головою нічно не зможемо, тому що це виключно описові курси, що не дають можливості ні архітектору ні розробнику виконувати свою роботу. Як на мене, то ці курси загального знання і їх повнні пройти всі хто збираться артикулювати з приводу хмари azure: від менеджера по продажах, та менеджкрів і до інженерів підтримки.
+
 ## <a name="p-2">2. Обгрунтування, чому це правильно</a>
 
 **Продуктивність РБД:**
