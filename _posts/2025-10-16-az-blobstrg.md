@@ -3,7 +3,7 @@ layout: post
 title: "AZURE AZ-204 AZ BLOB STORAGE"
 date: 2025-10-16 10:00:01
 categories: [azure]
-permalink: posts/2025-10-16/az-204-blob-strg/
+permalink: posts/2025-10-16/az-204-blob-strg-ua/
 published: true
 ---
 
@@ -15,7 +15,10 @@ published: true
 - [3.1. Заперечення: "Документи клієнтів у хмарі зберігати не можна (Безпека/Нормативні вимоги)"](#p-3.1)
 - [3.2. Заперечення: "Тарифи хмари непідйомні"](#p-3.2)
 - [3.3. Заперечення: "Ми вже купили сервери і платимо за їх обслуговування"](#p-3.3)
-
+- [3.4. Заперечення: "Є варіанти власного, локального об'єктового сховища і безкоштовного - для чого нам хмара"](#p-3.4)
+- [3.5. Порівняльний Аналіз Вартість vs. Складність (TCO)](#-p3.5)
+- [4. Лінки на документацію по Azure Blob Storage](#p-4)
+- [5. Міркуваня з приводу вибору хманих інструментів azure](#p-5)
 
 <!-- TOC END -->
 
@@ -96,4 +99,154 @@ published: true
 2. Сервери повинні займатися обробкою транзакцій (чим Oracle займається найкраще), а не обслуговуванням статичного файлового сховища. 
 3. За звичай Клієнт вже платить за Azure (Office 365 часто надає доступ до деяких ресурсів або клієнт вже маєте підписку). Використання наявного інструменту є логічним кроком. 
 4. Замість витрачати час на адміністрування/доопрацювання/оптимізацію зростаючого файлового сховища в БД, співробітники можуть сфокусуватися на більш критичних бізнес-задачах чи освоїти щось нове.
+
+### <a name="p-3.4">3.4. Заперечення: "Є варіанти власного, локального об'єктового сховища і безкоштовного - для чого нам хмара"</a
+
+Так, є варінти організації власного об'єктного сховища, найвідоміше ["MinIO"](https://github.com/minio/minio)
+Сховище жешевше за Oracle, але все одно вимагає купівлі серверів, дискових полиць, мережевого обладнання та оплати електроенергії/оренди ДЦ. Але складгість організації такого сховища, особливо територіально розподіленого надвисока.
+
+- Проблеми з документацією та налаштуванням (MinIO EC).
+- Проблеми з масштабуванням (не можна просто розширити поточний кластер, потрібен повний перезапуск всіх вузлів при розширенні/оновленні ).
+- Критичні помилки при експлуатації та оновленнях (втрата користувачів/політик , збої кешування, пошкодження стиснутих файлів).
+- Непередбачуваний час відновлення після збоїв (1.2 ТБ відновлювалися 9 днів, з прогнозом на місяці).
+- Необхідність самостійно створювати систему моніторингу (Prometheus/Grafana) та вручну відключати повільні диски, щоб не "гальмував весь кластер".
+- Для адекватної підтримки від вендора всеріно треба оплатити підписку.
+
+Для підтвердження ось лінк на відео (хоч воно і російське, але всеж таки достатьно ілюстративне): https://www.youtube.com/watch?v=XiJVC9nzAW4 .
+
+### <a name="p-3.5">3.5. Порівняльний Аналіз Вартість vs. Складність (TCO)</a>
+
+1. Локальне Сховище (Oracle + SSD)
+
+    Висока вартість: Найдорожча вартість зберігання за 1 ГБ через ліцензії Oracle, високопродуктивне обладнання та необхідність локального резервування (RAID, Data Guard).
+
+    Складність: Обслуговування БД, управління збільшенням її розміру, довгі бекапи.
+
+2. Власне Об'єктне Сховище (MinIO) 
+
+    Середня вартість: Дешевше за Oracle, але все одно вимагає купівлі серверів, дискових полиць, мережевого обладнання та оплати електроенергії/оренди ДЦ.
+
+    Складність: Надзвичайно висока:
+
+        Проблеми з документацією та налаштуванням (MinIO EC).
+
+        Проблеми з масштабуванням (не можна просто розширити поточний кластер, потрібен повний перезапуск всіх вузлів при розширенні/оновленні ).
+
+        Критичні помилки при експлуатації та оновленнях (втрата користувачів/політик [01:18:00], збої кешування, пошкодження стиснутих файлів ).
+
+        Непередбачуваний час відновлення після збоїв (1.2 ТБ відновлювалися 9 днів, з прогнозом на місяці ).
+
+        Необхідність самостійно створювати систему моніторингу (Prometheus/Grafana) та вручну відключати повільні диски, щоб не "гальмував весь кластер".
+
+3. Хмарне Об'єктне Сховище (Azure Blob Storage)
+
+    Низька вартість: Найдешевше зберігання за ГБ (особливо Cool/Archive). Немає витрат на "залізо" та електроенергію.
+
+    Складність: Низька. Це керована послуга. Замовник не турбується про:
+
+        RAID/EC, ZFS (це забезпечує Microsoft).
+
+        Оновлення (це прозоро робить Microsoft).
+
+        Масштабованість (вона необмежена).
+
+        Резервування (воно вбудоване — LRS, ZRS, GRS).
+
+
+**Підсумовуючи:**
+Розглядаємо перехід з Oracle на об'єктне сховище. Є два шляхи: власне рішення (наприклад, MinIO) або керована хмарна послуга (Azure Blob Storage).
+
+Власне рішення, хоч і має низьку ліцензійну вартість, вимагає надзвичайно високих операційних витрат та ризиків, про що свідчить [досвід інших компаній](https://www.youtube.com/watch?v=XiJVC9nzAW4) (наприклад, MinIO є дуже 'сирим' для продуктиву).
+
+Натомість, Azure Blob Storage пропонує:
+    Найдешевшу вартість за ГБ, порівняно як з Oracle, так і з TCO власного MinIO.
+    Гарантовану надійність і безпеку від Microsoft.
+    Нульові операційні витрати на обслуговування, оновлення та вирішення проблем, описаних у відео (втрата даних при оновленні, повільне відновлення).
+
+Перехід на Azure дозволяє нам значно заощадити кошти на Oracle, отримати необмежену масштабованість і уникнути ризиків, пов'язаних із підтримкою складного георозподіленого сховища власними силами."
+
+Таким чином, wt не просто "переїзд", а перехід до надійної, економічно вигідної та зрілої архітектури, уникаючи підводних каменів, які ілюструє доповідь про самостійну підтримку від іншх компаній.
+
+
+## <a name="p-4">4. Лінки на документацію по Azure Blob Storage</a>
+
+[Azure Blob Storage documentation](https://learn.microsoft.com/en-us/azure/storage/blobs/)
+- [Plan and manage costs for Azure Blob Storage](https://learn.microsoft.com/en-us/azure/storage/common/storage-plan-manage-costs?toc=%2Fazure%2Fstorage%2Fblobs%2Ftoc.json&bc=%2Fazure%2Fstorage%2Fblobs%2Fbreadcrumb%2Ftoc.json)
+
+- [Azure Blob Storage price](https://azure.microsoft.com/en-us/pricing/details/storage/blobs/)
+
+## <a name="p-5">5. Міркуваня з приводу вибору хманих інструментів azure</a>
+
+### <a name="p-5.1">5.1. Характеристика бінарних даних, з якими працюємо</a>
+
+Надходження бінарних документів можна охарактеризувати наступним чином.
+
+- Надходять нові документи рідко, тобто кілька разів на день. Інколи може бути і не кожний день.
+- Частота читання даних не дуже перевищує частоту надходження даних.
+- Інколи дані можуть оновлюватися, тому має значення збереження версійності документів. Але основну операціну цінність має остання версія документу.
+- Доступ до попередніх версій документів має значення, але рідко, у випдках  надходження та виконання запитів від регуляторних органів.
+
+Таким чином, в оперативному доступі мають бути останні версії документів. В архівному доступі можна тримати попередні версії документів.
+У випадку, коли дані не можуть бути записані з технічних причин, достатньо повідомити користувача, про не можливість запису і попросити спробувати пізніше. Тобто не має високої критичності по часу надходження файлів
+Читання даних  бажано забезпечувати більш надійно, щоб обробляти запити регуляторних органів без затримки.
+
+### <a name="p-5.2">5.2. Azure Blob Storage</a>
+
+Для вибору архутектури конфігурації Blob Storage використані корисні перелічені нижче документи:
+
+- [Architecture best practices for Azure Blob Storage](https://learn.microsoft.com/en-us/azure/well-architected/service-guides/azure-blob-storage?toc=%2Fazure%2Fstorage%2Fblobs%2Ftoc.json&bc=%2Fazure%2Fstorage%2Fblobs%2Fbreadcrumb%2Ftoc.json)
+- [Reliability in Azure Blob Storage](https://learn.microsoft.com/en-us/azure/reliability/reliability-storage-blob?toc=%2Fazure%2Fstorage%2Fblobs%2Ftoc.json&bc=%2Fazure%2Fstorage%2Fblobs%2Fbreadcrumb%2Ftoc.json)
+
+Потрібно забезпечити максимальну надійність зберігання і максимальну доступність  читання даних. Значить, у відповідності до:
+
+- [Azure Storage redundancy](https://learn.microsoft.com/en-us/azure/storage/common/storage-redundancy?toc=%2Fazure%2Fstorage%2Fblobs%2Ftoc.json&bc=%2Fazure%2Fstorage%2Fblobs%2Fbreadcrumb%2Ftoc.json),
+
+Мінімально підійде GRS/RA-GRS [Geo-zone-redundant storage](https://learn.microsoft.com/en-us/azure/storage/common/storage-redundancy?toc=%2Fazure%2Fstorage%2Fblobs%2Ftoc.json&bc=%2Fazure%2Fstorage%2Fblobs%2Fbreadcrumb%2Ftoc.json#geo-zone-redundant-storage).
+
+Тут я процитую, як працює  "Zone-redundant storage"
+
+    A write request to a storage account that is using ZRS happens synchronously. The write operation returns successfully only after the data is written to all replicas across the three availability zones. If an availability zone is temporarily unavailable, the operation returns successfully after the data is written to all available zones.
+
+    Microsoft recommends using ZRS in the primary region for scenarios that require high availability. ZRS is also recommended for restricting replication of data to a particular region to meet data governance requirements.
+
+    Microsoft recommends using ZRS for Azure Files workloads. If a zone becomes unavailable, no remounting of Azure file shares from the connected clients is required.
+
+
+Ну а на додаток маємо реплікацію в інший регіон згідно [Geo-redundant storage](https://learn.microsoft.com/en-us/azure/storage/common/storage-redundancy?toc=%2Fazure%2Fstorage%2Fblobs%2Ftoc.json&bc=%2Fazure%2Fstorage%2Fblobs%2Fbreadcrumb%2Ftoc.json#geo-redundant-storage), яка доступна тільки для читання:
+
+    A write operation is first committed to the primary location and replicated using LRS. The update is then replicated asynchronously to the secondary region. When data is written to the secondary location, it also replicates within that location using LRS.
+
+А зважаючи на розділ [Use geo-redundancy to design highly available applications](https://learn.microsoft.com/en-us/azure/storage/common/geo-redundant-design) можна зробити висновок про те, як будувати прикладну архітектуру додатків
+
+    A write operation is first committed to the primary location and replicated using LRS. The update is then replicated asynchronously to the secondary region. When data is written to the secondary location, it also replicates within that location using LRS.
+
+А зважаючи на розділ [Use geo-redundancy to design highly available applications](https://learn.microsoft.com/en-us/azure/storage/common/geo-redundant-design) можна зробити висновок про те, як будувати прикладну архітектуру додатків. Наведу цитати зі згаданого документу:
+
+    Azure Storage offers two options for geo-redundant replication: Geo-redundant storage (GRS) and Geo-zone-redundant storage (GZRS). To make use of the Azure Storage geo-redundancy options, make sure that your storage account is configured for read-access geo-redundant storage (RA-GRS) or read-access geo-zone-redundant storage (RA-GZRS). If it's not, you can learn more about how to change your storage account replication type.
+
+
+    You can design your application to handle transient faults or significant outages by reading from the secondary region when there's an issue that interferes with reading from the primary region. When the primary region is available again, your application can return to reading from the primary region.
+
+    Keep in mind these key considerations when designing your application for availability and resiliency using RA-GRS or RA-GZRS:
+
+    A read-only copy of the data you store in the primary region is asynchronously replicated in a secondary region. This asynchronous replication means that the read-only copy in the secondary region is eventually consistent with the data in the primary region. The storage service determines the location of the secondary region.
+
+    You can use the Azure Storage client libraries to perform read and update requests against the primary region endpoint. If the primary region is unavailable, you can automatically redirect read requests to the secondary region. You can also configure your app to send read requests directly to the secondary region, if desired, even when the primary region is available.
+
+    If the primary region becomes unavailable, you can initiate an account failover. When you fail over to the secondary region, the DNS entries pointing to the primary region are changed to point to the secondary region. After the failover is complete, write access is restored for GRS and RA-GRS accounts. For more information, see Disaster recovery and storage account failover.
+
+Також важливо врахувати інформацію, наведену в перелічених розділах з приводу архітектури прикладних додатків:
+
+- [Running your application in read-only mode](https://learn.microsoft.com/en-us/azure/storage/common/geo-redundant-design#running-your-application-in-read-only-mode).
+- [Handling updates when running in read-only mode](https://learn.microsoft.com/en-us/azure/storage/common/geo-redundant-design#handling-updates-when-running-in-read-only-mode).
+
+- [Read requests](https://learn.microsoft.com/en-us/azure/storage/common/geo-redundant-design#read-requests)
+- [Update requests](https://learn.microsoft.com/en-us/azure/storage/common/geo-redundant-design?toc=%2Fazure%2Fstorage%2Fblobs%2Ftoc.json&bc=%2Fazure%2Fstorage%2Fblobs%2Fbreadcrumb%2Ftoc.json#update-requests)
+- [How to implement the Circuit Breaker pattern](https://learn.microsoft.com/en-us/azure/storage/common/geo-redundant-design?toc=%2Fazure%2Fstorage%2Fblobs%2Ftoc.json&bc=%2Fazure%2Fstorage%2Fblobs%2Fbreadcrumb%2Ftoc.json#how-to-implement-the-circuit-breaker-pattern)
+- [Handling eventually consistent data](https://learn.microsoft.com/en-us/azure/storage/common/geo-redundant-design?toc=%2Fazure%2Fstorage%2Fblobs%2Ftoc.json&bc=%2Fazure%2Fstorage%2Fblobs%2Fbreadcrumb%2Ftoc.json#handling-eventually-consistent-data)
+
+- [Testing](https://learn.microsoft.com/en-us/azure/storage/common/geo-redundant-design?toc=%2Fazure%2Fstorage%2Fblobs%2Ftoc.json&bc=%2Fazure%2Fstorage%2Fblobs%2Fbreadcrumb%2Ftoc.json#testing)
+
+
+
 
