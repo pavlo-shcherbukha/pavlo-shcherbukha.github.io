@@ -19,6 +19,8 @@ published: true
 - [3.5. Порівняльний Аналіз Вартість vs. Складність (TCO)](#-p3.5)
 - [4. Лінки на документацію по Azure Blob Storage](#p-4)
 - [5. Міркуваня з приводу вибору хманих інструментів azure](#p-5)
+- [5.1. Характеристика бінарних даних, з якими працюємо](#p-5.1)
+- [5.2. Azure Blob Storage](#p=5.2)
 
 <!-- TOC END -->
 
@@ -50,8 +52,11 @@ published: true
 
 **Зауваження:**
 
-Можна, звичайно, прочитати відповдіний розділ :
-[ Develop solutions that use Blob storage](https://learn.microsoft.com/en-us/training/paths/develop-solutions-that-use-blob-storage/)  або навіть отримати сертифікат з "AZ-204 Developing Solution for Microsoft Azure". Або ж знайти відповдіний розділ в "AZ-900: Microsoft Azure Fundamentals" чи теж, отримати сертифікат. Їх читання та вивчення не буде лишнім. Але ж фактично зробити руками чи головою нічно не зможемо, тому що це виключно описові курси, що не дають можливості ні архітектору ні розробнику виконувати свою роботу. Як на мене, то ці курси загального знання і їх повнні пройти всі хто збираться артикулювати з приводу хмари azure: від менеджера по продажах, та менеджкрів і до інженерів підтримки.
+1. Можна, звичайно, прочитати відповдіний розділ :
+[ Develop solutions that use Blob storage](https://learn.microsoft.com/en-us/training/paths/develop-solutions-that-use-blob-storage/)  або навіть отримати сертифікат з "AZ-204 Developing Solution for Microsoft Azure". Або ж знайти відповдіний розділ в "AZ-900: Microsoft Azure Fundamentals" чи теж, отримати сертифікат. Їх читання та вивчення не буде лишнім. Але ж фактично зробити руками чи головою нічно не зможемо, тому що це виключно описові курси, що не дають можливості ні архітектору ні розробнику виконувати свою роботу. Як на мене, то ці курси загального знання і їх повнні пройти всі хто збираться артикулювати з приводу хмари azure: від менеджера по продажах, та менеджерів і до інженерів підтримки. Якщо це вивчать тільки  технічні спеціалісти, то ті, хто в харчовому лагцюжку знаходяться перед ними (менеджери та продажники) їх не будть розуміти і не зможуть приймати адекватних рішень, тому що нічого не зрозумію. 
+А досвід спідкуваня в режимі, коли продажник обіцяє клієнту: "Я вам приведу зараз класних пацнів, вони вам все порішають" - показує, що шлях в нікуди.
+
+2. Для графічного опису архітектур використано [drawio](https://www.drawio.com/) тому, що в своєму складі він має вбудовані іконки компонентів Azure. Хоча  для себе я давно віддав перевагу mermaid діаграмам.
 
 ## <a name="p-2">2. Обгрунтування, чому це правильно</a>
 
@@ -172,6 +177,9 @@ published: true
 
 Таким чином, wt не просто "переїзд", а перехід до надійної, економічно вигідної та зрілої архітектури, уникаючи підводних каменів, які ілюструє доповідь про самостійну підтримку від іншх компаній.
 
+На pic-03 показано, як би могла виглядати узагальнена архітектура для міграції з бази даних в хмарне azure Blob Storage з мультизонною реплікацією.
+<kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-03.png" /></kbd>
+<p style="text-align: center;"><a name="pic-03">pic-03</a></p>
 
 ## <a name="p-4">4. Лінки на документацію по Azure Blob Storage</a>
 
@@ -180,7 +188,8 @@ published: true
 
 - [Azure Blob Storage price](https://azure.microsoft.com/en-us/pricing/details/storage/blobs/)
 
-## <a name="p-5">5. Міркуваня з приводу вибору хманих інструментів azure</a>
+## <a name="p-5">5. Міркуваня з приводу вибору хмарних інструментів azure</a>
+
 
 ### <a name="p-5.1">5.1. Характеристика бінарних даних, з якими працюємо</a>
 
@@ -206,7 +215,15 @@ published: true
 
 - [Azure Storage redundancy](https://learn.microsoft.com/en-us/azure/storage/common/storage-redundancy?toc=%2Fazure%2Fstorage%2Fblobs%2Ftoc.json&bc=%2Fazure%2Fstorage%2Fblobs%2Fbreadcrumb%2Ftoc.json),
 
-Мінімально підійде GRS/RA-GRS [Geo-zone-redundant storage](https://learn.microsoft.com/en-us/azure/storage/common/storage-redundancy?toc=%2Fazure%2Fstorage%2Fblobs%2Ftoc.json&bc=%2Fazure%2Fstorage%2Fblobs%2Fbreadcrumb%2Ftoc.json#geo-zone-redundant-storage).
+Максимально підійде GRS/RA-GRS [Geo-zone-redundant storage](https://learn.microsoft.com/en-us/azure/storage/common/storage-redundancy?toc=%2Fazure%2Fstorage%2Fblobs%2Ftoc.json&bc=%2Fazure%2Fstorage%2Fblobs%2Fbreadcrumb%2Ftoc.json#geo-zone-redundant-storage).
+
+<kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-02.png" /></kbd>
+<p style="text-align: center;"><a name="pic-02">pic-02</a></p>
+
+Мінімально, можна зупинитися і на GRS [Replication across paired regions](https://learn.microsoft.com/en-us/azure/reliability/reliability-storage-blob?toc=%2Fazure%2Fstorage%2Fblobs%2Ftoc.json&bc=%2Fazure%2Fstorage%2Fblobs%2Fbreadcrumb%2Ftoc.json#replication-across-paired-regions)
+
+<kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-01.png" /></kbd>
+<p style="text-align: center;"><a name="pic-01">pic-01</a></p>
 
 Тут я процитую, як працює  "Zone-redundant storage"
 
@@ -252,6 +269,4 @@ published: true
 
 - [Testing](https://learn.microsoft.com/en-us/azure/storage/common/geo-redundant-design?toc=%2Fazure%2Fstorage%2Fblobs%2Ftoc.json&bc=%2Fazure%2Fstorage%2Fblobs%2Fbreadcrumb%2Ftoc.json#testing)
 
-
-
-
+- [ Azure Samples – Using the Circuit Breaker Pattern with RA-GRS storage](https://github.com/Azure-Samples/storage-dotnet-circuit-breaker-ha-ra-grs)
