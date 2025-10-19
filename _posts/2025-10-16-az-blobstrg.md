@@ -20,7 +20,11 @@ published: true
 - [4. Лінки на документацію по Azure Blob Storage](#p-4)
 - [5. Міркуваня з приводу вибору хманих інструментів azure](#p-5)
 - [5.1. Характеристика бінарних даних, з якими працюємо](#p-5.1)
-- [5.2. Azure Blob Storage](#p=5.2)
+- [5.2. Azure Blob Storage](#p-5.2)
+- [5.3. Azure Functions](#p-5.3)
+- [5.4. Azure Queue Storage](#p-5.4)
+- [5.5. Azure Static Web Apps](#p-5.5)
+
 
 <!-- TOC END -->
 
@@ -297,3 +301,55 @@ published: true
 
 <kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-06.png" /></kbd>
 <p style="text-align: center;"><a name="pic-06">pic-06</a></p>
+
+### <a name="p-5.3">5.3. Azure Functions</a>
+
+Чому я використав Server less Azure Function?
+По перше -  це найдешевший обчислювальний ресурс і більшості хмарних провайдерів і Azure тут нічого нового не відкрив.
+По друге - я вже третій раз впевнився:  якщо хочеш зрозуміти "філосовію" окремо взятої хмари -  почни з їх безсерверної платформи. По багатству і зручності безсерверної платфоми можна зробити висновок про всю хмару. 
+По третє - безсерверна платформа завжди інтегрована з основними хмарними продуктами - тому з ними легко познайомитися і вивчити.
+
+Якщо кортко, то про Server Less  можна почитити за лінком: [AZ-204: Implement Azure Functions](https://learn.microsoft.com/en-us/training/paths/implement-azure-functions/). Але мені більше подобається оцей матеріал: [What is Azure Functions?](https://learn.microsoft.com/en-us/azure/azure-functions/functions-overview).
+
+При запису файлів на blob storage можна використовувати функцію, що запускається BLOB-об'єктами, для перевірки, перетворення та обробки файлів в основній системі під час їх завантаження: [Process file uploads](https://learn.microsoft.com/en-us/azure/azure-functions/functions-scenarios?pivots=programming-language-python).
+
+При аналізу поведінки даних було визначно, що не передбачається великої інтенсивності надходження чи читання даних. Таким чином, буль який хмарний бакед чи API  не має сенсу запускати на окремо вибраній віртуаці (це найдорожчв опція) чи на хмарному kubernetes чи навіть на [App Service](https://learn.microsoft.com/en-gb/training/paths/create-azure-app-service-web-apps/). Достатньо запустити бакенд на звичайних, класичних безсрверних функціях.
+
+Та і взагалі для розробки прототипів чи навчальних проектів - це найпростіша платформа.
+
+### <a name="p-5.4">5.4. Azure Queue Storage</a>
+
+Azure Queue Storage використано для організації простого асинхронного обміну, для балансування навантаження на локальну систему та для мінімізації втрат даниї при проблемах в OnPremise дата центрі. Прочитати про них можна за лінком:
+[What is Azure Queue Storage](https://learn.microsoft.com/en-us/azure/storage/queues/storage-queues-introduction) або ж
+[az-204 Explore Azure Queue Storage](https://learn.microsoft.com/en-us/training/modules/discover-azure-message-queue/7-azure-queue-storage-overview?ns-enrollment-type=learningpath&ns-enrollment-id=learn.wwl.az-204-develop-message-based-solutions).
+
+Якщо, коротко, то  Azure Queue Storage – це сервіс для зберігання великої кількості повідомлень. Можна отримати доступ до повідомлень з будь-якої точки світу через автентифіковані виклики за допомогою HTTP або HTTPS. Повідомлення черги може мати розмір до 64 КБ. Черга може містити мільйони повідомлень, аж до загального ліміту ємності облікового запису сховища. Черги зазвичай використовуються для створення журналу робіт для асинхронної обробки, як-от в архітектурному стилі Web-Queue-Worker. Черги підтимують просту тарнзакційність.
+
+Ну і Azure Queue Storage прив'язані до Storage account. А структра повідомлення має json формат. Тобто, бінарні дані не передаються. Але, для чого передавати бінарні дані, якщо можна просто передати URL  на Blob об'єк  на Blob Storage.
+
+
+### <a name="p-5.5">5.5. Azure Static Web Apps</a>
+
+Статичні веб-програми зазвичай створюються за допомогою бібліотек та фреймворків, таких як Angular, React, Svelte або Vue. Ці програми містять HTML, CSS, JavaScript та ресурси зображень, які складають програму. У традиційній архітектурі веб-сервера ці файли обслуговуються з одного сервера разом із будь-якими необхідними кінцевими точками API.
+
+За допомогою Azure Static Web Apps статичні ресурси відокремлені від традиційного веб-сервера та натомість обслуговуються з точок, розподілених по всьому світу. Такий розподіл пришвидшує обслуговування файлів, оскільки файли фізично розташовані ближче до кінцевих користувачів. Кінцеві точки API, які є необов'язковими, розміщуються за допомогою безсерверної архітектури, що повністю усуває необхідність використання повноцінного серверного сервера.
+
+
+<kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-07.png" /></kbd>
+<p style="text-align: center;"><a name="pic-07">pic-07</a></p>
+
+
+Тут я процитую документацію Azure
+
+        Key features
+
+            Globally distributed web hosting puts static content like HTML, CSS, JavaScript, and images closer to your users.
+            Integrated API support provided by Azure Functions.
+            First-class GitHub and Azure DevOps integration changes to your repository trigger builds and deployments.
+            Free SSL certificates, which are automatically renewed.
+            Unique preview URLs for previewing pull requests.
+
+І використання цього продукту для розгортання Web UI  буде дешевше ніж піднімати його на віртуалці чи в app service  чи на хмарному kubernetis.
+
+
+## <a name="p-6">6. Елементи прототипування, що створюються програмно</a>
