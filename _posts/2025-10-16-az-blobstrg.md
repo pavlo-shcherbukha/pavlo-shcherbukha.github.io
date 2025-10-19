@@ -49,6 +49,11 @@ published: true
 
     Я не буду детально порівнбвати разні варіанти об'єктових сховищ типу: [AWS S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html), [IBM Cloud Object Storage](https://www.ibm.com/products/cloud-object-storage), [Azure Blob Storage](https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blobs-introduction). Моя ціль - вивчення azure cloud.
 
+Графічно, ідею можна зобразити таким чином [pic-03](#pic-03): 
+На pic-03 показано, як би могла виглядати узагальнена архітектура для міграції з бази даних в хмарне azure Blob Storage з мультизонною реплікацією.
+<kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-03.png" /></kbd>
+<p style="text-align: center;"><a name="pic-03">pic-03</a></p>
+
 
 **Зауваження:**
 
@@ -177,9 +182,7 @@ published: true
 
 Таким чином, wt не просто "переїзд", а перехід до надійної, економічно вигідної та зрілої архітектури, уникаючи підводних каменів, які ілюструє доповідь про самостійну підтримку від іншх компаній.
 
-На pic-03 показано, як би могла виглядати узагальнена архітектура для міграції з бази даних в хмарне azure Blob Storage з мультизонною реплікацією.
-<kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-03.png" /></kbd>
-<p style="text-align: center;"><a name="pic-03">pic-03</a></p>
+
 
 ## <a name="p-4">4. Лінки на документацію по Azure Blob Storage</a>
 
