@@ -8,126 +8,135 @@ published: true
 ---
 
 <!-- TOC BEGIN -->
-
-- [1. Про що цей блог](#p-1")
-- [2. Обгрунтування, чому це правильно](#p-2)
-- [3. Ключові моменти, які будуть нівелювати розробку такого аналізу](#p-3)
-- [3.1. Заперечення: "Документи клієнтів у хмарі зберігати не можна (Безпека/Нормативні вимоги)"](#p-3.1)
-- [3.2. Заперечення: "Тарифи хмари непідйомні"](#p-3.2)
-- [3.3. Заперечення: "Ми вже купили сервери і платимо за їх обслуговування"](#p-3.3)
-- [3.4. Заперечення: "Є варіанти власного, локального об'єктового сховища і безкоштовного - для чого нам хмара"](#p-3.4)
-- [3.5. Порівняльний Аналіз Вартість vs. Складність (TCO)](#-p3.5)
-- [4. Лінки на документацію по Azure Blob Storage](#p-4)
-- [5. Міркуваня з приводу вибору хманих інструментів azure](#p-5)
-- [5.1. Характеристика бінарних даних, з якими працюємо](#p-5.1)
-- [5.2. Azure Blob Storage](#p-5.2)
-- [5.3. Azure Functions](#p-5.3)
-- [5.4. Azure Queue Storage](#p-5.4)
-- [5.5. Azure Static Web Apps](#p-5.5)
-- [6. Елементи прототипування, що створюються програмно](#p-6)
-
-
+- [1. **What this blog is about**](#p-1")
+- [2. **Justification of why this is correct**](#p-2)
+- [3. **Key points that will negate the development of such an analysis**](#p-3)
+- [3.1. **Objection: "Client documents cannot be stored in the cloud (Security/Regulatory requirements)**](#p-3.1)
+- [3.2. **Objection: "Cloud tariffs are prohibitive (unaffordable)"**](#p-3.2)
+- [3.3. **Objection: "We have already bought servers and are paying for their maintenance**](#p-3.3)
+- [3.4. **Objection: "There are options for own, local object storage and free ones - why do we need the cloud**](#p-3.4)
+- [3.5. **Comparative Analysis: Cost vs. Complexity (TCO)**](#p-3.5)
+- [4. **Links to Azure Blob Storage documentation**](#p-4)
+- [5. **Considerations regarding the choice of Azure cloud tools**](#p-5)
+- [5.1. **Characteristics of the binary data we work with**](#p-5.1)
+- [5.2. **Azure Blob Storage**](#p-5.2)
+- [5.3. **Azure Functions**](#p-5.3)
+- [5.4. **Azure Queue Storage**](#p-5.4)
+- [5.5. **Azure Static Web Apps**](#-p5.5)
+- [6. **Elements of prototyping created programmatically (in software)**](#p-6)
 <!-- TOC END -->
 
-## <a name="p-1">1. Про що цей блог</a>
+## <a name="p-1">1. What this blog is about</a>
 
-Вивчаючи інструенти в хмарі azure, що можуть використовувати розробники для розробки прикладних додатків шукав якусь цікаву реалістичну задачу для навчання, яка б використовувала Azure Blob Storage. Я вже, використовую  api для роботи з BlobStorage, використовую утиліту azcopy.  Але все це були виключно теоретичні та практичні цеглинки, з яких можна побудувати додаток, як за вказаним лінками:
+While studying the Azure cloud tools that developers can use for building application software, I was looking for an interesting, realistic learning task that would utilize Azure Blob Storage. I am already using the API for working with Blob Storage and the azcopy utility. However, all of this consisted solely of theoretical and practical building blocks from which an application could be constructed, as shown in the links:
 -  [az-204-funcs](https://github.com/pavlo-shcherbukha/az-204-funcs);
--  [Розробка прототипу використання утілти копіювання файлів azcopy в парі з azure BlobStorage використовуючи авторизацію Service Principal](https://github.com/pavlo-shcherbukha/azlearning/blob/tz-000001/azcopy_p.md).  
+-  [Developing a prototype for using the azcopy file copying utility with Azure Blob Storage via Service Principal authorization.](https://github.com/pavlo-shcherbukha/azlearning/blob/tz-000001/azcopy_p.md).  
 
-Потім, почав шукати бізнесову задачу, яка б якось мотивувати клієнта використати хмару azure, а мені б слугувала підставою для розробки навчального проекту. Задача якось виникла сама собою в процесі спілкування зі своїми клегами. Задача ця не стосується якогось окремого клієнта.  Це досить середньозважене формулювання проблеми, що, як мені здається, досить часто можна занйти в організаціях, що мають "довгу" історію програмного забезепечення, для прикладу, використовують  одні і ті ж бази даних ще з епохи клієнт-серверних архітектур, переробляючи тільки самі програми-клієнти.
+Then, I started looking for a business task that would somehow motivate a client to use the Azure cloud and would serve as the basis for developing a training project for myself. The issue somehow arose by itself during a conversation with my colleagues. This problem does not concern any specific client. It is a fairly representative formulation of a problem that, as I believe, can often be found in organizations with a "long" software history—for example, those that have been using the same databases since the client-server architecture era, only re-engineering the client applications themselves.
 
-В таких організаціях часто використовується підхід, коли великі бінарні файли зберігаються в BLOB  полях бази даних. За звичай, це стосується великих корпоративних баз даних типу ORACLE, MSSQL, може DB2. Але в останній час, тенденція стала такою, що кількість і об'єм файлів, що треба зберігати росте в геомертичній прогресії. І з цим щось треба робити.
+In such organizations, an approach is often used where large binary files are stored in BLOB fields of a database. Typically, this applies to large corporate databases like ORACLE, MSSQL, or perhaps DB2. However, recently, the trend has been that the number and volume of files that need to be stored are growing exponentially. And something needs to be done about this.
 
-Що це можуть бути за  файли? Це можуть бути:
+What kind of files might these be? They could include:
 
-- особисті документи клієнтів-фізичних осіб, такі як паспорти, свідоцтва про народження чи одруження, договори, страховки;
-- установчі документи юридичних осіб, такі як реєстраційні докумети, устави прідприємства, податкова інформація, договори, страховки;
-- медичні документи (лікарські висновки, діагностичні фото МРТ, УЗІ, рентгенів);
-- фотографії продуктів;
-- різні постанови, виконавчі документи, платіжні документи -
-і таке  перелічувати можна довго.
+* **Personal documents of individual clients**, such as passports, birth or marriage certificates, contracts, insurance policies;
+* **Founding/Statutory documents of legal entities**, such as registration documents, company statutes, tax information, contracts, insurance policies;
+* **Medical documents** (medical reports, diagnostic images from MRI, ultrasound, X-rays);
+* **Product photographs**;
+* **Various resolutions, enforcement documents, payment documents** —
+    and the list can go on for a long time.
 
-**Ідея полягає в тому, щоб винести BLOB-дані (файлі-документів) з реляційної бази даних Oracle (MSSQL, DB2)  на об'єктне сховище (наприклад, Azure Blob Storage)**.
+**The idea is to offload BLOB data (file-documents) from the Oracle (MSSQL, DB2) relational database to object storage (for example, Azure Blob Storage).**
 
-    Далі по тексту, я  буду використовувати реляційну БД ORACLE,  так як, на мій погляд, це найчастіший приклад. Та і досвід її використання у мене найбільший.
+    Further in the text, I will use the **ORACLE relational database**, as, in my opinion, it is the most frequent example. I also have the most experience using it.
 
-    Я не буду детально порівнювати разні варіанти об'єктових сховищ типу: [AWS S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html), [IBM Cloud Object Storage](https://www.ibm.com/products/cloud-object-storage), [Azure Blob Storage](https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blobs-introduction). Моя ціль - вивчення azure cloud.
+    I will not be comparing different object storage options in detail, such as [AWS S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html), [IBM Cloud Object Storage](https://www.ibm.com/products/cloud-object-storage), or [Azure Blob Storage](https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blobs-introduction). My goal is to **study the Azure cloud**.
 
-Графічно, ідею можна зобразити таким чином [pic-03](#pic-03): 
-На pic-03 показано, як би могла виглядати узагальнена архітектура для міграції з бази даних в хмарне azure Blob Storage з мультизонною реплікацією.
+
+Graphically, the idea can be represented as follows : Pic-03 shows what a generalized architecture for migration from a database to cloud Azure Blob Storage with multi-zone replication could look like.
 <kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-03.png" /></kbd>
 <p style="text-align: center;"><a name="pic-03">pic-03</a></p>
 
-На малюнку зображено два Дата центри:
-- On Premise (1)
-- On Azure Cloud (2).
-Допустимо у нас велика база даних і потрібно виконати автоматичну міграцію з бази даних (1.2) в хмарний Blob Storage.
-В якості міграційного інструмента, що читає і відправляє дані в хмару вибрана інтеграційна шина Node-Red, хоча підійде що завгодно (Node.js, Python, Java), тобто підійде все, що підключається до бази даних і до якого є API бібіліотека для azure Blob Storage. За допомгою цього додатку вичитані з БД файли записуються на blob storage (2.2.1) в хмарі Azure. А далі, автомтично відбувається реплікація на інший віддалений сайт з Blob Storage (2.2.1).  
-При додаванні або оновленні файлу на Blob Storage  безсерверна azure функція тригериться цією подією і публікує в чергу повідомлення, про доданий Blob з його url  та hash (2.2.2, 2.2.3, 2.2.4).
-Вже інший Node-Red workflow читаэ повідомлення з Storage Que  і реєструє  нові дані для отримання blob, відмічає, що для цього клієнта і типу документа дані лежать уже в хмарі, а запис зі старим Blob  видаляємо. Тобто в цьому підіході отримується підтвердження, що запис уже мігрував і тільки тоді відаляється старий запис.
-В цій оархітектурі отримуємо 2 квитанції: з primary site (2.1) та з secondary site (2.2) (реплікаційний сайт). Тобто, ми можем бути впевнені, що дані є на двох сайтах.
-Ну і на додаток, ми можемо розгорнути Web додатки в Azure або OnPremise і використати один і той же backend для фронта. Авторизацію можна зробити через Azure EntraID. А backend можна зробити теж через azure функції.
+The figure are shown two Data Centers:
 
-**Зауваження:**
+    On-Premise (1)
 
-1. Можна, звичайно, прочитати відповдіний розділ :
-[ Develop solutions that use Blob storage](https://learn.microsoft.com/en-us/training/paths/develop-solutions-that-use-blob-storage/)  або навіть отримати сертифікат з "AZ-204 Developing Solution for Microsoft Azure". Або ж знайти відповдіний розділ в "AZ-900: Microsoft Azure Fundamentals" чи теж, отримати сертифікат. Їх читання та вивчення не буде лишнім. Але ж фактично зробити руками чи головою нічно не зможемо, тому що це виключно описові курси, що не дають можливості ні архітектору ні розробнику виконувати свою роботу. Як на мене, то ці курси загального знання і їх повнні пройти всі хто збираться артикулювати з приводу хмари azure: від менеджера по продажах, та менеджерів і до інженерів підтримки. Якщо це вивчать тільки  технічні спеціалісти, то ті, хто в харчовому лагцюжку знаходяться перед ними (менеджери та продажники) їх не будть розуміти і не зможуть приймати адекватних рішень, тому що нічого не зрозумію. 
-А досвід спідкуваня в режимі, коли продажник обіцяє клієнту: "Я вам приведу зараз класних пацнів, вони вам все порішають" - показує, що шлях в нікуди.
+    On Azure Cloud (2).
 
-2. Для графічного опису архітектур використано [drawio](https://www.drawio.com/) тому, що в своєму складі він має вбудовані іконки компонентів Azure. Хоча  для себе я давно віддав перевагу mermaid діаграмам.
+Assume we have a large database and need to perform an automated migration from the database (1.2) to cloud Blob Storage.
 
-## <a name="p-2">2. Обгрунтування, чому це правильно</a>
+The Node-Red integration bus was chosen as the migration tool that reads and sends data to the cloud, although anything suitable would work (Node.js, Python, Java) — essentially, anything that connects to the database and has an API library for Azure Blob Storage. With the help of this application, files read from the DB are written to the Blob Storage (2.2.1) in the Azure cloud. Furthermore, automatic replication to another remote site from Blob Storage (2.2.1) occurs.
 
-**Продуктивність РБД:**
+When a file is added or updated in the Blob Storage, a serverless Azure Function is triggered by this event and publishes a message to a queue about the added Blob, including its URL and hash (2.2.2, 2.2.3, 2.2.4).
 
-- Збільшення розміру таблиць/індексів: Великі BLOBи ускладнюють кешування даних у пам'яті (buffer cache) РБД.
+A different Node-Red workflow then reads the message from the Storage Queue and registers the new data for retrieving the blob, marks that the data for this client and document type is now located in the cloud, and the record with the old Blob is deleted. That is, this approach ensures confirmation that the record has migrated, and only then is the old record deleted.
 
-- Уповільнення резервного копіювання/відновлення (Backup/Recovery): Копіювання величезної бази даних, більша частина якої — статичні документи, займає надзвичайно багато часу та ресурсів.
+In this architecture, we receive two receipts: from the primary site (2.1) and from the secondary site (2.2) (the replication site). This means we can be confident that the data is present on both sites.
 
-- Роздуття бази даних: Зростання розміру БД вимагає дорожчих ліцензій Oracle (які часто залежать від обсягу або використання ресурсів) та потужнішого обладнання.
+Additionally, we can deploy Web applications in Azure or On-Premise and use the same backend for the frontend. Authorization can be done via Azure Entra ID. The backend can also be built using Azure Functions.
 
-**Вартість зберігання:**
+**Remarks:**
 
-- Вартість зберігання 1 ТБ даних у РБД Oracle (особливо з урахуванням ліцензій та необхідної продуктивності) на порядки вища, ніж вартість зберігання того ж обсягу в Azure Blob Storage (особливо на холодному/архівному рівні, якщо документи рідко використовуються).
+1. Of course, one can read the corresponding section: [Develop solutions that use Blob storage](https://learn.microsoft.com/en-us/training/paths/develop-solutions-that-use-blob-storage/) or even get a certificate in 'AZ-204 Developing Solutions for Microsoft Azure,' or find the relevant section in 'AZ-900: Microsoft Azure Fundamentals' and get that certificate. Reading and studying them won't be зointless. **However, we won't actually be able to do anything with our hands or minds**, because these are purely descriptive courses that don't enable either an architect or a developer to perform their job. **In my opinion, these are general knowledge courses and should be taken by everyone who is going to articulate anything about the Azure cloud**: from sales managers and general managers to support engineers. If only the technical specialists study this, then those who are higher up in the food chain (managers and salespeople) won't understand them and won't be able to make adequate decisions, because they won't understand anything.
 
-**Масштабованість:**
+And the experience of communication where a salesperson promises a client: 'I'll bring you some great guys right now, and they'll sort everything out for you' — shows that this is a **path to nowhere**."
 
-- Об'єктне сховище, як Azure Blob Storage, надає практично необмежену та горизонтальну масштабованість, на відміну від вертикально масштабованої (і дорогої) РБД.
+2. For the graphical description of the architectures, drawio was used because it has built-in icons for Azure components. Although, personally, I've long preferred Mermaid diagrams.
 
+## <a name="p-2">2. Justification of why this is correct</a>
 
-## <a name="p-3">3. Ключові моменти, які будуть нівелювати розробку такого аналізу</a>
+**Relational Database Performance:**
 
-### <a name="p-3.1">3.1. Заперечення: "Документи клієнтів у хмарі зберігати не можна (Безпека/Нормативні вимоги)"</a>
+- Increased Table/Index Size: Large BLOBs complicate the caching of data in the Relational Database's memory (buffer cache).
 
-1. Шифрування: Дані завжди шифруються як під час передачі (TLS/SSL), так і у стані спокою (Azure Storage Service Encryption). 
-2. Контроль доступу: Використання Shared Access Signatures (SAS) та Azure Active Directory для доступу дає гранульований контроль, на відміну від часто неоптимальних налаштувань у РБД. 
-3. Комплаєнс (Норми): Azure має тисячі сертифікатів відповідності (ISO, SOC, GDPR тощо), які підтверджують, що вона відповідає або перевищує вимоги більшості регуляторів, на відміну від локального ДЦ. 
-4. Фізична безпека: Дата-центри Azure захищені набагато краще, ніж локальні серверні приміщення.
-5. Ми зберігатимемо в БД лише метадані (ім'я файлу, хеш, посилання на Blob) та видалимо самі конфіденційні BLOBs, зменшуючи ризики компрометації РБД.
+- Slower Backup/Recovery: Copying a massive database, the majority of which consists of static documents, takes an extraordinarily long time and consumes significant resources.
 
-**Висновок:**
-  Навпаки, ми підвищуємо безпеку. Хмара забезпечує рівень захисту, який важко досягти в локальному ДЦ.
+- Database Bloat: The growth in DB size necessitates more expensive Oracle licenses (which often depend on volume or resource usage) and more powerful hardware.
 
+**Storage Cost:**
 
-### <a name="p-3.2">3.2. Заперечення: "Тарифи хмари непідйомні"</a>
+- The cost of storing 1 TB of data in an Oracle RDB (especially considering licensing and required performance) is orders of magnitude higher than the cost of storing the same volume in Azure Blob Storage (especially on the Cool/Archive tier, if the documents are rarely accessed).
 
-Тут потрібно зауважити з власного досвіду, що я таке зауваження чув не раз, а от внятного економічного розрахунку ніколи не бачив. Його навіть не хотіли проводити.
+**Scalability:**
 
-1. Зберігання статичних  об'ємних  даних в ліцензованій РБД - це зберігання  в найдорожчому місці. Перенесення BLOBs зменшує розмір БД, що може знизити майбутні ліцензійні/апаратні вимоги до Oracle. 
-2. Економія на операціях (OpEx): Вартість Azure Blob Storage ($/ГБ) у десятки разів нижча за вартість зберігання в Oracle. 
-3. Рівні зберігання: Документи, які старші за 6 місяців, можна перемістити з рівня Hot на Cool або Archive (за $0.001 на місяць за ГБ!), автоматизувавши економію. А в базі даних вони будуть "лежати" за однаковою ціною
-4. Надійність: Висока географічна/зонна реплікація (3-12 копій) входить у вартість, замінюючи необхідність купувати дороге обладнання для локального бекапу.
+- Object storage, such as Azure Blob Storage, provides practically unlimited and horizontal scalability, unlike the vertically scaled (and expensive) Relational Database (RDB).
 
-**Висновок:**
-  Ми не просто купуємо зберігання, ми купуємо економію на найдорожчих компонентах системи.
+## <a name="p-3">3. Key points that will negate the development of such an analysis</a>
 
-### <a name="p-3.3">3.3. Заперечення: "Ми вже купили сервери і платимо за їх обслуговування"</a>
+### <a name="p-3.1">3.1. Objection: "Client documents cannot be stored in the cloud (Security/Regulatory requirements)"</a>
 
-1. Зменшуючи навантаження на Oracle Server (менше операцій введення/виведення, менші таблиці) -  подовжує термін служби наявного обладнання та відтерміновує необхідність дорогого апгрейду. 
-2. Сервери повинні займатися обробкою транзакцій (чим Oracle займається найкраще), а не обслуговуванням статичного файлового сховища. 
-3. За звичай Клієнт вже платить за Azure (Office 365 часто надає доступ до деяких ресурсів або клієнт вже маєте підписку). Використання наявного інструменту є логічним кроком. 
-4. Замість витрачати час на адміністрування/доопрацювання/оптимізацію зростаючого файлового сховища в БД, співробітники можуть сфокусуватися на більш критичних бізнес-задачах чи освоїти щось нове.
+1. **Encryption:** Data is always encrypted both **in transit (TLS/SSL)** and **at rest (Azure Storage Service Encryption)**.
+2. **Access Control:** Using **Shared Access Signatures (SAS)** and **Azure Active Directory** for access provides **granular control**, unlike the often suboptimal settings in an RDB.
+3. **Compliance (Regulations):** Azure holds thousands of compliance certifications (**ISO, SOC, GDPR**, etc.), confirming that it meets or exceeds the requirements of most regulators, unlike a local data center (DC).
+4. **Physical Security:** Azure data centers are protected far better than local server rooms.
+5. **We will store only metadata** (filename, hash, Blob link) in the DB and **delete the confidential BLOBs themselves**, thereby reducing the risk of RDB compromise.
+
+**Conclusion:**
+  On the contrary, **we are increasing security**. The cloud provides a level of protection that is difficult to achieve in a local Data Center (DC).
+
+### <a name="p-3.2">3.2. Objection: "We have already bought servers and are paying for their maintenance"</a>
+
+Here it's important to note from my own experience that I've heard this observation more than once, but I've **never seen a clear economic calculation** for it. They didn't even want to conduct one.
+
+1. Storage of static, voluminous data in a licensed RDB is storage in the most expensive location. Transfering BLOBs reduces the size of the DB, which can lower future licensing/hardware requirements for Oracle.
+
+2. Savings on Operational Expenses (OpEx): The cost of Azure Blob Storage ($/GB) is tens of times lower than the cost of storage in Oracle.
+
+3. Storage Tiers: Documents older than 6 months can be moved from the Hot tier to the Cool or Archive tier (for $0.001 per month per GB!), automating savings. In the database, they would "lie" at the same price.
+
+4. Reliability: High geographic/zone replication (3-12 copies) is included in the cost, replacing the need to purchase expensive hardware for local backup.
+
+**Conclusion:**
+  We are not just buying storage; we are buying savings on the most expensive components of the system.
+
+### <a name="p-3.3">3.3. Objection: "We have already bought servers and are paying for their maintenance</a>
+
+1. Reducing the load on the Oracle Server (fewer I/O operations, smaller tables) extends the lifespan of existing hardware and postpones the need for expensive upgrades.
+
+2. Servers should be focused on transaction processing (which Oracle does best), not on maintaining static file storage.
+
+3. Typically, the client is already paying for Azure (Office 365 often provides access to some resources, or the client already has a subscription). Utilizing an existing tool is a logical step.
+
+4. Instead of spending time administering/refining/optimizing a growing file storage within the DB, employees can focus on more critical business tasks or learn something new.
 
 ### <a name="p-3.4">3.4. Заперечення: "Є варіанти власного, локального об'єктового сховища і безкоштовного - для чого нам хмара"</a
 
