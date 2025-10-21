@@ -138,86 +138,82 @@ Here it's important to note from my own experience that I've heard this observat
 
 4. Instead of spending time administering/refining/optimizing a growing file storage within the DB, employees can focus on more critical business tasks or learn something new.
 
-### <a name="p-3.4">3.4. Заперечення: "Є варіанти власного, локального об'єктового сховища і безкоштовного - для чого нам хмара"</a>
+### <a name="p-3.4">3.4. Objection: "There are options for own, local object storage and free ones - why do we need the cloud</a>
 
-Так, є варінти організації власного об'єктного сховища, найвідоміше ["MinIO"](https://github.com/minio/minio)
-Сховище жешевше за Oracle, але все одно вимагає купівлі серверів, дискових полиць, мережевого обладнання та оплати електроенергії/оренди ДЦ. Але складгість організації такого сховища, особливо територіально розподіленого надвисока.
+Yes, there are options for organizing own object storage, the most well-known being ["MinIO"](https://github.com/minio/minio). This storage is cheaper than Oracle, but it still requires purchasing servers, disk shelves, network equipment, and paying for electricity/DC rent. However, the complexity of organizing such storage, especially a geographically distributed one, is extremely high.
 
-- Проблеми з документацією та налаштуванням (MinIO EC).
-- Проблеми з масштабуванням (не можна просто розширити поточний кластер, потрібен повний перезапуск всіх вузлів при розширенні/оновленні ).
-- Критичні помилки при експлуатації та оновленнях (втрата користувачів/політик , збої кешування, пошкодження стиснутих файлів).
-- Непередбачуваний час відновлення після збоїв (1.2 ТБ відновлювалися 9 днів, з прогнозом на місяці).
-- Необхідність самостійно створювати систему моніторингу (Prometheus/Grafana) та вручну відключати повільні диски, щоб не "гальмував весь кластер".
-- Для адекватної підтримки від вендора всеріно треба оплатити підписку.
+- Issues with documentation and configuration (MinIO EC).
+- Issues with scaling (you cannot simply expand the current cluster; a complete restart of all nodes is required for expansion/updates).
+- Critical errors during operation and updates (loss of users/policies, caching failures, corruption of compressed files).
+- Unpredictable recovery time after failures (1.2 TB was recovering for 9 days, with a forecast of months).
+- The need to independently build a monitoring system (Prometheus/Grafana) and manually disable slow disks to prevent the "entire cluster from slowing down."
+- A subscription still needs to be paid for adequate vendor support.
 
-Для підтвердження ось лінк на відео (хоч воно і російське, але всеж таки достатьно ілюстративне): https://www.youtube.com/watch?v=XiJVC9nzAW4 .
+To confirm this, here is a link to the video (although it is in Russian, it is nonetheless quite illustrative): https://www.youtube.com/watch?v=XiJVC9nzAW4.
 
-### <a name="p-3.5">3.5. Порівняльний Аналіз Вартість vs. Складність (TCO)</a>
+### <a name="p-3.5">3.5. Comparative Analysis: Cost vs. Complexity (TCO)</a>
 
-1. Локальне Сховище (Oracle + SSD)
+1. Local Storage (Oracle + SSD)
 
-    Висока вартість: Найдорожча вартість зберігання за 1 ГБ через ліцензії Oracle, високопродуктивне обладнання та необхідність локального резервування (RAID, Data Guard).
+High Cost: The most expensive storage cost per 1 GB due to Oracle licenses, high-performance hardware, and the need for local redundancy (RAID, Data Guard).
 
-    Складність: Обслуговування БД, управління збільшенням її розміру, довгі бекапи.
+Complexity: Database maintenance, managing its size increase, and long backups.
 
-2. Власне Об'єктне Сховище (MinIO) 
+2. Self-Managed Object Storage (MinIO)
 
-    Середня вартість: Дешевше за Oracle, але все одно вимагає купівлі серверів, дискових полиць, мережевого обладнання та оплати електроенергії/оренди ДЦ.
+    Average Cost: Cheaper than Oracle, but still requires purchasing servers, disk shelves, network equipment, and paying for electricity/DC rent.
 
-    Складність: Надзвичайно висока:
+    Complexity: Extremely High:
 
-        Проблеми з документацією та налаштуванням (MinIO EC).
+        Issues with documentation and configuration (MinIO EC).
 
-        Проблеми з масштабуванням (не можна просто розширити поточний кластер, потрібен повний перезапуск всіх вузлів при розширенні/оновленні ).
+        Issues with scaling (you cannot simply expand the current cluster; a complete restart of all nodes is required for expansion/updates).
 
-        Критичні помилки при експлуатації та оновленнях (втрата користувачів/політик [01:18:00], збої кешування, пошкодження стиснутих файлів ).
+        Critical errors during operation and updates (loss of users/policies [01:18:00], caching failures, corruption of compressed files).
 
-        Непередбачуваний час відновлення після збоїв (1.2 ТБ відновлювалися 9 днів, з прогнозом на місяці ).
+        Unpredictable recovery time after failures (1.2 TB was recovering for 9 days, with a forecast of months).
 
-        Необхідність самостійно створювати систему моніторингу (Prometheus/Grafana) та вручну відключати повільні диски, щоб не "гальмував весь кластер".
+        The need to independently build a monitoring system (Prometheus/Grafana) and manually disable slow disks to prevent the 'entire cluster from slowing down'.    
 
-3. Хмарне Об'єктне Сховище (Azure Blob Storage)
+3. Cloud Object Storage (Azure Blob Storage)
 
-    Низька вартість: Найдешевше зберігання за ГБ (особливо Cool/Archive). Немає витрат на "залізо" та електроенергію.
+Low Cost: Cheapest storage per GB (especially Cool/Archive). No costs for 'hardware' or electricity.
+Complexity: Low. This is a managed service. The client doesn't worry about:
 
-    Складність: Низька. Це керована послуга. Замовник не турбується про:
+    RAID/EC, ZFS (Microsoft ensures this).
 
-        RAID/EC, ZFS (це забезпечує Microsoft).
+    Updates (Microsoft does this transparently).
 
-        Оновлення (це прозоро робить Microsoft).
+    Scalability (it's unlimited).
 
-        Масштабованість (вона необмежена).
-
-        Резервування (воно вбудоване — LRS, ZRS, GRS).
+    Redundancy (it's built-in — LRS, ZRS, GRS).        
 
 
-**Підсумовуючи:**
-Розглядаємо перехід з Oracle на об'єктне сховище. Є два шляхи: власне рішення (наприклад, MinIO) або керована хмарна послуга (Azure Blob Storage).
+**To summarize:**
+We are considering the transition from Oracle to object storage. There are two paths: an in-house solution (e.g., MinIO) or a managed cloud service (Azure Blob Storage).
 
-Власне рішення, хоч і має низьку ліцензійну вартість, вимагає надзвичайно високих операційних витрат та ризиків, про що свідчить [досвід інших компаній](https://www.youtube.com/watch?v=XiJVC9nzAW4) (наприклад, MinIO є дуже 'сирим' для продуктиву).
+An in-house solution, although having a low licensing cost, requires extremely high operational costs and risks, as evidenced by the [experience of other companies](https://www.youtube.com/watch?v=XiJVC9nzAW4).  For example, MinIO is very 'raw' for production.
 
-Натомість, Azure Blob Storage пропонує:
-    Найдешевшу вартість за ГБ, порівняно як з Oracle, так і з TCO власного MinIO.
-    Гарантовану надійність і безпеку від Microsoft.
-    Нульові операційні витрати на обслуговування, оновлення та вирішення проблем, описаних у відео (втрата даних при оновленні, повільне відновлення).
+In contrast, Azure Blob Storage offers:
+    The cheapest cost per GB, compared to both Oracle and the TCO of self-managed MinIO.
+    Guaranteed reliability and security from Microsoft.
+    Zero operational costs for maintenance, updates, and solving the problems described in the video (data loss during updates, slow recovery).
 
-Перехід на Azure дозволяє нам значно заощадити кошти на Oracle, отримати необмежену масштабованість і уникнути ризиків, пов'язаних із підтримкою складного георозподіленого сховища власними силами."
-
-Таким чином, wt не просто "переїзд", а перехід до надійної, економічно вигідної та зрілої архітектури, уникаючи підводних каменів, які ілюструє доповідь про самостійну підтримку від іншх компаній.
+The transition to Azure allows us to significantly save costs on Oracle, gain unlimited scalability, and avoid the risks associated with maintaining complex geographically distributed storage in-house.
 
 
+Thus, this is not just a 'move,' but a transition to a reliable, cost-effective, and mature architecture, avoiding the pitfalls illustrated by the report on self-support from other companies.
 
-## <a name="p-4">4. Лінки на документацію по Azure Blob Storage</a>
+## <a name="p-4">4. Links to Azure Blob Storage documentation</a>
 
 [Azure Blob Storage documentation](https://learn.microsoft.com/en-us/azure/storage/blobs/)
 - [Plan and manage costs for Azure Blob Storage](https://learn.microsoft.com/en-us/azure/storage/common/storage-plan-manage-costs?toc=%2Fazure%2Fstorage%2Fblobs%2Ftoc.json&bc=%2Fazure%2Fstorage%2Fblobs%2Fbreadcrumb%2Ftoc.json)
 
 - [Azure Blob Storage price](https://azure.microsoft.com/en-us/pricing/details/storage/blobs/)
 
-## <a name="p-5">5. Міркуваня з приводу вибору хмарних інструментів azure</a>
+## <a name="p-5">5. Considerations regarding the choice of Azure cloud tools</a>
 
-
-### <a name="p-5.1">5.1. Характеристика бінарних даних, з якими працюємо</a>
+### <a name="p-5.1">5.1. Characteristics of the binary data we work with</a>
 
 Надходження бінарних документів можна охарактеризувати наступним чином.
 
@@ -229,6 +225,16 @@ Here it's important to note from my own experience that I've heard this observat
 Таким чином, в оперативному доступі мають бути останні версії документів. В архівному доступі можна тримати попередні версії документів.
 У випадку, коли дані не можуть бути записані з технічних причин, достатньо повідомити користувача, про не можливість запису і попросити спробувати пізніше. Тобто не має високої критичності по часу надходження файлів
 Читання даних  бажано забезпечувати більш надійно, щоб обробляти запити регуляторних органів без затримки.
+
+The arrival of binary documents can be characterized as follows:
+
+- New documents arrive infrequently, meaning a few times a day. Sometimes, it might not even be every day.
+- The frequency of reading data does not significantly exceed the frequency of data arrival.
+- Data may occasionally be updated, so document versioning matters. However, the latest version of the document holds the main operational value.
+- Access to previous document versions is important, but rarely needed, typically in cases of receiving and fulfilling requests from regulatory bodies.
+- Thus, the latest versions of documents must be in operational access. Previous document versions can be kept in archival access.
+- In cases where data cannot be written due to technical reasons, it is sufficient to notify the user about the inability to write and ask them to try again later. This means there is no high time-criticality for file arrival.
+- Reading data should preferably be ensured more reliably to process regulatory body requests without delay
 
 ### <a name="p-5.2">5.2. Azure Blob Storage</a>
 
