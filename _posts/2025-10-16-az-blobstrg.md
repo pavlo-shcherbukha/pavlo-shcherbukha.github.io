@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "AZURE AZ-204 AZ BLOB STORAGE"
+title: "AZURE AZ-204 AZ BLOB STORAGE - навчальний проект"
 date: 2025-10-16 10:00:01
 categories: [azure]
 permalink: posts/2025-10-16/az-204-blob-strg-ua/
