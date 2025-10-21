@@ -344,52 +344,54 @@ For comparison, the prices for using the **App Service** platform are provided.
 
 ### <a name="p-5.4">5.4. Azure Queue Storage</a>
 
-Azure Queue Storage використано для організації простого асинхронного обміну, для балансування навантаження на локальну систему та для мінімізації втрат даниї при проблемах в OnPremise дата центрі. Прочитати про них можна за лінком:
+Azure Queue Storage is used to organize simple asynchronous exchange, to balance the load on the local system, and to minimize data loss in case of problems in the On-Premise data center. You can read about them by following the link
 [What is Azure Queue Storage](https://learn.microsoft.com/en-us/azure/storage/queues/storage-queues-introduction) або ж
 [az-204 Explore Azure Queue Storage](https://learn.microsoft.com/en-us/training/modules/discover-azure-message-queue/7-azure-queue-storage-overview?ns-enrollment-type=learningpath&ns-enrollment-id=learn.wwl.az-204-develop-message-based-solutions).
 
-Якщо, коротко, то  Azure Queue Storage – це сервіс для зберігання великої кількості повідомлень. Можна отримати доступ до повідомлень з будь-якої точки світу через автентифіковані виклики за допомогою HTTP або HTTPS. Повідомлення черги може мати розмір до 64 КБ. Черга може містити мільйони повідомлень, аж до загального ліміту ємності облікового запису сховища. Черги зазвичай використовуються для створення журналу робіт для асинхронної обробки, як-от в архітектурному стилі Web-Queue-Worker. Черги підтимують просту тарнзакційність.
 
-Ну і Azure Queue Storage прив'язані до Storage account. А структра повідомлення має json формат. Тобто, бінарні дані не передаються. Але, для чого передавати бінарні дані, якщо можна просто передати URL  на Blob об'єк  на Blob Storage.
+In short, Azure Queue Storage is a service for storing a large number of messages. Messages can be accessed from anywhere in the world via authenticated calls using HTTP or HTTPS. A queue message can be up to 64 KB in size. A queue can contain millions of messages, up to the overall capacity limit of the storage account. Queues are typically used to create a job log for asynchronous processing, such as in the Web-Queue-Worker architectural style. Queues support simple transactions.
+
+Well, Azure Queue Storage is tied to a Storage Account. And the message structure is in JSON format. This means binary data is not transmitted. But it is not necessary  to transmit binary data if you can simply transmit the URL to the Blob object on Blob Storage.
+
 
 
 ### <a name="p-5.5">5.5. Azure Static Web Apps</a>
 
-Статичні веб-програми зазвичай створюються за допомогою бібліотек та фреймворків, таких як Angular, React, Svelte або Vue. Ці програми містять HTML, CSS, JavaScript та ресурси зображень, які складають програму. У традиційній архітектурі веб-сервера ці файли обслуговуються з одного сервера разом із будь-якими необхідними кінцевими точками API.
+Static web applications are typically created using libraries and frameworks such as Angular, React, Svelte, or Vue. These applications contain HTML, CSS, JavaScript, and image assets that constitute the program. In a traditional web server architecture, these files are served from a single server along with any necessary API endpoints.
 
-За допомогою Azure Static Web Apps статичні ресурси відокремлені від традиційного веб-сервера та натомість обслуговуються з точок, розподілених по всьому світу. Такий розподіл пришвидшує обслуговування файлів, оскільки файли фізично розташовані ближче до кінцевих користувачів. Кінцеві точки API, які є необов'язковими, розміщуються за допомогою безсерверної архітектури, що повністю усуває необхідність використання повноцінного серверного сервера.
+With Azure Static Web Apps, static assets are separated from the traditional web server and are instead served from globally distributed points. This distribution speeds up file serving because the files are physically located closer to the end-users. The API endpoints, which are optional, are hosted using a serverless architecture, which completely eliminates the need for a full-fledged backend server
 
 
 <kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-07.png" /></kbd>
 <p style="text-align: center;"><a name="pic-07">pic-07</a></p>
 
+Here I will quote the Azure documentation.
 
-Тут я процитую документацію Azure
+    Key features
 
-        Key features
+        Globally distributed web hosting puts static content like HTML, CSS, JavaScript, and images closer to your users.
+        Integrated API support provided by Azure Functions.
+        First-class GitHub and Azure DevOps integration changes to your repository trigger builds and deployments.
+        Free SSL certificates, which are automatically renewed.
+        Unique preview URLs for previewing pull requests.
 
-            Globally distributed web hosting puts static content like HTML, CSS, JavaScript, and images closer to your users.
-            Integrated API support provided by Azure Functions.
-            First-class GitHub and Azure DevOps integration changes to your repository trigger builds and deployments.
-            Free SSL certificates, which are automatically renewed.
-            Unique preview URLs for previewing pull requests.
+And using this product to deploy Web UI will be cheaper than deploying it on a virtual machine or in an app service or on cloud Kubernetes.
 
-І використання цього продукту для розгортання Web UI  буде дешевше ніж піднімати його на віртуалці чи в app service  чи на хмарному kubernetis.
-
-
-Ціни на використання ціє ї платформи показані на [pic-09](#pic-09).
+The prices for using this platform are shown in [pic-09](#pic-09).
 
 <kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-09.png" /></kbd>
 <p style="text-align: center;"><a name="pic-09">pic-09</a></p>
 
-Для порівняння наведені ціни на використання платформи AppService.
+For comparison, the prices for using the App Service platform are provided.
 
 <kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-10.png" /></kbd>
 <p style="text-align: center;"><a name="pic-10">pic-10</a></p>
 
-та ціни на аренду віртуальних машин [pic-11](#pic-11)
+the prices for using  VMs [pic-11](#pic-11)
 
 <kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-11.png" /></kbd>
 <p style="text-align: center;"><a name="pic-11">pic-11</a></p>
 
-## <a name="p-6">6. Елементи прототипування, що створюються програмно</a>
+## <a name="p-6">6. Elements of prototyping created programmatically (in software)</a>
+
+to be
