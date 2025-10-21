@@ -317,26 +317,27 @@ The tariffs for using Blob Storage when using ZRS are shown in  [pic-06](#pic-06
 
 ### <a name="p-5.3">5.3. Azure Functions</a>
 
-Чому я використав Server less Azure Function?
-По перше -  це найдешевший обчислювальний ресурс і більшості хмарних провайдерів і Azure тут нічого нового не відкрив.
-По друге - я вже третій раз впевнився:  якщо хочеш зрозуміти "філосовію" окремо взятої хмари -  почни з їх безсерверної платформи. По багатству і зручності безсерверної платфоми можна зробити висновок про всю хмару. 
-По третє - безсерверна платформа завжди інтегрована з основними хмарними продуктами - тому з ними легко познайомитися і вивчити.
+Why did I use a Serverless Azure Function?
 
-Якщо кортко, то про Server Less  можна почитити за лінком: [AZ-204: Implement Azure Functions](https://learn.microsoft.com/en-us/training/paths/implement-azure-functions/). Але мені більше подобається оцей матеріал: [What is Azure Functions?](https://learn.microsoft.com/en-us/azure/azure-functions/functions-overview).
+- Firstly, it is the cheapest computing resource among most cloud providers, and Azure has not introduced anything new here.
+- Secondly, I have been convinced for the third time: if you want to understand the 'philosophy' of a particular cloud, start with their serverless platform. Based on the richness and convenience of the serverless platform, one can draw a conclusion about the entire cloud.
+- Thirdly, the serverless platform is always integrated with the main cloud products—therefore, it is easy to get acquainted with and study them.
 
-При запису файлів на blob storage можна використовувати функцію, що запускається BLOB-об'єктами, для перевірки, перетворення та обробки файлів в основній системі під час їх завантаження: [Process file uploads](https://learn.microsoft.com/en-us/azure/azure-functions/functions-scenarios?pivots=programming-language-python).
+If briefly, one can read about Serverless by following the link: [AZ-204: Implement Azure Functions](https://learn.microsoft.com/en-us/training/paths/implement-azure-functions/). Але мені більше подобається оцей матеріал: [What is Azure Functions?](https://learn.microsoft.com/en-us/azure/azure-functions/functions-overview).
 
-При аналізу поведінки даних було визначно, що не передбачається великої інтенсивності надходження чи читання даних. Таким чином, буль який хмарний бакед чи API  не має сенсу запускати на окремо вибраній віртуаці (це найдорожчв опція) чи на хмарному kubernetes чи навіть на [App Service](https://learn.microsoft.com/en-gb/training/paths/create-azure-app-service-web-apps/). Достатньо запустити бакенд на звичайних, класичних безсрверних функціях.
+When writing files to Blob Storage, you can use a function that is triggered by BLOB objects to check, transform, and process files in the main system during upload: [Process file uploads](https://learn.microsoft.com/en-us/azure/azure-functions/functions-scenarios?pivots=programming-language-python).
 
-Та і взагалі для розробки прототипів чи навчальних проектів - це найпростіша платформа.
+Upon analyzing the data behavior, it was determined that no high intensity of data arrival or reading is expected. Thus, running any cloud backend or API on a separately chosen virtual machine (which is the most expensive option) or on cloud Kubernetes or even on [Missing reference, presumably to a PaaS service like App Service or a container instance] makes no sense. [App Service](https://learn.microsoft.com/en-gb/training/paths/create-azure-app-service-web-apps/). Достатньо запустити бакенд на звичайних, класичних безсрверних функціях.
 
-Ціни на використання пдатформи показані на [pic-08](#pic-08)
+And generally, for developing prototypes or learning projects, this is the simplest platform
+
+The prices for using the platform are shown in [pic-08](#pic-08)
 
 <kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-08.png" /></kbd>
 <p style="text-align: center;"><a name="pic-08">pic-08</a></p>
 
 
-Для порівняння наведені ціни на використання платформи AppService.
+For comparison, the prices for using the **App Service** platform are provided.
 
 <kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-10.png" /></kbd>
 <p style="text-align: center;"><a name="pic-10">pic-10</a></p>
