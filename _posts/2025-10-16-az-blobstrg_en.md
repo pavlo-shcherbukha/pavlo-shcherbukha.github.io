@@ -53,7 +53,7 @@ What kind of files might these be? They could include:
 
 
 Graphically, the idea can be represented as follows : Pic-03 shows what a generalized architecture for migration from a database to cloud Azure Blob Storage with multi-zone replication could look like.
-<kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-03.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-10-16-az-blobstrg/doc/pic-03.png" /></kbd>
 <p style="text-align: center;"><a name="pic-03">pic-03</a></p>
 
 The figure are shown two Data Centers:
@@ -249,12 +249,12 @@ It is necessary to ensure maximum storage reliability and maximum data read avai
 
 The maximum storage reliability is GRS/RA-GRS [Geo-zone-redundant storage](https://learn.microsoft.com/en-us/azure/storage/common/storage-redundancy?toc=%2Fazure%2Fstorage%2Fblobs%2Ftoc.json&bc=%2Fazure%2Fstorage%2Fblobs%2Fbreadcrumb%2Ftoc.json#geo-zone-redundant-storage).
 
-<kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-02.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-10-16-az-blobstrg/doc/pic-02.png" /></kbd>
 <p style="text-align: center;"><a name="pic-02">pic-02</a></p>
 
 The minimum storage reliability could be  GRS [Replication across paired regions](https://learn.microsoft.com/en-us/azure/reliability/reliability-storage-blob?toc=%2Fazure%2Fstorage%2Fblobs%2Ftoc.json&bc=%2Fazure%2Fstorage%2Fblobs%2Fbreadcrumb%2Ftoc.json#replication-across-paired-regions)
 
-<kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-01.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-10-16-az-blobstrg/doc/pic-01.png" /></kbd>
 <p style="text-align: center;"><a name="pic-01">pic-01</a></p>
 
 Here I will quote how  "Zone-redundant storage" works:
@@ -303,16 +303,16 @@ It is also important to consider the information provided in the listed sections
 
 The tariffs for using Blob Storage when using LRS are shown in [pic-04](#pic-04) та [pic-05](#pic-05) :
 
-<kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-04.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-10-16-az-blobstrg/doc/pic-04.png" /></kbd>
 <p style="text-align: center;"><a name="pic-04">pic-04</a></p>
 
 
-<kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-05.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-10-16-az-blobstrg/doc/pic-05.png" /></kbd>
 <p style="text-align: center;"><a name="pic-05">pic-05</a></p>
 
 The tariffs for using Blob Storage when using ZRS are shown in  [pic-06](#pic-06)
 
-<kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-06.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-10-16-az-blobstrg/doc/pic-06.png" /></kbd>
 <p style="text-align: center;"><a name="pic-06">pic-06</a></p>
 
 ### <a name="p-5.3">5.3. Azure Functions</a>
@@ -333,13 +333,13 @@ And generally, for developing prototypes or learning projects, this is the simpl
 
 The prices for using the platform are shown in [pic-08](#pic-08)
 
-<kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-08.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-10-16-az-blobstrg/doc/pic-08.png" /></kbd>
 <p style="text-align: center;"><a name="pic-08">pic-08</a></p>
 
 
 For comparison, the prices for using the **App Service** platform are provided.
 
-<kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-10.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-10-16-az-blobstrg/doc/pic-10.png" /></kbd>
 <p style="text-align: center;"><a name="pic-10">pic-10</a></p>
 
 ### <a name="p-5.4">5.4. Azure Queue Storage</a>
@@ -362,7 +362,7 @@ Static web applications are typically created using libraries and frameworks suc
 With Azure Static Web Apps, static assets are separated from the traditional web server and are instead served from globally distributed points. This distribution speeds up file serving because the files are physically located closer to the end-users. The API endpoints, which are optional, are hosted using a serverless architecture, which completely eliminates the need for a full-fledged backend server
 
 
-<kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-07.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-10-16-az-blobstrg/doc/pic-07.png" /></kbd>
 <p style="text-align: center;"><a name="pic-07">pic-07</a></p>
 
 Here I will quote the Azure documentation.
@@ -379,17 +379,17 @@ And using this product to deploy Web UI will be cheaper than deploying it on a v
 
 The prices for using this platform are shown in [pic-09](#pic-09).
 
-<kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-09.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-10-16-az-blobstrg/doc/pic-09.png" /></kbd>
 <p style="text-align: center;"><a name="pic-09">pic-09</a></p>
 
 For comparison, the prices for using the App Service platform are provided.
 
-<kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-10.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-10-16-az-blobstrg/doc/pic-10.png" /></kbd>
 <p style="text-align: center;"><a name="pic-10">pic-10</a></p>
 
 the prices for using  VMs [pic-11](#pic-11)
 
-<kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-11.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-10-16-az-blobstrg/doc/pic-11.png" /></kbd>
 <p style="text-align: center;"><a name="pic-11">pic-11</a></p>
 
 ## <a name="p-6">6. Elements of prototyping created programmatically (in software)</a>
