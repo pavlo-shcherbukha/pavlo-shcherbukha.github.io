@@ -138,86 +138,82 @@ Here it's important to note from my own experience that I've heard this observat
 
 4. Instead of spending time administering/refining/optimizing a growing file storage within the DB, employees can focus on more critical business tasks or learn something new.
 
-### <a name="p-3.4">3.4. Заперечення: "Є варіанти власного, локального об'єктового сховища і безкоштовного - для чого нам хмара"</a>
+### <a name="p-3.4">3.4. Objection: "There are options for own, local object storage and free ones - why do we need the cloud</a>
 
-Так, є варінти організації власного об'єктного сховища, найвідоміше ["MinIO"](https://github.com/minio/minio)
-Сховище жешевше за Oracle, але все одно вимагає купівлі серверів, дискових полиць, мережевого обладнання та оплати електроенергії/оренди ДЦ. Але складгість організації такого сховища, особливо територіально розподіленого надвисока.
+Yes, there are options for organizing own object storage, the most well-known being ["MinIO"](https://github.com/minio/minio). This storage is cheaper than Oracle, but it still requires purchasing servers, disk shelves, network equipment, and paying for electricity/DC rent. However, the complexity of organizing such storage, especially a geographically distributed one, is extremely high.
 
-- Проблеми з документацією та налаштуванням (MinIO EC).
-- Проблеми з масштабуванням (не можна просто розширити поточний кластер, потрібен повний перезапуск всіх вузлів при розширенні/оновленні ).
-- Критичні помилки при експлуатації та оновленнях (втрата користувачів/політик , збої кешування, пошкодження стиснутих файлів).
-- Непередбачуваний час відновлення після збоїв (1.2 ТБ відновлювалися 9 днів, з прогнозом на місяці).
-- Необхідність самостійно створювати систему моніторингу (Prometheus/Grafana) та вручну відключати повільні диски, щоб не "гальмував весь кластер".
-- Для адекватної підтримки від вендора всеріно треба оплатити підписку.
+- Issues with documentation and configuration (MinIO EC).
+- Issues with scaling (you cannot simply expand the current cluster; a complete restart of all nodes is required for expansion/updates).
+- Critical errors during operation and updates (loss of users/policies, caching failures, corruption of compressed files).
+- Unpredictable recovery time after failures (1.2 TB was recovering for 9 days, with a forecast of months).
+- The need to independently build a monitoring system (Prometheus/Grafana) and manually disable slow disks to prevent the "entire cluster from slowing down."
+- A subscription still needs to be paid for adequate vendor support.
 
-Для підтвердження ось лінк на відео (хоч воно і російське, але всеж таки достатьно ілюстративне): https://www.youtube.com/watch?v=XiJVC9nzAW4 .
+To confirm this, here is a link to the video (although it is in Russian, it is nonetheless quite illustrative): https://www.youtube.com/watch?v=XiJVC9nzAW4.
 
-### <a name="p-3.5">3.5. Порівняльний Аналіз Вартість vs. Складність (TCO)</a>
+### <a name="p-3.5">3.5. Comparative Analysis: Cost vs. Complexity (TCO)</a>
 
-1. Локальне Сховище (Oracle + SSD)
+1. Local Storage (Oracle + SSD)
 
-    Висока вартість: Найдорожча вартість зберігання за 1 ГБ через ліцензії Oracle, високопродуктивне обладнання та необхідність локального резервування (RAID, Data Guard).
+High Cost: The most expensive storage cost per 1 GB due to Oracle licenses, high-performance hardware, and the need for local redundancy (RAID, Data Guard).
 
-    Складність: Обслуговування БД, управління збільшенням її розміру, довгі бекапи.
+Complexity: Database maintenance, managing its size increase, and long backups.
 
-2. Власне Об'єктне Сховище (MinIO) 
+2. Self-Managed Object Storage (MinIO)
 
-    Середня вартість: Дешевше за Oracle, але все одно вимагає купівлі серверів, дискових полиць, мережевого обладнання та оплати електроенергії/оренди ДЦ.
+    Average Cost: Cheaper than Oracle, but still requires purchasing servers, disk shelves, network equipment, and paying for electricity/DC rent.
 
-    Складність: Надзвичайно висока:
+    Complexity: Extremely High:
 
-        Проблеми з документацією та налаштуванням (MinIO EC).
+        Issues with documentation and configuration (MinIO EC).
 
-        Проблеми з масштабуванням (не можна просто розширити поточний кластер, потрібен повний перезапуск всіх вузлів при розширенні/оновленні ).
+        Issues with scaling (you cannot simply expand the current cluster; a complete restart of all nodes is required for expansion/updates).
 
-        Критичні помилки при експлуатації та оновленнях (втрата користувачів/політик [01:18:00], збої кешування, пошкодження стиснутих файлів ).
+        Critical errors during operation and updates (loss of users/policies [01:18:00], caching failures, corruption of compressed files).
 
-        Непередбачуваний час відновлення після збоїв (1.2 ТБ відновлювалися 9 днів, з прогнозом на місяці ).
+        Unpredictable recovery time after failures (1.2 TB was recovering for 9 days, with a forecast of months).
 
-        Необхідність самостійно створювати систему моніторингу (Prometheus/Grafana) та вручну відключати повільні диски, щоб не "гальмував весь кластер".
+        The need to independently build a monitoring system (Prometheus/Grafana) and manually disable slow disks to prevent the 'entire cluster from slowing down'.    
 
-3. Хмарне Об'єктне Сховище (Azure Blob Storage)
+3. Cloud Object Storage (Azure Blob Storage)
 
-    Низька вартість: Найдешевше зберігання за ГБ (особливо Cool/Archive). Немає витрат на "залізо" та електроенергію.
+Low Cost: Cheapest storage per GB (especially Cool/Archive). No costs for 'hardware' or electricity.
+Complexity: Low. This is a managed service. The client doesn't worry about:
 
-    Складність: Низька. Це керована послуга. Замовник не турбується про:
+    RAID/EC, ZFS (Microsoft ensures this).
 
-        RAID/EC, ZFS (це забезпечує Microsoft).
+    Updates (Microsoft does this transparently).
 
-        Оновлення (це прозоро робить Microsoft).
+    Scalability (it's unlimited).
 
-        Масштабованість (вона необмежена).
-
-        Резервування (воно вбудоване — LRS, ZRS, GRS).
+    Redundancy (it's built-in — LRS, ZRS, GRS).        
 
 
-**Підсумовуючи:**
-Розглядаємо перехід з Oracle на об'єктне сховище. Є два шляхи: власне рішення (наприклад, MinIO) або керована хмарна послуга (Azure Blob Storage).
+**To summarize:**
+We are considering the transition from Oracle to object storage. There are two paths: an in-house solution (e.g., MinIO) or a managed cloud service (Azure Blob Storage).
 
-Власне рішення, хоч і має низьку ліцензійну вартість, вимагає надзвичайно високих операційних витрат та ризиків, про що свідчить [досвід інших компаній](https://www.youtube.com/watch?v=XiJVC9nzAW4) (наприклад, MinIO є дуже 'сирим' для продуктиву).
+An in-house solution, although having a low licensing cost, requires extremely high operational costs and risks, as evidenced by the [experience of other companies](https://www.youtube.com/watch?v=XiJVC9nzAW4).  For example, MinIO is very 'raw' for production.
 
-Натомість, Azure Blob Storage пропонує:
-    Найдешевшу вартість за ГБ, порівняно як з Oracle, так і з TCO власного MinIO.
-    Гарантовану надійність і безпеку від Microsoft.
-    Нульові операційні витрати на обслуговування, оновлення та вирішення проблем, описаних у відео (втрата даних при оновленні, повільне відновлення).
+In contrast, Azure Blob Storage offers:
+    The cheapest cost per GB, compared to both Oracle and the TCO of self-managed MinIO.
+    Guaranteed reliability and security from Microsoft.
+    Zero operational costs for maintenance, updates, and solving the problems described in the video (data loss during updates, slow recovery).
 
-Перехід на Azure дозволяє нам значно заощадити кошти на Oracle, отримати необмежену масштабованість і уникнути ризиків, пов'язаних із підтримкою складного георозподіленого сховища власними силами."
-
-Таким чином, wt не просто "переїзд", а перехід до надійної, економічно вигідної та зрілої архітектури, уникаючи підводних каменів, які ілюструє доповідь про самостійну підтримку від іншх компаній.
+The transition to Azure allows us to significantly save costs on Oracle, gain unlimited scalability, and avoid the risks associated with maintaining complex geographically distributed storage in-house.
 
 
+Thus, this is not just a 'move,' but a transition to a reliable, cost-effective, and mature architecture, avoiding the pitfalls illustrated by the report on self-support from other companies.
 
-## <a name="p-4">4. Лінки на документацію по Azure Blob Storage</a>
+## <a name="p-4">4. Links to Azure Blob Storage documentation</a>
 
 [Azure Blob Storage documentation](https://learn.microsoft.com/en-us/azure/storage/blobs/)
 - [Plan and manage costs for Azure Blob Storage](https://learn.microsoft.com/en-us/azure/storage/common/storage-plan-manage-costs?toc=%2Fazure%2Fstorage%2Fblobs%2Ftoc.json&bc=%2Fazure%2Fstorage%2Fblobs%2Fbreadcrumb%2Ftoc.json)
 
 - [Azure Blob Storage price](https://azure.microsoft.com/en-us/pricing/details/storage/blobs/)
 
-## <a name="p-5">5. Міркуваня з приводу вибору хмарних інструментів azure</a>
+## <a name="p-5">5. Considerations regarding the choice of Azure cloud tools</a>
 
-
-### <a name="p-5.1">5.1. Характеристика бінарних даних, з якими працюємо</a>
+### <a name="p-5.1">5.1. Characteristics of the binary data we work with</a>
 
 Надходження бінарних документів можна охарактеризувати наступним чином.
 
@@ -230,28 +226,38 @@ Here it's important to note from my own experience that I've heard this observat
 У випадку, коли дані не можуть бути записані з технічних причин, достатньо повідомити користувача, про не можливість запису і попросити спробувати пізніше. Тобто не має високої критичності по часу надходження файлів
 Читання даних  бажано забезпечувати більш надійно, щоб обробляти запити регуляторних органів без затримки.
 
+The arrival of binary documents can be characterized as follows:
+
+- New documents arrive infrequently, meaning a few times a day. Sometimes, it might not even be every day.
+- The frequency of reading data does not significantly exceed the frequency of data arrival.
+- Data may occasionally be updated, so document versioning matters. However, the latest version of the document holds the main operational value.
+- Access to previous document versions is important, but rarely needed, typically in cases of receiving and fulfilling requests from regulatory bodies.
+- Thus, the latest versions of documents must be in operational access. Previous document versions can be kept in archival access.
+- In cases where data cannot be written due to technical reasons, it is sufficient to notify the user about the inability to write and ask them to try again later. This means there is no high time-criticality for file arrival.
+- Reading data should preferably be ensured more reliably to process regulatory body requests without delay
+
 ### <a name="p-5.2">5.2. Azure Blob Storage</a>
 
-Для вибору архутектури конфігурації Blob Storage використані корисні перелічені нижче документи:
+The following helpful documents were used for selecting the Blob Storage configuration architecture:
 
 - [Architecture best practices for Azure Blob Storage](https://learn.microsoft.com/en-us/azure/well-architected/service-guides/azure-blob-storage?toc=%2Fazure%2Fstorage%2Fblobs%2Ftoc.json&bc=%2Fazure%2Fstorage%2Fblobs%2Fbreadcrumb%2Ftoc.json)
 - [Reliability in Azure Blob Storage](https://learn.microsoft.com/en-us/azure/reliability/reliability-storage-blob?toc=%2Fazure%2Fstorage%2Fblobs%2Ftoc.json&bc=%2Fazure%2Fstorage%2Fblobs%2Fbreadcrumb%2Ftoc.json)
 
-Потрібно забезпечити максимальну надійність зберігання і максимальну доступність  читання даних. Значить, у відповідності до:
+It is necessary to ensure maximum storage reliability and maximum data read availability. Therefore, in accordance with the following:
 
 - [Azure Storage redundancy](https://learn.microsoft.com/en-us/azure/storage/common/storage-redundancy?toc=%2Fazure%2Fstorage%2Fblobs%2Ftoc.json&bc=%2Fazure%2Fstorage%2Fblobs%2Fbreadcrumb%2Ftoc.json),
 
-Максимально підійде GRS/RA-GRS [Geo-zone-redundant storage](https://learn.microsoft.com/en-us/azure/storage/common/storage-redundancy?toc=%2Fazure%2Fstorage%2Fblobs%2Ftoc.json&bc=%2Fazure%2Fstorage%2Fblobs%2Fbreadcrumb%2Ftoc.json#geo-zone-redundant-storage).
+The maximum storage reliability is GRS/RA-GRS [Geo-zone-redundant storage](https://learn.microsoft.com/en-us/azure/storage/common/storage-redundancy?toc=%2Fazure%2Fstorage%2Fblobs%2Ftoc.json&bc=%2Fazure%2Fstorage%2Fblobs%2Fbreadcrumb%2Ftoc.json#geo-zone-redundant-storage).
 
 <kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-02.png" /></kbd>
 <p style="text-align: center;"><a name="pic-02">pic-02</a></p>
 
-Мінімально, можна зупинитися і на GRS [Replication across paired regions](https://learn.microsoft.com/en-us/azure/reliability/reliability-storage-blob?toc=%2Fazure%2Fstorage%2Fblobs%2Ftoc.json&bc=%2Fazure%2Fstorage%2Fblobs%2Fbreadcrumb%2Ftoc.json#replication-across-paired-regions)
+The minimum storage reliability could be  GRS [Replication across paired regions](https://learn.microsoft.com/en-us/azure/reliability/reliability-storage-blob?toc=%2Fazure%2Fstorage%2Fblobs%2Ftoc.json&bc=%2Fazure%2Fstorage%2Fblobs%2Fbreadcrumb%2Ftoc.json#replication-across-paired-regions)
 
 <kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-01.png" /></kbd>
 <p style="text-align: center;"><a name="pic-01">pic-01</a></p>
 
-Тут я процитую, як працює  "Zone-redundant storage"
+Here I will quote how  "Zone-redundant storage" works:
 
     A write request to a storage account that is using ZRS happens synchronously. The write operation returns successfully only after the data is written to all replicas across the three availability zones. If an availability zone is temporarily unavailable, the operation returns successfully after the data is written to all available zones.
 
@@ -260,15 +266,13 @@ Here it's important to note from my own experience that I've heard this observat
     Microsoft recommends using ZRS for Azure Files workloads. If a zone becomes unavailable, no remounting of Azure file shares from the connected clients is required.
 
 
-Ну а на додаток маємо реплікацію в інший регіон згідно [Geo-redundant storage](https://learn.microsoft.com/en-us/azure/storage/common/storage-redundancy?toc=%2Fazure%2Fstorage%2Fblobs%2Ftoc.json&bc=%2Fazure%2Fstorage%2Fblobs%2Fbreadcrumb%2Ftoc.json#geo-redundant-storage), яка доступна тільки для читання:
+And in addition, we have replication to another region according to [Geo-redundant storage](https://learn.microsoft.com/en-us/azure/storage/common/storage-redundancy?toc=%2Fazure%2Fstorage%2Fblobs%2Ftoc.json&bc=%2Fazure%2Fstorage%2Fblobs%2Fbreadcrumb%2Ftoc.json#geo-redundant-storage), which is read-only:
 
     A write operation is first committed to the primary location and replicated using LRS. The update is then replicated asynchronously to the secondary region. When data is written to the secondary location, it also replicates within that location using LRS.
 
-А зважаючи на розділ [Use geo-redundancy to design highly available applications](https://learn.microsoft.com/en-us/azure/storage/common/geo-redundant-design) можна зробити висновок про те, як будувати прикладну архітектуру додатків
+And considering the section [Use geo-redundancy to design highly available applications](https://learn.microsoft.com/en-us/azure/storage/common/geo-redundant-design) one can draw a conclusion about how to build the application architecture.
 
     A write operation is first committed to the primary location and replicated using LRS. The update is then replicated asynchronously to the secondary region. When data is written to the secondary location, it also replicates within that location using LRS.
-
-А зважаючи на розділ [Use geo-redundancy to design highly available applications](https://learn.microsoft.com/en-us/azure/storage/common/geo-redundant-design) можна зробити висновок про те, як будувати прикладну архітектуру додатків. Наведу цитати зі згаданого документу:
 
     Azure Storage offers two options for geo-redundant replication: Geo-redundant storage (GRS) and Geo-zone-redundant storage (GZRS). To make use of the Azure Storage geo-redundancy options, make sure that your storage account is configured for read-access geo-redundant storage (RA-GRS) or read-access geo-zone-redundant storage (RA-GZRS). If it's not, you can learn more about how to change your storage account replication type.
 
@@ -283,7 +287,7 @@ Here it's important to note from my own experience that I've heard this observat
 
     If the primary region becomes unavailable, you can initiate an account failover. When you fail over to the secondary region, the DNS entries pointing to the primary region are changed to point to the secondary region. After the failover is complete, write access is restored for GRS and RA-GRS accounts. For more information, see Disaster recovery and storage account failover.
 
-Також важливо врахувати інформацію, наведену в перелічених розділах з приводу архітектури прикладних додатків:
+It is also important to consider the information provided in the listed sections regarding application architecture:
 
 - [Running your application in read-only mode](https://learn.microsoft.com/en-us/azure/storage/common/geo-redundant-design#running-your-application-in-read-only-mode).
 - [Handling updates when running in read-only mode](https://learn.microsoft.com/en-us/azure/storage/common/geo-redundant-design#handling-updates-when-running-in-read-only-mode).
@@ -297,7 +301,7 @@ Here it's important to note from my own experience that I've heard this observat
 
 - [ Azure Samples – Using the Circuit Breaker Pattern with RA-GRS storage](https://github.com/Azure-Samples/storage-dotnet-circuit-breaker-ha-ra-grs)
 
-Тарифи використання BlobStorage в використанны LRS показані на [pic-04](#pic-04) та [pic-05](#pic-05) :
+The tariffs for using Blob Storage when using LRS are shown in [pic-04](#pic-04) та [pic-05](#pic-05) :
 
 <kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-04.png" /></kbd>
 <p style="text-align: center;"><a name="pic-04">pic-04</a></p>
@@ -306,86 +310,88 @@ Here it's important to note from my own experience that I've heard this observat
 <kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-05.png" /></kbd>
 <p style="text-align: center;"><a name="pic-05">pic-05</a></p>
 
-
-Тарифи використання BlobStorage в використанны ZRS показані на [pic-06](#pic-06)
+The tariffs for using Blob Storage when using ZRS are shown in  [pic-06](#pic-06)
 
 <kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-06.png" /></kbd>
 <p style="text-align: center;"><a name="pic-06">pic-06</a></p>
 
 ### <a name="p-5.3">5.3. Azure Functions</a>
 
-Чому я використав Server less Azure Function?
-По перше -  це найдешевший обчислювальний ресурс і більшості хмарних провайдерів і Azure тут нічого нового не відкрив.
-По друге - я вже третій раз впевнився:  якщо хочеш зрозуміти "філосовію" окремо взятої хмари -  почни з їх безсерверної платформи. По багатству і зручності безсерверної платфоми можна зробити висновок про всю хмару. 
-По третє - безсерверна платформа завжди інтегрована з основними хмарними продуктами - тому з ними легко познайомитися і вивчити.
+Why did I use a Serverless Azure Function?
 
-Якщо кортко, то про Server Less  можна почитити за лінком: [AZ-204: Implement Azure Functions](https://learn.microsoft.com/en-us/training/paths/implement-azure-functions/). Але мені більше подобається оцей матеріал: [What is Azure Functions?](https://learn.microsoft.com/en-us/azure/azure-functions/functions-overview).
+- Firstly, it is the cheapest computing resource among most cloud providers, and Azure has not introduced anything new here.
+- Secondly, I have been convinced for the third time: if you want to understand the 'philosophy' of a particular cloud, start with their serverless platform. Based on the richness and convenience of the serverless platform, one can draw a conclusion about the entire cloud.
+- Thirdly, the serverless platform is always integrated with the main cloud products—therefore, it is easy to get acquainted with and study them.
 
-При запису файлів на blob storage можна використовувати функцію, що запускається BLOB-об'єктами, для перевірки, перетворення та обробки файлів в основній системі під час їх завантаження: [Process file uploads](https://learn.microsoft.com/en-us/azure/azure-functions/functions-scenarios?pivots=programming-language-python).
+If briefly, one can read about Serverless by following the link: [AZ-204: Implement Azure Functions](https://learn.microsoft.com/en-us/training/paths/implement-azure-functions/). Але мені більше подобається оцей матеріал: [What is Azure Functions?](https://learn.microsoft.com/en-us/azure/azure-functions/functions-overview).
 
-При аналізу поведінки даних було визначно, що не передбачається великої інтенсивності надходження чи читання даних. Таким чином, буль який хмарний бакед чи API  не має сенсу запускати на окремо вибраній віртуаці (це найдорожчв опція) чи на хмарному kubernetes чи навіть на [App Service](https://learn.microsoft.com/en-gb/training/paths/create-azure-app-service-web-apps/). Достатньо запустити бакенд на звичайних, класичних безсрверних функціях.
+When writing files to Blob Storage, you can use a function that is triggered by BLOB objects to check, transform, and process files in the main system during upload: [Process file uploads](https://learn.microsoft.com/en-us/azure/azure-functions/functions-scenarios?pivots=programming-language-python).
 
-Та і взагалі для розробки прототипів чи навчальних проектів - це найпростіша платформа.
+Upon analyzing the data behavior, it was determined that no high intensity of data arrival or reading is expected. Thus, running any cloud backend or API on a separately chosen virtual machine (which is the most expensive option) or on cloud Kubernetes or even on [Missing reference, presumably to a PaaS service like App Service or a container instance] makes no sense. [App Service](https://learn.microsoft.com/en-gb/training/paths/create-azure-app-service-web-apps/). Достатньо запустити бакенд на звичайних, класичних безсрверних функціях.
 
-Ціни на використання пдатформи показані на [pic-08](#pic-08)
+And generally, for developing prototypes or learning projects, this is the simplest platform
+
+The prices for using the platform are shown in [pic-08](#pic-08)
 
 <kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-08.png" /></kbd>
 <p style="text-align: center;"><a name="pic-08">pic-08</a></p>
 
 
-Для порівняння наведені ціни на використання платформи AppService.
+For comparison, the prices for using the **App Service** platform are provided.
 
 <kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-10.png" /></kbd>
 <p style="text-align: center;"><a name="pic-10">pic-10</a></p>
 
 ### <a name="p-5.4">5.4. Azure Queue Storage</a>
 
-Azure Queue Storage використано для організації простого асинхронного обміну, для балансування навантаження на локальну систему та для мінімізації втрат даниї при проблемах в OnPremise дата центрі. Прочитати про них можна за лінком:
+Azure Queue Storage is used to organize simple asynchronous exchange, to balance the load on the local system, and to minimize data loss in case of problems in the On-Premise data center. You can read about them by following the link
 [What is Azure Queue Storage](https://learn.microsoft.com/en-us/azure/storage/queues/storage-queues-introduction) або ж
 [az-204 Explore Azure Queue Storage](https://learn.microsoft.com/en-us/training/modules/discover-azure-message-queue/7-azure-queue-storage-overview?ns-enrollment-type=learningpath&ns-enrollment-id=learn.wwl.az-204-develop-message-based-solutions).
 
-Якщо, коротко, то  Azure Queue Storage – це сервіс для зберігання великої кількості повідомлень. Можна отримати доступ до повідомлень з будь-якої точки світу через автентифіковані виклики за допомогою HTTP або HTTPS. Повідомлення черги може мати розмір до 64 КБ. Черга може містити мільйони повідомлень, аж до загального ліміту ємності облікового запису сховища. Черги зазвичай використовуються для створення журналу робіт для асинхронної обробки, як-от в архітектурному стилі Web-Queue-Worker. Черги підтимують просту тарнзакційність.
 
-Ну і Azure Queue Storage прив'язані до Storage account. А структра повідомлення має json формат. Тобто, бінарні дані не передаються. Але, для чого передавати бінарні дані, якщо можна просто передати URL  на Blob об'єк  на Blob Storage.
+In short, Azure Queue Storage is a service for storing a large number of messages. Messages can be accessed from anywhere in the world via authenticated calls using HTTP or HTTPS. A queue message can be up to 64 KB in size. A queue can contain millions of messages, up to the overall capacity limit of the storage account. Queues are typically used to create a job log for asynchronous processing, such as in the Web-Queue-Worker architectural style. Queues support simple transactions.
+
+Well, Azure Queue Storage is tied to a Storage Account. And the message structure is in JSON format. This means binary data is not transmitted. But it is not necessary  to transmit binary data if you can simply transmit the URL to the Blob object on Blob Storage.
+
 
 
 ### <a name="p-5.5">5.5. Azure Static Web Apps</a>
 
-Статичні веб-програми зазвичай створюються за допомогою бібліотек та фреймворків, таких як Angular, React, Svelte або Vue. Ці програми містять HTML, CSS, JavaScript та ресурси зображень, які складають програму. У традиційній архітектурі веб-сервера ці файли обслуговуються з одного сервера разом із будь-якими необхідними кінцевими точками API.
+Static web applications are typically created using libraries and frameworks such as Angular, React, Svelte, or Vue. These applications contain HTML, CSS, JavaScript, and image assets that constitute the program. In a traditional web server architecture, these files are served from a single server along with any necessary API endpoints.
 
-За допомогою Azure Static Web Apps статичні ресурси відокремлені від традиційного веб-сервера та натомість обслуговуються з точок, розподілених по всьому світу. Такий розподіл пришвидшує обслуговування файлів, оскільки файли фізично розташовані ближче до кінцевих користувачів. Кінцеві точки API, які є необов'язковими, розміщуються за допомогою безсерверної архітектури, що повністю усуває необхідність використання повноцінного серверного сервера.
+With Azure Static Web Apps, static assets are separated from the traditional web server and are instead served from globally distributed points. This distribution speeds up file serving because the files are physically located closer to the end-users. The API endpoints, which are optional, are hosted using a serverless architecture, which completely eliminates the need for a full-fledged backend server
 
 
 <kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-07.png" /></kbd>
 <p style="text-align: center;"><a name="pic-07">pic-07</a></p>
 
+Here I will quote the Azure documentation.
 
-Тут я процитую документацію Azure
+    Key features
 
-        Key features
+        Globally distributed web hosting puts static content like HTML, CSS, JavaScript, and images closer to your users.
+        Integrated API support provided by Azure Functions.
+        First-class GitHub and Azure DevOps integration changes to your repository trigger builds and deployments.
+        Free SSL certificates, which are automatically renewed.
+        Unique preview URLs for previewing pull requests.
 
-            Globally distributed web hosting puts static content like HTML, CSS, JavaScript, and images closer to your users.
-            Integrated API support provided by Azure Functions.
-            First-class GitHub and Azure DevOps integration changes to your repository trigger builds and deployments.
-            Free SSL certificates, which are automatically renewed.
-            Unique preview URLs for previewing pull requests.
+And using this product to deploy Web UI will be cheaper than deploying it on a virtual machine or in an app service or on cloud Kubernetes.
 
-І використання цього продукту для розгортання Web UI  буде дешевше ніж піднімати його на віртуалці чи в app service  чи на хмарному kubernetis.
-
-
-Ціни на використання ціє ї платформи показані на [pic-09](#pic-09).
+The prices for using this platform are shown in [pic-09](#pic-09).
 
 <kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-09.png" /></kbd>
 <p style="text-align: center;"><a name="pic-09">pic-09</a></p>
 
-Для порівняння наведені ціни на використання платформи AppService.
+For comparison, the prices for using the App Service platform are provided.
 
 <kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-10.png" /></kbd>
 <p style="text-align: center;"><a name="pic-10">pic-10</a></p>
 
-та ціни на аренду віртуальних машин [pic-11](#pic-11)
+the prices for using  VMs [pic-11](#pic-11)
 
 <kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-11.png" /></kbd>
 <p style="text-align: center;"><a name="pic-11">pic-11</a></p>
 
-## <a name="p-6">6. Елементи прототипування, що створюються програмно</a>
+## <a name="p-6">6. Elements of prototyping created programmatically (in software)</a>
+
+to be
