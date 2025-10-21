@@ -56,7 +56,7 @@ published: true
 
 Графічно, ідею можна зобразити таким чином [pic-03](#pic-03): 
 На pic-03 показано, як би могла виглядати узагальнена архітектура для міграції з бази даних в хмарне azure Blob Storage з мультизонною реплікацією.
-<kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-03.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-10-16-az-blobstrg/doc/pic-03.png" /></kbd>
 <p style="text-align: center;"><a name="pic-03">pic-03</a></p>
 
 На малюнку зображено два Дата центри:
@@ -234,12 +234,12 @@ published: true
 
 Максимально підійде GRS/RA-GRS [Geo-zone-redundant storage](https://learn.microsoft.com/en-us/azure/storage/common/storage-redundancy?toc=%2Fazure%2Fstorage%2Fblobs%2Ftoc.json&bc=%2Fazure%2Fstorage%2Fblobs%2Fbreadcrumb%2Ftoc.json#geo-zone-redundant-storage).
 
-<kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-02.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-10-16-az-blobstrg/doc/pic-02.png" /></kbd>
 <p style="text-align: center;"><a name="pic-02">pic-02</a></p>
 
 Мінімально, можна зупинитися і на GRS [Replication across paired regions](https://learn.microsoft.com/en-us/azure/reliability/reliability-storage-blob?toc=%2Fazure%2Fstorage%2Fblobs%2Ftoc.json&bc=%2Fazure%2Fstorage%2Fblobs%2Fbreadcrumb%2Ftoc.json#replication-across-paired-regions)
 
-<kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-01.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-10-16-az-blobstrg/doc/pic-01.png" /></kbd>
 <p style="text-align: center;"><a name="pic-01">pic-01</a></p>
 
 Тут я процитую, як працює  "Zone-redundant storage"
@@ -290,17 +290,17 @@ published: true
 
 Тарифи використання BlobStorage в використанны LRS показані на [pic-04](#pic-04) та [pic-05](#pic-05) :
 
-<kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-04.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-10-16-az-blobstrg/doc/pic-04.png" /></kbd>
 <p style="text-align: center;"><a name="pic-04">pic-04</a></p>
 
 
-<kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-05.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-10-16-az-blobstrg/doc/pic-05.png" /></kbd>
 <p style="text-align: center;"><a name="pic-05">pic-05</a></p>
 
 
 Тарифи використання BlobStorage в використанны ZRS показані на [pic-06](#pic-06)
 
-<kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-06.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-10-16-az-blobstrg/doc/pic-06.png" /></kbd>
 <p style="text-align: center;"><a name="pic-06">pic-06</a></p>
 
 ### <a name="p-5.3">5.3. Azure Functions</a>
@@ -320,13 +320,13 @@ published: true
 
 Ціни на використання пдатформи показані на [pic-08](#pic-08)
 
-<kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-08.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-10-16-az-blobstrg/doc/pic-08.png" /></kbd>
 <p style="text-align: center;"><a name="pic-08">pic-08</a></p>
 
 
 Для порівняння наведені ціни на використання платформи AppService.
 
-<kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-10.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-10-16-az-blobstrg/doc/pic-10.png" /></kbd>
 <p style="text-align: center;"><a name="pic-10">pic-10</a></p>
 
 ### <a name="p-5.4">5.4. Azure Queue Storage</a>
@@ -347,7 +347,7 @@ Azure Queue Storage використано для організації про�
 За допомогою Azure Static Web Apps статичні ресурси відокремлені від традиційного веб-сервера та натомість обслуговуються з точок, розподілених по всьому світу. Такий розподіл пришвидшує обслуговування файлів, оскільки файли фізично розташовані ближче до кінцевих користувачів. Кінцеві точки API, які є необов'язковими, розміщуються за допомогою безсерверної архітектури, що повністю усуває необхідність використання повноцінного серверного сервера.
 
 
-<kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-07.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-10-16-az-blobstrg/doc/pic-07.png" /></kbd>
 <p style="text-align: center;"><a name="pic-07">pic-07</a></p>
 
 
@@ -366,17 +366,17 @@ Azure Queue Storage використано для організації про�
 
 Ціни на використання ціє ї платформи показані на [pic-09](#pic-09).
 
-<kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-09.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-10-16-az-blobstrg/doc/pic-09.png" /></kbd>
 <p style="text-align: center;"><a name="pic-09">pic-09</a></p>
 
 Для порівняння наведені ціни на використання платформи AppService.
 
-<kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-10.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-10-16-az-blobstrg/doc/pic-10.png" /></kbd>
 <p style="text-align: center;"><a name="pic-10">pic-10</a></p>
 
 та ціни на аренду віртуальних машин [pic-11](#pic-11)
 
-<kbd><img src="../assets/img/posts/2025-10-16-az-blobstrg/doc/pic-11.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-10-16-az-blobstrg/doc/pic-11.png" /></kbd>
 <p style="text-align: center;"><a name="pic-11">pic-11</a></p>
 
 ## <a name="p-6">6. Елементи прототипування, що створюються програмно</a>
