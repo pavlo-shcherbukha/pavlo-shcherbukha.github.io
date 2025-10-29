@@ -37,7 +37,7 @@ published: true
 Коли вже є обліковка в ORACLE CLOUD можна підключатися до oracle docker registry.
 Для цього треба зайти на https://container-registry.oracle.com  [pic-01](#pic-01).
 
-<kbd><img src="../assets/img/posts/2025-10-27-oracledb-container/doc/pic-01.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-10-27-oracledb-container/doc/pic-01.png" /></kbd>
 <p style="text-align: center;"><a name="pic-01">pic-01</a></p>
 
 
@@ -46,7 +46,7 @@ published: true
 - **express** Oracle Database Express Edition;
 - **free**	Oracle Database Free.
 
-<kbd><img src="../assets/img/posts/2025-10-27-oracledb-containerdoc/pic-02.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-10-27-oracledb-containerdoc/pic-02.png" /></kbd>
 <p style="text-align: center;"><a name="pic-02">pic-02</a></p>
 
 
