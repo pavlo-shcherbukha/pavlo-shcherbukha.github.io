@@ -302,3 +302,351 @@ pip install -r requirements.txt
 jupyter notebook
 ```
 
+- **Приклади використання**
+
+Далі наведена Jupyter NoteBook, що експортована в markdown
+
+### Учимся працювати з БД ORACLE  на Python
+
+#### Допоміжна документація
+- [Introduction to the Python Driver for Oracle Database](https://python-oracledb.readthedocs.io/en/latest/user_guide/introduction.html#introduction-to-the-python-driver-for-oracle-database)
+- [Python python-oracledb Driver](https://oracle.github.io/python-oracledb/)
+- [Python: Read Data from Oracle Database](https://kontext.tech/article/1019/python-read-data-from-oracle-database)
+
+#### Підключення до БД через "товстий" клієнт ORACLE та виборка одного запису з його виводом через "print"
+- Очікується, що вибиирається тільки один запис [5.1.1. Fetch Methods](https://python-oracledb.readthedocs.io/en/latest/user_guide/sql_execution.html#fetch-methods)
+- Прив'язка зміних запиту виконується через **змінні прив'язки**
+
+
+```python
+    import oracledb
+    import getpass
+    
+    username = "CUSTDOC"
+    userpwd = getpass.getpass("Enter password: ")
+
+    host="localhost"
+    port="1521"
+    service_name="XEPDB1"
+    dsn = f'{username}/{userpwd}@{host}:{port}/{service_name}'
+   
+```
+
+    Enter password:  ········
+
+
+
+```python
+import oracledb
+import os
+try:
+    connection = oracledb.connect(dsn=dsn)
+    print("✅ Успішно підключено до XEPDB1!")
+    
+    # Приклад виконання запиту
+    cursor = connection.cursor()
+    cursor.execute("SELECT SYSDATE FROM DUAL")
+    (current_date,) = cursor.fetchone()
+    print(f"Поточна дата в БД: {current_date}")
+except oracledb.Error as e:
+    print(f"❌ Помилка підключення: {e}")
+
+finally:
+   if connection:
+        connection.close()
+        print("✅ Закрили connection")
+
+```
+
+    ✅ Успішно підключено до XEPDB1!
+    Поточна дата в БД: 2025-10-29 06:51:57
+    ✅ Закрили connection
+
+
+#### Пробуємо прочитати дані з довідника з таблиці CUSTDOC.CUST$D$DOCTYPE
+
+- Приклад запиту
+
+```sql
+SELECT A.TYPEDOC, A.NAMETYPE FROM CUSTDOC.CUST$D$DOCTYPE A;
+```
+**Визначення метаданим даних:** [5.1.3. Query Column Metadata](https://python-oracledb.readthedocs.io/en/latest/user_guide/sql_execution.html#query-column-metadata) та мапінг типів даних: [5.1.4. Fetch Data Types](https://python-oracledb.readthedocs.io/en/latest/user_guide/sql_execution.html#fetch-data-types)
+
+
+```python
+# SQL- запит як багаторядкова змінна
+sql_query = """
+    SELECT A.TYPEDOC, A.NAMETYPE
+    FROM CUSTDOC.CUST$D$DOCTYPE A
+"""
+# Встановлюємо змінну з'єднання
+connection = None
+cursor = None
+
+try:
+    # 1. Встановлення з'єднання (підключення до бази даних)
+    connection = oracledb.connect(dsn=dsn)
+
+    # 2. Створення курсора
+    cursor = connection.cursor()
+    
+    # 3. Виконання запиту SELECT
+    cursor.execute(sql_query)
+    
+    # --- Обробка та відображення даних ---
+    
+    # Отримання імен стовпців для заголовка
+    # cursor.description - це список кортежів, де перший елемент - ім'я стовпця
+    column_names = [col[0] for col in cursor.description]
+    
+    print("-" * 50)
+    # Відображення заголовка
+    print(f"{column_names[0]:<15} {column_names[1]}")
+    print("-" * 50)
+    
+    # 4. Отримання всіх результатів
+    # fetchall() повертає список кортежів, де кожен кортеж - рядок даних
+    rows = cursor.fetchall()
+    
+    # 5. Обробка та відображення отриманих даних
+    if rows:
+        for row in rows:
+            # Виведення даних з форматуванням
+            # :<15 означає вирівнювання по лівому краю, займаючи 15 символів
+            print(f"{row[0]:<15} {row[1]}")
+    else:
+        print("Запит не повернув жодного рядка.")
+        
+    print("-" * 50)
+
+except oracledb.Error as e:
+    # Обробка помилок Oracle
+    error_obj, = e.args
+    print(f"Помилка Oracle: {error_obj.code} - {error_obj.message}")
+    
+finally:
+    # 6. Закриття курсора та з'єднання
+    if cursor:
+        cursor.close()
+        print("\nКурсор закрито.")
+    if connection:
+        connection.close()
+        print("З'єднання з БД закрито.")
+
+```
+
+    --------------------------------------------------
+    TYPEDOC         NAMETYPE
+    --------------------------------------------------
+    NAT_ID          National Identity Document
+    FOR_PASS        International Passport
+    BIRTH_CERT      Birth Certificate	
+    TAX_ID          Tax Identification Number
+    DRV_LIC         	Drivers License
+    COI             Certificate of Incorporation
+    REG_EXT         Company Register Extract
+    PoA             Power of Attorney
+    AoA             Articles of Association ( Charter )
+    --------------------------------------------------
+    
+    Курсор закрито.
+    З'єднання з БД закрито.
+
+
+#### Пробуємо прочитати дані так, щоб отриманий набір даних трансформувати в Dictionary
+В цьому прикладі, отримавши dictionary, легко завантажити в pandas чи виконати іншу обробку засобами Python
+
+
+```python
+import oracledb
+
+sql = """SELECT A.TYPEDOC, A.NAMETYPE
+    FROM CUSTDOC.CUST$D$DOCTYPE A
+    """
+try:
+    # 1. Встановлення з'єднання (підключення до бази даних)
+    connection = oracledb.connect(dsn=dsn)
+    cursor = connection.cursor()
+
+    cursor.execute(sql)
+
+    columns = [col[0] for col in cursor.description]
+    cursor.rowfactory = lambda *args: dict(zip(columns, args))
+    data = cursor.fetchall()
+    print(data)
+
+except oracledb.Error as e:
+    # Обробка помилок Oracle
+    error_obj, = e.args
+    print(f"Помилка Oracle: {error_obj.code} - {error_obj.message}")
+    
+finally:
+    # 6. Закриття курсора та з'єднання
+    if cursor:
+        cursor.close()
+        print("\nКурсор закрито.")
+    if connection:
+        connection.close()
+        print("З'єднання з БД закрито.")
+
+```
+
+    [{'TYPEDOC': 'NAT_ID', 'NAMETYPE': 'National Identity Document'}, {'TYPEDOC': 'FOR_PASS', 'NAMETYPE': 'International Passport'}, {'TYPEDOC': 'BIRTH_CERT', 'NAMETYPE': 'Birth Certificate\t'}, {'TYPEDOC': 'TAX_ID', 'NAMETYPE': 'Tax Identification Number'}, {'TYPEDOC': 'DRV_LIC', 'NAMETYPE': '\tDrivers License'}, {'TYPEDOC': 'COI', 'NAMETYPE': 'Certificate of Incorporation'}, {'TYPEDOC': 'REG_EXT', 'NAMETYPE': 'Company Register Extract'}, {'TYPEDOC': 'PoA', 'NAMETYPE': 'Power of Attorney'}, {'TYPEDOC': 'AoA', 'NAMETYPE': 'Articles of Association ( Charter )'}]
+    
+    Курсор закрито.
+    З'єднання з БД закрито.
+
+
+#### Вставка даних в БД
+- [5.2. INSERT and UPDATE Statements](https://python-oracledb.readthedocs.io/en/latest/user_guide/sql_execution.html#insert-and-update-statements)
+  [9. Managing Transactions](https://python-oracledb.readthedocs.io/en/latest/user_guide/txn_management.html#managing-transactions)
+
+
+```python
+import oracledb
+import json
+import os
+
+# 1. Шлях до  файлу JSON
+file_path = 'artists.json'
+
+# 2. Відкриваємо та читаємо файл
+try:
+    with open(file_path, 'r', encoding='utf-8') as f:
+        # json.load() перетворює вміст файлу JSON на список Python Dictionary
+        artists_data = json.load(f)
+        
+    print("Файл JSON успішно прочитано у Python-список.")
+    print(f"Перший елемент: {artists_data['rows'][0]['artist_en']}")
+
+    # Підключаюся до БД
+    connection = oracledb.connect(dsn)
+    cursor = connection.cursor()
+    
+    sql = """insert into CUSTDOC.CUST$ARTIST 
+              ( artist_en, artist_ua, photo_url, work_url, work_title_en, work_title_ua ) VALUES 
+              ( :a_artist_en, :a_artist_ua, :a_photo_url, :a_work_url, :a_work_title_en, :a_work_title_ua  )"""
+
+
+    for artist in artists_data['rows']:
+        print( f" INSERT DATA ROW:  {artist['artist_en']}")
+        cursor.execute(sql, 
+                       {
+                        "a_artist_en": artist['artist_en'], 
+                        "a_artist_ua": artist['artist_ua'], 
+                        "a_photo_url": artist['photo_url'], 
+                        "a_work_url":  artist['work_url'], 
+                        "a_work_title_en": artist['work_title_en'], 
+                        "a_work_title_ua": artist['work_title_ua']
+                       }
+         )
+    connection.commit()
+        
+except FileNotFoundError:
+    print(f"Помилка: Файл не знайдено за шляхом {file_path}")
+except json.JSONDecodeError:
+    print("Помилка: Неправильний формат JSON у файлі.")
+except oracledb.Error as e:
+    # Обробка помилок Oracle
+    error_obj, = e.args
+    print(f"Помилка Oracle: {error_obj.code} - {error_obj.message}")
+finally:
+    # 6. Закриття курсора та з'єднання
+    if cursor:
+        cursor.close()
+        print("\nКурсор закрито.")
+    if connection:
+        connection.close()
+        print("З'єднання з БД закрито.")
+```
+
+    Файл JSON успішно прочитано у Python-список.
+    Перший елемент: Pablo Picasso
+     INSERT DATA ROW:  Pablo Picasso
+     INSERT DATA ROW:  Salvador Dalí
+     INSERT DATA ROW:  Francisco Goya
+     INSERT DATA ROW:  Diego Velázquez
+     INSERT DATA ROW:  Joan Miró
+    
+    Курсор закрито.
+    З'єднання з БД закрито.
+
+
+#### Пробуємо прочитати вставені дані
+
+
+```python
+# SQL- запит як багаторядкова змінна
+sql_query = """
+    SELECT A.artist_en, A.artist_ua 
+    FROM CUSTDOC.CUST$ARTIST  A
+"""
+# Встановлюємо змінну з'єднання
+connection = None
+cursor = None
+
+try:
+    # 1. Встановлення з'єднання (підключення до бази даних)
+    connection = oracledb.connect(dsn=dsn)
+
+    # 2. Створення курсора
+    cursor = connection.cursor()
+    
+    # 3. Виконання запиту SELECT
+    cursor.execute(sql_query)
+    
+    # --- Обробка та відображення даних ---
+    
+    # Отримання імен стовпців для заголовка
+    # cursor.description - це список кортежів, де перший елемент - ім'я стовпця
+    column_names = [col[0] for col in cursor.description]
+    
+    print("-" * 50)
+    # Відображення заголовка
+    print(f"{column_names[0]:<15} {column_names[1]}")
+    print("-" * 50)
+    
+    # 4. Отримання всіх результатів
+    # fetchall() повертає список кортежів, де кожен кортеж - рядок даних
+    rows = cursor.fetchall()
+    
+    # 5. Обробка та відображення отриманих даних
+    if rows:
+        for row in rows:
+            # Виведення даних з форматуванням
+            # :<15 означає вирівнювання по лівому краю, займаючи 15 символів
+            print(f"{row[0]:<15} {row[1]}")
+    else:
+        print("Запит не повернув жодного рядка.")
+        
+    print("-" * 50)
+
+except oracledb.Error as e:
+    # Обробка помилок Oracle
+    error_obj, = e.args
+    print(f"Помилка Oracle: {error_obj.code} - {error_obj.message}")
+    
+finally:
+    # 6. Закриття курсора та з'єднання
+    if cursor:
+        cursor.close()
+        print("\nКурсор закрито.")
+    if connection:
+        connection.close()
+        print("З'єднання з БД закрито.")
+```
+
+    --------------------------------------------------
+    ARTIST_EN       ARTIST_UA
+    --------------------------------------------------
+    Pablo Picasso   Пабло Пікассо
+    Salvador Dalí   Сальвадор Далі
+    Francisco Goya  Франсіско Гойя
+    Diego Velázquez Дієго Веласкес
+    Joan Miró       Жоан Міро
+    --------------------------------------------------
+    
+    Курсор закрито.
+    З'єднання з БД закрито.
+
+
