@@ -25,8 +25,10 @@ published: true
 В цьому блозі описано, як отримати  **офіційний docker image** бази даних ORACLE  та запустити його в контейнері на локальній робоій станції (справедливо тільки для linux 64). Досліди проводилися на UBUNTU. 
 Також описано як встановити  службові паролі та як працювати з DDL  скрипатми.
 
-Тестування підключення ззовні контенера на host-машині де запущений і сам контейнер виконувалося на Jupyter notebook.
+Тестування підключення з зовні контеqнера на host-машині де запущений і сам контейнер виконувалося на Jupyter notebook.
+Повний приклад репозиторію з  DDL  скриптами  та JUPYTER Notebook знаходиться за лінком: [oracle-db-container](https://github.com/pavlo-shcherbukha/oracle-db-container).
 
+Сама JUPYTER Notebook за прямим лінком в тому ж репозиторії [test-oradb.ipynb](https://github.com/pavlo-shcherbukha/oracle-db-container/blob/main/test-oradb.ipynb) 
 
 ## Отримання образу ORACLE DB з офіційного сайту ORACLE
 
@@ -304,7 +306,9 @@ jupyter notebook
 
 - **Приклади використання**
 
-Далі наведена Jupyter NoteBook, що експортована в markdown
+Далі наведена Jupyter NoteBook, що експортована в markdown.
+Сама JUPYTER Notebook за прямим лінком в тому ж репозиторії [test-oradb.ipynb](https://github.com/pavlo-shcherbukha/oracle-db-container/blob/main/test-oradb.ipynb). 
+
 
 ### Учимся працювати з БД ORACLE  на Python
 
@@ -313,7 +317,7 @@ jupyter notebook
 - [Python python-oracledb Driver](https://oracle.github.io/python-oracledb/)
 - [Python: Read Data from Oracle Database](https://kontext.tech/article/1019/python-read-data-from-oracle-database)
 
-#### Підключення до БД через "товстий" клієнт ORACLE та виборка одного запису з його виводом через "print"
+#### Підключення до БД та виборка одного запису з його виводом через "print"
 - Очікується, що вибиирається тільки один запис [5.1.1. Fetch Methods](https://python-oracledb.readthedocs.io/en/latest/user_guide/sql_execution.html#fetch-methods)
 - Прив'язка зміних запиту виконується через **змінні прив'язки**
 
