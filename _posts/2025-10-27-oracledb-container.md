@@ -46,7 +46,7 @@ published: true
 - **express** Oracle Database Express Edition;
 - **free**	Oracle Database Free.
 
-<kbd><img src="/assets/img/posts/2025-10-27-oracledb-containerdoc/pic-02.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-10-27-oracledb-container/doc/pic-02.png" /></kbd>
 <p style="text-align: center;"><a name="pic-02">pic-02</a></p>
 
 
