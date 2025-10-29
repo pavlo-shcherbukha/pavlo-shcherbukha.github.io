@@ -37,6 +37,15 @@ published: true
 
 Сама JUPYTER Notebook за прямим лінком в тому ж репозиторії [test-oradb.ipynb](https://github.com/pavlo-shcherbukha/oracle-db-container/blob/main/test-oradb.ipynb) 
 
+
+**Практична цінність:**
+
+- Покрокова інструкція з отримання офіційного образу, що є обов'язковим для Oracle.
+
+- Детальний опис налаштування службових паролів та створення робочих користувачів/схем за допомогою sqlplus.
+
+- Наскрізний приклад підключення та взаємодії з БД за допомогою популярного інструменту Jupyter Notebook та сучасного Python-драйвера oracledb.
+
 ## Отримання образу ORACLE DB з офіційного сайту ORACLE
 
 Отримати образ БД ORACLE  можна, настільки я знайшов, тільки з офіційного ORACLE docker registry.
