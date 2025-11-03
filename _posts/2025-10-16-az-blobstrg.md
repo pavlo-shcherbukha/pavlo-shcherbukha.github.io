@@ -80,10 +80,10 @@ published: true
 3. Приклади програмного коду
 
 3.1. ORACLE та Node-RED  можна подивитися за лінком: [oracle-db-container](https://github.com/pavlo-shcherbukha/oracle-db-container).
+
 3.2. Створення azure function можна подивитися за лінком: [racle-to-blobstorage-azfunc](https://github.com/pavlo-shcherbukha/oracle-to-blobstorage-azfunc).
+
 3.3. Домнстраційна навальна задачка що поєднує в собі: БД ORACLE, Node-Red, Azure Blob Storage, Azure Storage Queue, Azure Function, Azure EventGrid, щоб винести BLOB-дані (файли) з реляційної бази даних Oracl на об’єктне сховище (в Azure Blob Storage) можна переглянути: [az blob strg v1 ua](https://youtu.be/kxf2yb5EE-U).
-
-
 
 ## <a name="p-2">2. Обгрунтування, чому це правильно</a>
 
