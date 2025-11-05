@@ -82,6 +82,21 @@ And the experience of communication where a salesperson promises a client: 'I'll
 
 2. For the graphical description of the architectures, drawio was used because it has built-in icons for Azure components. Although, personally, I've long preferred Mermaid diagrams.
 
+3. GitHub repo with program code
+
+3.1. ORACLE and Node-RED: [oracle-db-container](https://github.com/pavlo-shcherbukha/oracle-db-container/blob/main/README_EN.md).
+
+3.2. Create azure function: [oracle-to-blobstorage-azfunc](https://github.com/pavlo-shcherbukha/oracle-to-blobstorage-azfunc).
+
+3.4  node-oracledb
+
+Documentation Link: [https://node-oracledb.readthedocs.io/](https://node-oracledb.readthedocs.io/)
+
+3.5. python-oracledb
+
+Documentation Link: [https://oracle.github.io/python-oracledb/](https://oracle.github.io/python-oracledb/)
+
+
 ## <a name="p-2">2. Justification of why this is correct</a>
 
 **Relational Database Performance:**
