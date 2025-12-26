@@ -230,6 +230,13 @@ async def client_function(msg: func.QueueMessage, client: df.DurableOrchestratio
 
 Крім показаного тригера для Storage Queue  оркестратори Durable Functions  мають вбудований http слухач подій. При запуску оркестратора він поіертає URL  цього слухача, де event Name  треба передати в елементі URL, а в тілі передати прикладні дані. 
 
+**І на останок, требадодати кілька слів про відладку і тестування.**
+
+Durable функції досить важко відлагоджувати і тестувати за допомогою традиційних інсрументів тестування. Попершу  вони state full і відповідно, інструмент для тестуванняі відладки повинен бути теж state full.  По друге - кожний запус функції дає набір своїх унікальних URL і доадткових даних, які потім будуть використовуватися для моніторингу чи отримання результатів. Ну і вони інтегруються з різними midleware інструментами, що вимагають підключення їхнії API. Ну і durable function управляються подіями, які потрібно генерува чи моелювати чи емілювати і, часто, інтерактивно.
+
+Тому для відладки і тестування я використав Jupyter notebook  залишився дуже нею задоволений.
+Детально про  організацію тестування я описав за лінком: [Тестування оркестратора](https://github.com/pavlo-shcherbukha/sh-py-ml-orchestrator-p/tree/master#%D1%82%D0%B5%D1%81%D1%82%D1%83%D0%B2%D0%B0%D0%BD%D0%BD%D1%8F-%D0%BE%D1%80%D0%BA%D0%B5%D1%81%D1%82%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%B0). А саму Notebook можна подивитися за лінком [durable-func-test.ipynb](https://github.com/pavlo-shcherbukha/sh-py-ml-orchestrator-p/blob/master/tests/notebooks/durable-func-test.ipynb) та helper  до неї: [test_utils.py](https://github.com/pavlo-shcherbukha/sh-py-ml-orchestrator-p/blob/master/tests/test_utils.py)
+
 
 ### <a name="p-3.3">3.3. Heavy Lifting (Обробка): AI в контейнерах</a>
 
