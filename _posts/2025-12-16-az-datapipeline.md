@@ -71,15 +71,32 @@ published: true
 По архітектурі, оркестратор durable функції повинен запускатися за допомогою події в EventGrid. ПОки що, для поглибленого тестування, я запукаю оркестратор шляхом http - виклику. Особливість durablr function така, що вони state full, на відміну від регулярних функцій. Крім того, durablr function дозволяють легко будувати послідовно-паралельну обробку  задач, та системи, що управляються подіями. Тобто, це такий собі **BPM** що описується програмним кодом. 
 В поточній архітектурі функція працює як  оркестратор, що реагує на події:
 
-- Стартує роботу по триманні http-запиту. Вона не тримає http  з'єднання поки працює функція. Вона отримала запит, запустила процес, дала відповідь з параметрами управління процесом і "засинає".
+- Стартує роботу по триманні http-запиту. Вона не тримає http  з'єднання поки працює функція. Вона отримала запит, запустила процес, дала відповідь з параметрами управління процесом і "засинає". 
 
-- Функція буде "спати" і очікувати відповіді від запущеного процесу або вичерпання інтервалу очікування відповіді.  "Сон" означає те, що функція не витрачає процесорний час до тих пір, доки не надійде зовнішня подія.
-Програмний код durablr function знаходиться в репозиторії [Dacha video Durable fuctionas - Оркестратор обчислень.](https://github.com/pavlo-shcherbukha/sh-py-ml-orchestrator-p/tree/master). Сам програмний код durable функції в файлі: [function_app.py](https://github.com/pavlo-shcherbukha/sh-py-ml-orchestrator-p/blob/master/function_app.py).
+Ось приклад відповіді з параметрами управління:
+```json
+{
+    "id": "1........9",
+    "statusQueryGetUri": "http://localhost:7071/runtime/webhooks/durabletask/instances/1........9?taskHub=TestHubName&connection=Storage&code=base63str",
+    "sendEventPostUri": "http://localhost:7071/runtime/webhooks/durabletask/instances/1........9/raiseEvent/{eventName}?taskHub=TestHubName&connection=Storage&code=base64str",
+    "terminatePostUri": "http://localhost:7071/runtime/webhooks/durabletask/instances/1........9/terminate?reason={text}&taskHub=TestHubName&connection=Storage&code=base64str",
+    "rewindPostUri": "http://localhost:7071/runtime/webhooks/durabletask/instances/1........9/rewind?reason={text}&taskHub=TestHubName&connection=Storage&code=base64str",
+    "purgeHistoryDeleteUri": "http://localhost:7071/runtime/webhooks/durabletask/instances/1........9?taskHub=TestHubName&connection=Storage&code=base64str",
+    "restartPostUri": "http://localhost:7071/runtime/webhooks/durabletask/instances/1........9/restart?taskHub=TestHubName&connection=Storage&code=base64str",
+    "suspendPostUri": "http://localhost:7071/runtime/webhooks/durabletask/instances/1........9/suspend?reason={text}&taskHub=TestHubName&connection=Storage&code=base64str",
+    "resumePostUri": "http://localhost:7071/runtime/webhooks/durabletask/instances/1........9/resume?reason={text}&taskHub=TestHubName&connection=Storage&code=base64str"
+}
+```
 
-Функція взаємодіє з чергами Azure Storage Queue.  Таким чином вимагається підключення до Storge Account де розгорнуі ті черги. Підключення до Storage account  відбувається за допомогою connect string. Для розробки це нормально. А от для продукту чи для продуктивної експлуатації потрібно робити підключення через **Menedget identity**.
-
-Треба звернути увагу, що у azure  достатньо ємуляторів, щоб вести локальну розробку, не підключаючись до хмарних ресурсів. 
-Розгортання функції я виконую через GitHub action.  Як на мене це найбільш швидкий і прийнятний спосіб і платформенно не залежний. В лінку на репозиторій [Розгортаня в хмарі Azure](https://github.com/pavlo-shcherbukha/sh-py-ml-orchestrator-p/tree/master#%D1%80%D0%BE%D0%B7%D0%B3%D0%BE%D1%80%D1%82%D0%B0%D0%BD%D1%8F-%D0%B2-%D1%85%D0%BC%D0%B0%D1%80%D1%96-azure) докладно описано процес розгортання в хмарі.
+    - "id": " instance_id ідентифікатор екземпляра запущеної функції ",
+    - "statusQueryGetUri": "url  за яким можна моніторити стан виконання завдання і отримати результат, якщо виконання звершилося",
+    -  "sendEventPostUri": "url куди можна відправити зовнішню подію по  http. При цьому в URL {eventName} потрібно замінити на назву вашого event /raiseEvent/{eventName}?taskHub= , а instance_id треба передати в тілі запиту, щоб перенаправити саме на потрібний інстансе",
+    - "terminatePostUri": "За цим url  відбувається припинення виконання завдання",
+    - "rewindPostUri": " ??? не пом'ятаю",
+    - "purgeHistoryDeleteUri": "Url очистити історію виконання завдань",
+    - "restartPostUri": "Url перезапуску завдання",
+    - "suspendPostUri": "Url  призупинити завдання",
+    - "resumePostUri": ""Url продовження виконання завдання"qD0%B0%D1%80%D1%96-azure) докладно описано процес розгортання в хмарі.
 
 Потрібно звернути увагу на обробку помилок в оркестраторі. В наведеному фрагменті кода оркестратора в блоці **Exception** для обробки помилки  викликає таке ж **Activity**,  як і для основної бізнес логіки. Код самого Activity  наведено після фрагмента оркетратора.
 
@@ -115,7 +132,7 @@ def SendFailureNotification(error: str):
 
 ```
 
-Така обрбока гарантує те, що у випадку помилки оркестратор  коректно завершить свою роботу і збереже результат, навіть з помилкою. В прикладних Activity просто логуємо помилку і викидуємо **Exception** на вищий рівень (на ріваень оркестратора)
+Така обробка гарантує те, що у випадку помилки, оркестратор  коректно завершить свою роботу і збереже результат, навіть з помилкою. В прикладних Activity просто логуємо помилку і викидуємо **Exception** на вищий рівень (на ріваень оркестратора)
 
 
 ```py
@@ -158,7 +175,6 @@ def send_processing_request(  blobMessage: object):
 ```
 
 Я вже писав про те, що оркестратор управляється подіями. А поки подія не настала, то оркестратор "спить" не споживаючи процесорного часу. Наведений нижче фрагмент коду показує, як перевести оркестратор в стан очікування
-
 
 ```py
         # Запукс завдання на обробку відео
