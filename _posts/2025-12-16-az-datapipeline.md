@@ -463,13 +463,21 @@ logger.debug(f"YOLO model ready: {yolo_model.info()}")
 
 ## <a name="p-4">4. Оцінка вартості рішення</a>
 
-    Raspberry Pi: Разова інвестиція.
+    - Raspberry Pi: Разова інвестиція. якщо пошукати до готовий набрі, що включає саму плату, корпус, блок живлення, sd-карту  можна знайти за 6000  грн.
+    - Камера - все залежить від моделі - ну нехай в райні 800-1500 грн.
+    - Azure Blob/Functions: Майже безкоштовно на малих об'ємах.
+    - Azure Container Instances: Оплата лише за секунди роботи (наприклад, 2-3 центи за один запуск аналізу).
+    - Azure Container Registry [pricing](https://azure.microsoft.com/en-us/pricing/details/container-registry/).
 
-    Azure Blob/Functions: Майже безкоштовно на малих об'ємах.
+Ось фінансова статистика викорстання цієї архітектури за груднь місяць
 
-    Azure Container Instances: Оплата лише за секунди роботи (наприклад, 2-3 центи за один запуск аналізу).
+<kbd><img src="../assets/img/posts/2025-12-16-az-datapipeline/doc/pic-03.png" /></kbd>
+<p style="text-align: center;"><a name="pic-03">pic-03</a></p>
 
-Це покаже, що ваша архітектура не тільки технологічна, а й економічно виправдана.
+<kbd><img src="../assets/img/posts/2025-12-16-az-datapipeline/doc/pic-04.png" /></kbd>
+<p style="text-align: center;"><a name="pic-04">pic-04</a></p>
+
+
 
 ## <a name="p-5">5. Підсумкові  думки</a>
 
