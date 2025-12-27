@@ -77,14 +77,15 @@ published: true
 ```json
 {
     "id": "1........9",
-    "statusQueryGetUri": "http://localhost:7071/runtime/webhooks/durabletask/instances/1........9?...",
-    "sendEventPostUri": "http://localhost:7071/runtime/webhooks/durabletask/instances/1........9/raiseEvent/{eventName}?...",
-    "terminatePostUri": "http://localhost:7071/runtime/webhooks/durabletask/instances/1........9/terminate?reason={text}&...",
-    "rewindPostUri": "http://localhost:7071/runtime/webhooks/durabletask/instances/1........9/rewind?reason={text}&...",
-    "purgeHistoryDeleteUri": "http://localhost:7071/runtime/webhooks/durabletask/instances/1........9?...",
-    "restartPostUri": "http://localhost:7071/runtime/webhooks/durabletask/instances/1........9/restart?...",
-    "suspendPostUri": "http://localhost:7071/runtime/webhooks/durabletask/instances/1........9/suspend?reason={text}&...",
-    "resumePostUri": "http://localhost:7071/runtime/webhooks/durabletask/instances/1........9/resume?reason={text}&..."
+
+    "statusQueryGetUri": "http://localhost:7071/.../instances/....?...",
+    "sendEventPostUri": "http://localhost:7071/..../instances/''''/raiseEvent/{eventName}?...",
+    "terminatePostUri": "http://localhost:7071/..../instances/..../terminate?reason={text}&...",
+    "rewindPostUri": "http://localhost:7071/......./instances/..../rewind?reason={text}&...",
+    "purgeHistoryDeleteUri": "http://localhost:7071/..../stances/..?...",
+    "restartPostUri": "http://localhost:7071/...../instances/1....../restart?...",
+    "suspendPostUri": "http://localhost:7071/.....instances/1..../suspend?reason={text}&...",
+    "resumePostUri": "http://localhost:7071/....../instances/../resume?reason={text}&..."
 
 }
 ```
