@@ -77,14 +77,15 @@ published: true
 ```json
 {
     "id": "1........9",
-    "statusQueryGetUri": "http://localhost:7071/runtime/webhooks/durabletask/instances/1........9?taskHub=TestHubName&connection=Storage&code=base63str",
-    "sendEventPostUri": "http://localhost:7071/runtime/webhooks/durabletask/instances/1........9/raiseEvent/{eventName}?taskHub=TestHubName&connection=Storage&code=base64str",
-    "terminatePostUri": "http://localhost:7071/runtime/webhooks/durabletask/instances/1........9/terminate?reason={text}&taskHub=TestHubName&connection=Storage&code=base64str",
-    "rewindPostUri": "http://localhost:7071/runtime/webhooks/durabletask/instances/1........9/rewind?reason={text}&taskHub=TestHubName&connection=Storage&code=base64str",
-    "purgeHistoryDeleteUri": "http://localhost:7071/runtime/webhooks/durabletask/instances/1........9?taskHub=TestHubName&connection=Storage&code=base64str",
-    "restartPostUri": "http://localhost:7071/runtime/webhooks/durabletask/instances/1........9/restart?taskHub=TestHubName&connection=Storage&code=base64str",
-    "suspendPostUri": "http://localhost:7071/runtime/webhooks/durabletask/instances/1........9/suspend?reason={text}&taskHub=TestHubName&connection=Storage&code=base64str",
-    "resumePostUri": "http://localhost:7071/runtime/webhooks/durabletask/instances/1........9/resume?reason={text}&taskHub=TestHubName&connection=Storage&code=base64str"
+    "statusQueryGetUri": "http://localhost:7071/runtime/webhooks/durabletask/instances/1........9?...",
+    "sendEventPostUri": "http://localhost:7071/runtime/webhooks/durabletask/instances/1........9/raiseEvent/{eventName}?...",
+    "terminatePostUri": "http://localhost:7071/runtime/webhooks/durabletask/instances/1........9/terminate?reason={text}&...",
+    "rewindPostUri": "http://localhost:7071/runtime/webhooks/durabletask/instances/1........9/rewind?reason={text}&...",
+    "purgeHistoryDeleteUri": "http://localhost:7071/runtime/webhooks/durabletask/instances/1........9?...",
+    "restartPostUri": "http://localhost:7071/runtime/webhooks/durabletask/instances/1........9/restart?...",
+    "suspendPostUri": "http://localhost:7071/runtime/webhooks/durabletask/instances/1........9/suspend?reason={text}&...",
+    "resumePostUri": "http://localhost:7071/runtime/webhooks/durabletask/instances/1........9/resume?reason={text}&..."
+
 }
 ```
 
