@@ -44,7 +44,7 @@ published: true
 
 Узагальнена архітектура додатку показана на [pic-01](#pic-01)
 
-<kbd><img src="../assets/img/posts/2025-12-16-az-datapipeline/doc/pic-01.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-12-16-az-datapipeline/doc/pic-01.png" /></kbd>
 <p style="text-align: center;"><a name="pic-01">pic-01</a></p>
 
 ## <a name="p-2">2. Edge Layer (Межа): Розумна детекція на Raspberry Pi 5</a>
@@ -184,26 +184,26 @@ def send_processing_request(  blobMessage: object):
 Я вже писав про те, що оркестратор управляється подіями. А поки подія не настала, то оркестратор "спить" не споживаючи процесорного часу. Наведений нижче фрагмент коду показує, як перевести оркестратор в стан очікування
 
 ```py
-        # Запукс завдання на обробку відео
-        result5 = yield context.call_activity("send_processing_request", blobMessage)
-        
-        # виставляємо час очікування події в секундах
-        due_time = context.current_utc_datetime + timedelta(seconds=360)
-        # запускаємо таймер очікування на розрахований інтерва
-        durable_timeout_task = context.create_timer(due_time)
-        # реєструємо зовнішню подію, що очікує функція, протягом встановленого періоду
-        eventName = "PROCESSING_VIDEO_COMPLITED"
-        eventBody = context.wait_for_external_event(eventName)
-        # Очікування, яка з подій настане ранше: пройде зовнішня, чи закінчиться часовий інтервал
-        winning_task = yield context.task_any([eventBody, durable_timeout_task])
-        result6 = None 
-        if eventBody == winning_task:
-            # якщо прийшла зовнішня подія, то зберігаємо результат з успішною відповіддю про обробку відеофайла
-            durable_timeout_task.cancel()
-            result6 = yield context.call_activity("SendVideoComplited", eventBody.result)
-        else:
-            # якщо ж відповідь вчасно не надійшла, то зберігаємо результат обробки з відповіддню timeout 
-            result6 = yield context.call_activity("Escalate", "ESCALATE DUE TO TIMEOUT")
+# Запукс завдання на обробку відео
+result5 = yield context.call_activity("send_processing_request", blobMessage)
+
+# виставляємо час очікування події в секундах
+due_time = context.current_utc_datetime + timedelta(seconds=360)
+# запускаємо таймер очікування на розрахований інтерва
+durable_timeout_task = context.create_timer(due_time)
+# реєструємо зовнішню подію, що очікує функція, протягом встановленого періоду
+eventName = "PROCESSING_VIDEO_COMPLITED"
+eventBody = context.wait_for_external_event(eventName)
+# Очікування, яка з подій настане ранше: пройде зовнішня, чи закінчиться часовий інтервал
+winning_task = yield context.task_any([eventBody, durable_timeout_task])
+result6 = None 
+if eventBody == winning_task:
+    # якщо прийшла зовнішня подія, то зберігаємо результат з успішною відповіддю про обробку відеофайла
+    durable_timeout_task.cancel()
+    result6 = yield context.call_activity("SendVideoComplited", eventBody.result)
+else:
+    # якщо ж відповідь вчасно не надійшла, то зберігаємо результат обробки з відповіддню timeout 
+    result6 = yield context.call_activity("Escalate", "ESCALATE DUE TO TIMEOUT")
 ```
 
 Тепер розглянемо як обробляти зовнішню подію, як налаштувати відповідні тригери. На наведеному нижче фрагменті коду показано тригер, що слухає чергу Storage Queue за назвою **"video-processed**. Як можна помітити, **client.raise_event(....)** приймає досить специфічні параметри:
@@ -308,53 +308,53 @@ Durable функції досить важко відлагоджувати і �
 
     ```py
 
-    import tempfile
-    temp_dir = tempfile.gettempdir()
-    cv2.imwrite(f"{temp_dir}/{local_screenshot_name}", frame)
+import tempfile
+temp_dir = tempfile.gettempdir()
+cv2.imwrite(f"{temp_dir}/{local_screenshot_name}", frame)
 
     ```
 Ще одною особливістю є те, при збереженні кадрів з детектованими об'єктами не просто файл завантажується на BlobStorage, в до нього додається ще ряд кастомних метаданих:
 
-    ```py
+```py
 
-                # Логіка для тварин
-                            logger.debug(f"DOG OR CAT DETECTED")
-                            timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-                            local_screenshot_name = f"{fblob}_detect_dogcat_{frame_number}_{timestamp}.jpg"
-                            # Формування імені блобу з префіксом каталогу
-                            screenshot_name = f"{fblob}/detect_dogcat_{frame_number}_{timestamp}.jpg"
+# Логіка для тварин
+logger.debug(f"DOG OR CAT DETECTED")
+timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+local_screenshot_name = f"{fblob}_detect_dogcat_{frame_number}_{timestamp}.jpg"
+# Формування імені блобу з префіксом каталогу
+screenshot_name = f"{fblob}/detect_dogcat_{frame_number}_{timestamp}.jpg"
 
-                            # 1. Визначення метаданих у вигляді словника
-                            video_name_prefix = os.path.splitext(fblob)[0]
-                            custom_metadata = {
-                                "video_source": fblob,      
-                                "detection_class": class_name,
-                                "detection_confidence": f"{confidence:.2f}",
-                                "frame_number": str(frame_number),     
-                                "processing_time_utc": datetime.utcnow().isoformat()
-                            }
+# 1. Визначення метаданих у вигляді словника
+video_name_prefix = os.path.splitext(fblob)[0]
+custom_metadata = {
+    "video_source": fblob,      
+    "detection_class": class_name,
+    "detection_confidence": f"{confidence:.2f}",
+    "frame_number": str(frame_number),     
+    "processing_time_utc": datetime.utcnow().isoformat()
+}
 
-                            logger.debug(f"metadata for blob " + json.dumps( custom_metadata ))
+logger.debug(f"metadata for blob " + json.dumps( custom_metadata ))
 
-                            cv2.imwrite(f"{temp_dir}/{local_screenshot_name}", frame)
-                            
-                            #Завантаження скріншоту в Blob Storage
-                            screenshot_blob_client = container_client.get_blob_client(screenshot_name)
-                            logger.debug(f"Uploading screenshot to blob: {temp_dir}/{local_screenshot_name} to {screenshot_name} ")
-                            with open(f"{temp_dir}/{local_screenshot_name}", "rb") as data:
-                                screenshot_blob_client.upload_blob(data, metadata=custom_metadata, overwrite=True)
-                                logging.info(f"Скріншот завантажено: {local_screenshot_name} в {screenshot_name}")
-                            logger.debug(f"Remove processed screenshot: {temp_dir}/{local_screenshot_name}")
-                            os.remove(f"{temp_dir}/{local_screenshot_name}")
+cv2.imwrite(f"{temp_dir}/{local_screenshot_name}", frame)
 
-    ```
+#Завантаження скріншоту в Blob Storage
+screenshot_blob_client = container_client.get_blob_client(screenshot_name)
+logger.debug(f"Uploading screenshot to blob: {temp_dir}/{local_screenshot_name} to {screenshot_name} ")
+with open(f"{temp_dir}/{local_screenshot_name}", "rb") as data:
+    screenshot_blob_client.upload_blob(data, metadata=custom_metadata, overwrite=True)
+    logging.info(f"Скріншот завантажено: {local_screenshot_name} в {screenshot_name}")
+logger.debug(f"Remove processed screenshot: {temp_dir}/{local_screenshot_name}")
+os.remove(f"{temp_dir}/{local_screenshot_name}")
+
+```
  На Blob Storage  можна створювати віртуальні папки. І тоді файли будуть групуватися за віртуальними паками. Ось приклад створення імені блоба з віртуальною папкою:
 
-    ```py
-        # Формування імені блобу з префіксом каталогу {fblob}
-        screenshot_name = f"{fblob}/detect_car_{frame_number}_{timestamp}.jpg"
+```py
+# Формування імені блобу з префіксом каталогу {fblob}
+screenshot_name = f"{fblob}/detect_car_{frame_number}_{timestamp}.jpg"
 
-    ```
+```
 
 З приводу YOLO8 моделі. Я використовую мінімальну **"yolov8n.pt"**. Щоб модель не скачувалась кожного разу з інтернету, що на справді теж дуже довго відбувається, я її один раз скача і поклав у базовий контейнер. На відміну від показаного в документації Ultralitic  найпоширенішого (і найдовшого) способу завантаження моделі я використовую такий:
 
@@ -408,13 +408,13 @@ logger.debug(f"YOLO model ready: {yolo_model.info()}")
 
 ```json
 {
-        "instance_id": "800081000120002",
-        "blobUrl": "http://127.0.0.1:10000/devstoreaccount1/dacha-video/20250819-110439.avi", 
-        "blobName": "dacha-video/20250819-110439.avi", 
-        "status": "PROCESSED", 
-        "start_timestamp": "2025-12-14T18:00:30.761319", 
-        "stop_timestamp": "2025-12-14T18:00:37.427266", 
-        "details": {}
+"instance_id": "800081000120002",
+"blobUrl": "http://127.0.0.1:10000/devstoreaccount1/dacha-video/20250819-110439.avi", 
+"blobName": "dacha-video/20250819-110439.avi", 
+"status": "PROCESSED", 
+"start_timestamp": "2025-12-14T18:00:30.761319", 
+"stop_timestamp": "2025-12-14T18:00:37.427266", 
+"details": {}
 }
 
 ```
@@ -457,7 +457,7 @@ logger.debug(f"YOLO model ready: {yolo_model.info()}")
 А на детектованих зображеннях можна побачити такий списко метаданих, що пояснюють, що саме детектовано:
 
 
-<kbd><img src="../assets/img/posts/2025-12-16-az-datapipeline/doc/pic-02.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-12-16-az-datapipeline/doc/pic-02.png" /></kbd>
 <p style="text-align: center;"><a name="pic-02">pic-02</a></p>
 
 
@@ -471,10 +471,10 @@ logger.debug(f"YOLO model ready: {yolo_model.info()}")
 
 Ось фінансова статистика викорстання цієї архітектури за груднь місяць
 
-<kbd><img src="../assets/img/posts/2025-12-16-az-datapipeline/doc/pic-03.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-12-16-az-datapipeline/doc/pic-03.png" /></kbd>
 <p style="text-align: center;"><a name="pic-03">pic-03</a></p>
 
-<kbd><img src="../assets/img/posts/2025-12-16-az-datapipeline/doc/pic-04.png" /></kbd>
+<kbd><img src="/assets/img/posts/2025-12-16-az-datapipeline/doc/pic-04.png" /></kbd>
 <p style="text-align: center;"><a name="pic-04">pic-04</a></p>
 
 
