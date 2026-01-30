@@ -308,7 +308,9 @@ Spark вміє підключатися до Oracle як до джерела. В
 
 Для керівництва IT-департаменту перехід на Spark та Mage.ai — це насамперед перехід від "хаосу скриптів" до "заводу даних".
 
-![Data Pipeline Management](../assets/img/posts/2026-01-29-spark-start/doc/spark.png)
+
+<kbd><img src="/assets/img/posts/2026-01-29-spark-start/doc/spark.png" /></kbd>
+<p style="text-align: center;"><a name="pic-01">pic-1 Data Pipeline Management</a></p>
 
 Замість тисяч рядків PL/SQL, розкиданих по базі, ми отримуємо візуальний контроль над кожним кроком трансформації. Це дозволяє банку швидше реагувати на зміни в законодавстві чи вимогах НБУ, не ризикуючи "покласти" основну базу даних.
 
