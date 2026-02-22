@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "hyper-v ubuntu extend disc"
+title: "Hyper-v ubuntu. Expend disk size"
 date: 2026-02-20 10:00:01
 categories: [spark]
 permalink: posts/2026-02-20/hyper-v-ubuntu/
