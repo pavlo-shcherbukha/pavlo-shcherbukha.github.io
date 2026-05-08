@@ -1,27 +1,29 @@
 ---
 layout: post
-title: "From PL/SQL to PySpark: How to Build an On-Premice Lakehouse with Delta Lake"
+title: "Why Microsoft Fabric’s Copy Data Templates Might Fail Your Production ETL (And How to Fix It)"
 date: 2026-05-01 10:00:01
 categories: [spark]
-permalink: posts/2026-01-27/spark-deltalake-en/
+permalink: posts/2026-05-01/Fabric.EventDrivenFileProcessing-en/
 published: true
 ---
 
 <!-- TOC BEGIN -->
 
-- [1. ](#p-1")
-- [2. ](#p-2)
-- [3. ](#p-3)
-- [4. ](#p-4)
-- [5. ](#p-5)
-- [6. ](#p-6)
-- [7. ](#p-7)
+- [1. Introdunction](#p-1")
+- [2. High-level concept of file processing](#p-2)
+- [3. Technical implementation](#p-3)
+- [3.1. Eventstream settings ](#p-3.1)
+- [3.2. Configuring PipeLine to receive files ](#p-3.2)
+- [3.3. Pipline for calculating the SILVER level](#p-3.3)
+- [3.4. Semantic model and visualisation in the SILVER level ](#p-3.4)
 
 
 <!-- TOC END -->
 
 # Why Microsoft Fabric’s Copy Data Templates Might Fail Your Production ETL (And How to Fix It)
 
+
+## <a name="p-1">Introdunction<a>
 Many people start learning Fabric with Microsoft's templates (Copy Data), but they are designed for demos. In real life (especially in fintech or banking systems) we deal with unstable structures, duplicate files, and the need for full idempotence (so that re-runs don't break the data).
 
 <kbd><img src="../assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-01.png" /></kbd>
@@ -69,7 +71,7 @@ Another negative side is that IT staff (data engineers) will be constantly invol
 Therefore, I tried to develop the concept of building a system that provides event-driven file reception and is transparent throughout the entire data transformation path, up to the SILVER level, and create a working prototype.
 
 
-## High-level concept of file processing
+## <a name="p-2">High-level concept of file processing</a>
 
 The high-level diagram is shown in the figure [pic-p1-101](#pic-p1-101)
 
@@ -157,7 +159,7 @@ Well, then the display case calculation is started. Again, we do not delete and 
 
 After the SILVER level is formed, the data quality check process is started. At least check the number of records in the files and in the fact table, and check for the absence of null in the Dimensions fields.
 
-## Technical implementation
+## <a name="p-3">Technical implementation</a>
 
 For technical implementation, [pic-p1-06](#pic-p1-06) shows the structure of input directories.
 
@@ -173,7 +175,7 @@ This way the files end up in the **terminals** input directory. During the recep
 
 
 
-### Eventstream settings
+### <a name="p-3.1">Eventstream settings</a>
 
 The technical implementation of event logging is shown in [pic-p1-05](#pic-p1-05)
 
@@ -258,7 +260,7 @@ It is important to note here that you can create a table automatically by clicki
 
 ```
 
-### Configuring PipeLine to receive files
+### <a name="p-3.2">Configuring PipeLine to receive files</a>
 
 The pipeline for receiving files with the Lookup Activity query setup is shown in [pic-p1-11](#pic-p1-11).
 
@@ -460,7 +462,7 @@ def read_files(all_files):
 
 And at this stage, the file processing work is complete.
 
-### Pipline for calculating the SILVER level.
+### <a name="p-3.3">Pipline for calculating the SILVER level</a>
 
 This is the key moment when raw BRONZE level data is transformed into SILVER business entities:
 
@@ -774,7 +776,7 @@ You may ask: "Why did I write about the error?".
 And I wrote about the error because even after discovering a gross error when building the database, using the described file processing and building method Silver layer made it possible to fix it in a simple way and proved that the model is idimpotent.
 
 
-### Semantic model and visualisation in the SILVER level
+### <a name="p-3.4">Semantic model and visualisation in the SILVER level</a>
 
 The final steps for Silver Level is to build a semantic model [pic-p1-16](#pic-p1-16).
 
