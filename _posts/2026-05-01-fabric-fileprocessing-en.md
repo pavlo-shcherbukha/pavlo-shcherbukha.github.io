@@ -26,7 +26,7 @@ published: true
 ## <a name="p-1">Introdunction<a>
 Many people start learning Fabric with Microsoft's templates (Copy Data), but they are designed for demos. In real life (especially in fintech or banking systems) we deal with unstable structures, duplicate files, and the need for full idempotence (so that re-runs don't break the data).
 
-<kbd><img src="../assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-01.png" /></kbd>
+<kbd><img src="/assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-01.png" /></kbd>
 <p style="text-align: center;"><a name="pic-p1-01">pic-p1-01</a></p>
 
 In very simple cases, a variant of Microsoft templates (Copy Data) can be used. But this approach has a large number of disadvantages. I will describe the disadvantages that I see when using regular CopyData when processing files:
@@ -75,25 +75,25 @@ Therefore, I tried to develop the concept of building a system that provides eve
 
 The high-level diagram is shown in the figure [pic-p1-101](#pic-p1-101)
 
-<kbd><img src="../assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-101.png" /></kbd>
+<kbd><img src="/assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-101.png" /></kbd>
 <p style="text-align: center;"><a name="pic-p1-101">pic-p1-101</a></p>
 
 
 
 To fully automate file processing, the Azure OneLake feature was used - to generate a [Fabric OneLake Events](https://learn.microsoft.com/en-us/fabric/real-time-hub/explore-fabric-onelake-events?toc=/fabric/onelake/toc.json&bc=/fabric/onelake/toc.json#onelake-events-profile) event when a file is created.
 
-<kbd><img src="../assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-02.png" /></kbd>
+<kbd><img src="/assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-02.png" /></kbd>
 <p style="text-align: center;"><a name="pic-p1-02">pic-p1-02</a></p>
 
 with the schema (message structure):
 
-<kbd><img src="../assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-03.png" /></kbd>
+<kbd><img src="/assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-03.png" /></kbd>
 <p style="text-align: center;"><a name="pic-p1-03">pic-p1-03</a></p>
 
 
 In this case, it is enough to use the Event **Microsoft.Fabric.OneLake.FileCreated**, which means: "Raised when a file is created or updated in OneLake." If you receive and process this event via the Fabrivc Eventstream, the system will automatically receive a signal about the arrival of a new file. When we receive this event via the Fabric Eventstream in the structure described in the following table: [Schemas](https://learn.microsoft.com/en-us/fabric/real-time-hub/explore-fabric-onelake-events?toc=/fabric/onelake/toc.json&bc=/fabric/onelake/toc.json#schemas) and as shown in [pic-p1-03](#pic-p1-03), there are several ways to process it [pic-p1-04](#pic-p1-04):
 
-<kbd><img src="../assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-04.png" /></kbd>
+<kbd><img src="/assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-04.png" /></kbd>
 <p style="text-align: center;"><a name="pic-p1-04">pic-p1-04</a></p>
 
 
@@ -163,14 +163,14 @@ After the SILVER level is formed, the data quality check process is started. At 
 
 For technical implementation, [pic-p1-06](#pic-p1-06) shows the structure of input directories.
 
-<kbd><img src="../assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-06.png" /></kbd>
+<kbd><img src="/assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-06.png" /></kbd>
 <p style="text-align: center;"><a name="pic-p1-06">pic-p1-06</a></p>
 
 This way the files end up in the **terminals** input directory. During the reception process the snapshot file is copied to the **processing_snapshots** directory. When the file is accepted it is moved to the **archive** directory.
 
 [pic-p1-07](#pic-p1-07) shows the structure of the table that is the receiver of messages. 2 additional fields have been added to the table to record the processing status of the message - file.
 
-<kbd><img src="../assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-07.png" /></kbd>
+<kbd><img src="/assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-07.png" /></kbd>
 <p style="text-align: center;"><a name="pic-p1-07">pic-p1-07</a></p>
 
 
@@ -187,7 +187,7 @@ The technical implementation of event logging is shown in [pic-p1-05](#pic-p1-05
 
 This is where the event is received and properly filtered.
 
-<kbd><img src="../assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-08.png" /></kbd>
+<kbd><img src="/assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-08.png" /></kbd>
 <p style="text-align: center;"><a name="pic-p1-08">pic-p1-08</a></p>
 
 You need to pay attention to the directory and file mask settings. If you leave it just /Files, events will be generated for all file actions. That is, if you create a file in the snapshot directory, you will receive an event. Therefore, it is better to configure a filter to definitely not receive unnecessary events.
@@ -202,7 +202,7 @@ There is nothing to configure here.
 
 This node performs message transformation. In this node is added two additional fields and filling them.  So thees fields and  theirs values immediately enter the table of saved events fullfilled.
 
-<kbd><img src="../assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-09.png" /></kbd>
+<kbd><img src="/assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-09.png" /></kbd>
 <p style="text-align: center;"><a name="pic-p1-09">pic-p1-09</a></p>
 
 Two fields are added:
@@ -220,7 +220,7 @@ Two fields are added:
 
 The figure shows where the event from the eventstream is stored.
 
-<kbd><img src="../assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-10.png" /></kbd>
+<kbd><img src="/assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-10.png" /></kbd>
 <p style="text-align: center;"><a name="pic-p1-10">pic-p1-10</a></p>
 
 It is important to note here that you can create a table automatically by clicking "create new" (2) or use an existing one. I created mine because I added two additional fields:
@@ -264,7 +264,7 @@ It is important to note here that you can create a table automatically by clicki
 
 The pipeline for receiving files with the Lookup Activity query setup is shown in [pic-p1-11](#pic-p1-11).
 
-<kbd><img src="../assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-11.png" /></kbd>
+<kbd><img src="/assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-11.png" /></kbd>
 <p style="text-align: center;"><a name="pic-p1-11">pic-p1-11</a></p>
 
 
@@ -296,7 +296,7 @@ The output of the Lookup Activity will be JSON with the following structure if t
 
 Accordingly, the following Activity notebook accepts the "count" parameters from this json [pic-p1-12](#pic-p1-12).
 
-<kbd><img src="../assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-12.png" /></kbd>
+<kbd><img src="/assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-12.png" /></kbd>
 <p style="text-align: center;"><a name="pic-p1-12">pic-p1-12</a></p>
 
 
@@ -304,7 +304,7 @@ Accordingly, the following Activity notebook accepts the "count" parameters from
 
 And notebook accepts it [pic-p1-13](#pic-p1-13):
 
-<kbd><img src="../assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-13.png" /></kbd>
+<kbd><img src="/assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-13.png" /></kbd>
 <p style="text-align: center;"><a name="pic-p1-13">pic-p1-13</a></p>
 
 But there is a nuance. In NoteBook, you can only pass simple parameters: STRING, INT, BOOLEAN, FLOAT. That is, you cannot pass a JSON structure and you cannot pass a list. You can pass one file, you can pass one field from an array of objects. But processing one file at a time is very inefficient in Spark. Therefore, the LookUp Activity itself is used as a signal that there are unprocessed files. And at the notebook level we understand what exactly has not been processed.
@@ -473,26 +473,26 @@ This is the key moment when raw BRONZE level data is transformed into SILVER bus
 In the future, this will allow building semantic models and the GOLD level
 The pipeline looks like in pic [pic-p1-14](#pic-p1-14):
 
-<kbd><img src="../assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-14.png" /></kbd>
+<kbd><img src="/assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-14.png" /></kbd>
 <p style="text-align: center;"><a name="pic-p1-14">pic-p1-14</a></p>
 
 
 If in the previous pipeline, where files are received, I only mentioned that Notebook returns the result of the work. Here in the current one, I showed the mechanism how to process the result, and determine when an error occurred, then raise the error to the pipeline level. If this is not done, then by catching the exception in the code and even returning the result with an error message, the output result must be processed correctly. If this is not done, then Notebook worked successfully, and the pipeline completed successfully, regardless of what result you returned. Schematically, how the transformation occurs is shown in [pic-p1-15](#pic-p1-15):
 
-<kbd><img src="../assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-15.png" /></kbd>
+<kbd><img src="/assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-15.png" /></kbd>
 <p style="text-align: center;"><a name="pic-p1-15">pic-p1-15</a></p>
 
 
 The first interesting thing is FindProcessingDate. In contrast with previous Lookup Activity, this activity trying to find the first open busints date i calendar. So, the check box "Firs row only" is on. In pay attantion that JSON shema  outpu valuse is diffrent [pic-p1-18](#pic-p1-18).
 
 
-<kbd><img src="../assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-18.png" /></kbd>
+<kbd><img src="/assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-18.png" /></kbd>
 <p style="text-align: center;"><a name="pic-p1-18">pic-p1-18</a></p>
 
 
 Так як змінилася структура вихідного повідомлення в Lookup Activity, то  міняється і його передача в Notebook activity [pic-p1-19](#pic-p1-19).
 
-<kbd><img src="../assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-19.png" /></kbd>
+<kbd><img src="/assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-19.png" /></kbd>
 <p style="text-align: center;"><a name="pic-p1-19">pic-p1-19</a></p>
 
 
@@ -780,13 +780,13 @@ And I wrote about the error because even after discovering a gross error when bu
 
 The final steps for Silver Level is to build a semantic model [pic-p1-16](#pic-p1-16).
 
-<kbd><img src="../assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-16.png" /></kbd>
+<kbd><img src="/assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-16.png" /></kbd>
 <p style="text-align: center;"><a name="pic-p1-16">pic-p1-16</a></p>
 
 
 Also, the report, which is shown on  [pic-p1-17](#pic-p1-17)
 
-<kbd><img src="../assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-17.png" /></kbd>
+<kbd><img src="/assets/img/posts/2026-05-01-fabric-fileprocessing/doc/pic-p1-17.png" /></kbd>
 <p style="text-align: center;"><a name="pic-p1-17">pic-p1-17</a></p>
 
 
