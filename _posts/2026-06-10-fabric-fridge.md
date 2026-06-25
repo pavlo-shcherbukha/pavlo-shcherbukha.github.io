@@ -33,7 +33,7 @@ published: true
 
 Узагальнену архітектуру системи можна побачити на [pic-01](#pic-01)
 
-<kbd><img src="../assets/img/posts/2026-06-10-fabric-fridge/doc/RealTimeFabric_v01.drawio.png" /></kbd>
+<kbd><img src="/assets/img/posts/2026-06-10-fabric-fridge/doc/RealTimeFabric_v01.drawio.png" /></kbd>
 <p style="text-align: center;"><a name="pic-01">pic-01</a></p>
 
 1. Ліворуч показана "Sensor data stream area" (область даних від сенсорів), що складається:
@@ -54,7 +54,7 @@ published: true
 
 Вразливість до електромагнітних перешкод (EMI): Сигнал датчика чутливий до перешкод від потужного промислового обладнання (частотні перетворювачі, електродвигуни)
 
-<kbd><img src="../assets/img/posts/2026-06-10-fabric-fridge/doc/Raspberry-PI.png" /></kbd>
+<kbd><img src="/assets/img/posts/2026-06-10-fabric-fridge/doc/Raspberry-PI.png" /></kbd>
 <p style="text-align: center;"><a name="pic-02">pic-02</a></p>
 
 І далі, наскільки я розумію, підключення інших сенсорів не буде дуже складним. Якщо ці сенсори не дуже цифрові, то є ESP32 на які можна поставити Python  пакети і змусити їх працювати за принципом Raspberry.
@@ -81,7 +81,7 @@ published: true
 
 Щоб зрозуміти характер об'єкта контролю, провів кількадобовий R&D експеримент на базі звичайного домашнього холодильника, підключеного через Raspberry Pi 5 з датчиком температури DHT22 до KQL бази даних  через черги (Microsoft Fabric Real-Time Intelligence). Знову, хочу наголосити, що це не промислова система і не система для отримання точних вимірювань. Моя ціль - це вивчення Microsoft Fabric на якихось корисних  прототипах, що  наближені до реальних промислових завдань.  
 
-<kbd><img src="../assets/img/posts/2026-06-10-fabric-fridge/doc/pic-03.png" /></kbd>
+<kbd><img src="/assets/img/posts/2026-06-10-fabric-fridge/doc/pic-03.png" /></kbd>
 <p style="text-align: center;"><a name="pic-03">pic-03</a></p>
 
 
@@ -96,7 +96,7 @@ published: true
 Тепер подивимося, як це все виглядає на графіках PowerBI [pic04](#pic-04). 
 На графіках уже відображаєтются  дані з обрахованого gold рівня, коли покази сенсорів перераховані в показник MKT Mean Kinetic Temperature (середня кінетична температура), що широко викорситовується в фармацевтичній та харчовій промисловлсті, як метрика кумулятивного теплового впливу.
 
-<kbd><img src="../assets/img/posts/2026-06-10-fabric-fridge/doc/pic-04.png" /></kbd>
+<kbd><img src="/assets/img/posts/2026-06-10-fabric-fridge/doc/pic-04.png" /></kbd>
 <p style="text-align: center;"><a name="pic-04">pic-04</a></p>
 
 
@@ -111,7 +111,7 @@ published: true
 
 Розглянемо інші графік и[pic-05](#pic-05). Ці графіки порівняльні і показуєтья відхилення від допустимого "температурного коридору".
 
-<kbd><img src="../assets/img/posts/2026-06-10-fabric-fridge/doc/pic-05.png" /></kbd>
+<kbd><img src="/assets/img/posts/2026-06-10-fabric-fridge/doc/pic-05.png" /></kbd>
 <p style="text-align: center;"><a name="pic-05">pic-05</a></p>
 
 
@@ -307,7 +307,7 @@ plt.show()
     +--------------------+-------------+-----------+
     only showing top 15 rows
 
-![png](../assets/img/posts/2026-06-10-fabric-fridge/doc/output_5_2.png)
+![png](/assets/img/posts/2026-06-10-fabric-fridge/doc/output_5_2.png)
     
 
 ### 5.3. Пробую фільтрувати сигнал високочастотним фільтром і дивится, що виходить
@@ -373,7 +373,7 @@ plt.show()
     частота роботи компресора 0.000119 Hz
     normal_cutoff = 0.014280142801428015   nyquist = 0.0166665
     
-![png](../assets/img/posts/2026-06-10-fabric-fridge/doc/output_7_2.png)
+![png](/assets/img/posts/2026-06-10-fabric-fridge/doc/output_7_2.png)
 
 
 На графіку в п.3. можна побачити оригінальний сигнал від датчика температури синім кольором і відфільтрований сигнал червоним кольором.
@@ -592,7 +592,7 @@ plt.show()
 
 ```
 
-![png](../assets/img/posts/2026-06-10-fabric-fridge/doc/output_11_1.png)
+![png](/assets/img/posts/2026-06-10-fabric-fridge/doc/output_11_1.png)
 
 
 На графіку червоним кольром показана розрахована RMS температура. Як бачимо, графік пологий, очищений від шумів з досить  зрозумілими спайками в гору. Тепер , спробуємо розрахувати якість показники. Відсутні всякі дріфти температури та низькочастотні коливання компресора (точніше, вони такі маленькі, що їх можна не враховувати).
@@ -766,7 +766,7 @@ plt.show()
      53 2026-06-17 18:39:32.019846 2026-06-17 18:45:16.002535         5.733045
     
     
-![png](../assets/img/posts/2026-06-10-fabric-fridge/doc/output_15_2.png)
+![png](/assets/img/posts/2026-06-10-fabric-fridge/doc/output_15_2.png)
     
 
 ## <a name="p-6">6. Деякі підсумки</a>
