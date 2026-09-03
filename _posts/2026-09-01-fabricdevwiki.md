@@ -1354,9 +1354,18 @@ END
 
 ### <a name="p-13.1">Оброка файлів за подіями eventStream</a>
 
-Опис прототипу знаходиться за лінком: [Event Driven file uploading](shcherbukha.github.io/posts/2026-05-01/Fabric.EventDrivenFileProcessing-en/)
+Опис прототипу знаходиться за лінком: [Event Driven file uploading](https://pavlo-shcherbukha.github.io/posts/2026-05-01/Fabric.EventDrivenFileProcessing-en/)
+
+Стаття на Medium:
+
+1. [Why Microsoft Fabric’s Copy Data Templates Might Fail Your Production ETL (And How to Fix It) # Part 1](https://medium.com/@pashashcherbukha/why-microsoft-fabrics-copy-data-templates-might-fail-your-production-etl-and-how-to-fix-it-part-1-1118e804e8a1?sharedUserId=pashashcherbukha)
+
+2. [Why Microsoft Fabric’s Copy Data Templates Might Fail Your Production ETL (And How to Fix It) # Part 2](https://medium.com/@pashashcherbukha/why-microsoft-fabrics-copy-data-templates-might-fail-your-production-etl-and-how-to-fix-it-4f644628e9d7?sharedUserId=pashashcherbukha)
+
+3. [Why Microsoft Fabric’s Copy Data Templates Might Fail Your Production ETL (And How to Fix It) # Part 3](https://medium.com/@pashashcherbukha/why-microsoft-fabrics-copy-data-templates-might-fail-your-production-etl-and-how-to-fix-it-24ee20204c29?sharedUserId=pashashcherbukha)
 
 ### <a name="p-13.2">Оброка даних з датчиків в RealTime та перетворення сирих даних в бізнес - сутності</a>
 
 Опис прототипу знаходиться за лінком:
 [Microsoft Fabric. Прагматичний AI та Цифрові двійники: Чому 5 рядків математики іноді цінніші за гігабайтні нейромережі](https://pavlo-shcherbukha.github.io/posts/2026-06-10/Fabric.%20AL-vs-Engeneering/)
+
