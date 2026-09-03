@@ -1898,11 +1898,10 @@ print("Генерація даних закінчена і записана в  
 
 
 
-22. [Лінк на документацію  про ролі в Workspaces наведено тут:Microsoft Fabric workspace roles](https://learn.microsoft.com/en-us/fabric/fundamentals/roles-workspaces#-workspace-roles).
+22. [Лінк на документацію  про ролі в Workspaces наведено тут:Microsoft Fabric workspace roles](https://learn.microsoft.com/en-us/fabric/fundamentals/roles-workspaces#-workspace-roles)
 
 <kbd><img src="/assets/img/posts/2026-09-01-fabricdevwiki/doc/pic-05-1.png" /></kbd>
 <p style="text-align: center;"><a name="pic-05-1">pic-05-1</a></p>
-
 
 23. [What is Fabric User data functions?](https://learn.microsoft.com/en-us/fabric/data-engineering/user-data-functions/user-data-functions-overview)
 
