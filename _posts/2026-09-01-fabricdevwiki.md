@@ -1837,7 +1837,7 @@ print("Генерація даних закінчена і записана в  
 
 3. [Fabric Data Engineering documentation](https://learn.microsoft.com/en-us/fabric/data-engineering/)
 
-3.1. [Fabric Data Engineering documentation. **Summary of library management best practices**](https://learn.microsoft.com/en-us/fabric/data-engineering/library-management#summary-of-library-management-best-practices)
+3.1. [Fabric Data Engineering documentation. Summary of library management best practices](https://www.google.com/url?sa=E&source=gmail&q=https://learn.microsoft.com/en-us/fabric/data-engineering/library-management%23summary-of-library-management-best-practices)
 
 4. [Microsoft OneLake documentation](https://learn.microsoft.com/en-us/fabric/onelake/)
 
