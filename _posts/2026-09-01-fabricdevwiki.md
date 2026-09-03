@@ -41,7 +41,7 @@ published: true
 
 - [12. Використання функцій Fabric](#p-12)
 
-- [13. Прототипування]
+- [13. Прототипування](#p-13)
 
 
 <!-- TOC END -->
@@ -1352,6 +1352,11 @@ END
 
 ## <a name="p-13">Прототипування</a>
 
-##3 <a name="p-13.1">Оброка файлів за подіями eventStream</a>
+### <a name="p-13.1">Оброка файлів за подіями eventStream</a>
 
-Опис прототипу знаходиться за лінком: [Event Driven file uploading](./prototyping/upload_files_using_eventstream/evupfiles.md)
+Опис прототипу знаходиться за лінком: [Event Driven file uploading](shcherbukha.github.io/posts/2026-05-01/Fabric.EventDrivenFileProcessing-en/)
+
+### <a name="p-13.2">Оброка даних з датчиків в RealTime та перетворення сирих даних в бізнес - сутності</a>
+
+Опис прототипу знаходиться за лінком:
+[Microsoft Fabric. Прагматичний AI та Цифрові двійники: Чому 5 рядків математики іноді цінніші за гігабайтні нейромережі](https://pavlo-shcherbukha.github.io/posts/2026-06-10/Fabric.%20AL-vs-Engeneering/)
