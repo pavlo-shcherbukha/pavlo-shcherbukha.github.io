@@ -7,6 +7,11 @@ permalink: posts/2026-09-01/Fabricdeveloperwiki/
 published: true
 ---
 
+
+<kbd><img src="/assets/img/posts/2026-09-01-fabricdevwiki/doc/pic-h4.png" /></kbd>
+
+
+
 <!-- TOC BEGIN -->
 
 I. СТАНДАРТИ ТА ГОВЕРНАНС (Обов’язково до виконання)
