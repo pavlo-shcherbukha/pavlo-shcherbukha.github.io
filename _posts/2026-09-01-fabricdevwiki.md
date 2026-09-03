@@ -1835,7 +1835,7 @@ print("Генерація даних закінчена і записана в  
 
 3. [Fabric Data Engineering documentation](https://learn.microsoft.com/en-us/fabric/data-engineering/)
 
-3.1. [Fabric Data Engineering documentation. Summary of library management best practices](https://www.google.com/url?sa=E&source=gmail&q=https://learn.microsoft.com/en-us/fabric/data-engineering/library-management%23summary-of-library-management-best-practices)
+    3.1. [Fabric Data Engineering documentation. Summary of library management best practices](https://www.google.com/url?sa=E&source=gmail&q=https://learn.microsoft.com/en-us/fabric/data-engineering/library-management%23summary-of-library-management-best-practices)
 
 4. [Microsoft OneLake documentation](https://learn.microsoft.com/en-us/fabric/onelake/)
 
@@ -1845,23 +1845,23 @@ print("Генерація даних закінчена і записана в  
 
 7. [Limitations of Fabric Data Warehouse](https://learn.microsoft.com/en-us/fabric/data-warehouse/limitations)
 
-7.1. [Get Started with Fabric DWH](https://learn.microsoft.com/en-us/fabric/fundamentals/decision-guide-data-store?toc=/fabric/data-warehouse/toc.json&bc=/fabric/data-warehouse/toc.json)
+    7.1. [Get Started with Fabric DWH](https://learn.microsoft.com/en-us/fabric/fundamentals/decision-guide-data-store?toc=/fabric/data-warehouse/toc.json&bc=/fabric/data-warehouse/toc.json)
 
-7.2. [Transact-SQL reference (Database Engine)](https://learn.microsoft.com/en-us/sql/t-sql/language-reference?view=fabric&preserve-view=true)
+    7.2. [Transact-SQL reference (Database Engine)](https://learn.microsoft.com/en-us/sql/t-sql/language-reference?view=fabric&preserve-view=true)
 
-7.3. [sql-server-samples](https://github.com/Microsoft/sql-server-samples/tree/master/samples)
+    7.3. [sql-server-samples](https://github.com/Microsoft/sql-server-samples/tree/master/samples)
 
-7.4. [CREATE SCHEMA](https://learn.microsoft.com/en-us/sql/t-sql/statements/create-schema-transact-sql?view=fabric&preserve-view=true)
+    7.4. [CREATE SCHEMA](https://learn.microsoft.com/en-us/sql/t-sql/statements/create-schema-transact-sql?view=fabric&preserve-view=true)
 
-7.5. [DROP SCHEMA](https://learn.microsoft.com/en-us/sql/t-sql/statements/drop-schema-transact-sql?view=fabric)
+    7.5. [DROP SCHEMA](https://learn.microsoft.com/en-us/sql/t-sql/statements/drop-schema-transact-sql?view=fabric)
 
-7.6. [CREATE TABLE](https://learn.microsoft.com/en-us/sql/t-sql/statements/create-table-azure-sql-data-warehouse?view=fabric)
+    7.6. [CREATE TABLE](https://learn.microsoft.com/en-us/sql/t-sql/statements/create-table-azure-sql-data-warehouse?view=fabric)
 
-7.7. [DROP TABLE](https://learn.microsoft.com/en-us/sql/t-sql/statements/drop-table-transact-sql?view=fabric)
+    7.7. [DROP TABLE](https://learn.microsoft.com/en-us/sql/t-sql/statements/drop-table-transact-sql?view=fabric)
 
-7.8. [CREATE VIEW](https://learn.microsoft.com/en-us/sql/t-sql/statements/create-view-transact-sql?view=fabric)
+    7.8. [CREATE VIEW](https://learn.microsoft.com/en-us/sql/t-sql/statements/create-view-transact-sql?view=fabric)
 
-7.9. [DROP VIEW](https://learn.microsoft.com/en-us/sql/t-sql/statements/drop-view-transact-sql?view=fabric)
+    7.9. [DROP VIEW](https://learn.microsoft.com/en-us/sql/t-sql/statements/drop-view-transact-sql?view=fabric)
 
 
 8. [Limitations in SQL database in Microsoft Fabric](https://learn.microsoft.com/en-us/fabric/database/sql/limitations)
