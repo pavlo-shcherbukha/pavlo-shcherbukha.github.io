@@ -7,8 +7,6 @@ permalink: posts/2026-09-01/Fabricdeveloperwiki/
 published: true
 ---
 
-# FABRIC DEVELOPER WIKI
-
 <!-- TOC BEGIN -->
 
 I. СТАНДАРТИ ТА ГОВЕРНАНС (Обов’язково до виконання)
@@ -1873,11 +1871,11 @@ print("Генерація даних закінчена і записана в  
 10. [Databricks tables](https://docs.databricks.com/aws/en/tables)
 
 
-11. [Why Microsoft Fabric’s Copy Data Templates Might Fail Your Production ETL (And How to Fix It) # Part 1](https://medium.com/@pashashcherbukha/why-microsoft-fabrics-copy-data-templates-might-fail-your-production-etl-and-how-to-fix-it-part-1-1118e804e8a1)
+11. [Why Microsoft Fabric’s Copy Data Templates Might Fail Your Production ETL (And How to Fix It)  Part 1](https://medium.com/@pashashcherbukha/why-microsoft-fabrics-copy-data-templates-might-fail-your-production-etl-and-how-to-fix-it-part-1-1118e804e8a1)
 
-12. [Why Microsoft Fabric’s Copy Data Templates Might Fail Your Production ETL (And How to Fix It) # Part 2](https://medium.com/@pashashcherbukha/why-microsoft-fabrics-copy-data-templates-might-fail-your-production-etl-and-how-to-fix-it-4f644628e9d7)
+12. [Why Microsoft Fabric’s Copy Data Templates Might Fail Your Production ETL (And How to Fix It)  Part 2](https://medium.com/@pashashcherbukha/why-microsoft-fabrics-copy-data-templates-might-fail-your-production-etl-and-how-to-fix-it-4f644628e9d7)
 
-13. [Why Microsoft Fabric’s Copy Data Templates Might Fail Your Production ETL (And How to Fix It) # Part 3](https://medium.com/@pashashcherbukha/why-microsoft-fabrics-copy-data-templates-might-fail-your-production-etl-and-how-to-fix-it-24ee20204c29)
+13. [Why Microsoft Fabric’s Copy Data Templates Might Fail Your Production ETL (And How to Fix It)  Part 3](https://medium.com/@pashashcherbukha/why-microsoft-fabrics-copy-data-templates-might-fail-your-production-etl-and-how-to-fix-it-24ee20204c29)
 
 14. [What is the Microsoft Fabric Capacity Metrics app?](https://learn.microsoft.com/en-us/fabric/enterprise/metrics-app)
 
